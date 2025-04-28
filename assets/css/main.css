@@ -771,7 +771,7 @@ section,
 .hero .wave1 use {
   animation: move-forever1 10s linear infinite;
   animation-delay: -2s;
-  fill: var(--default-color);
+  fill: var(--default-zcolor);
   opacity: 0.6;
 }
 
