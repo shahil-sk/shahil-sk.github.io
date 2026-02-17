@@ -1,0 +1,217 @@
+{
+  "hero": {
+    "logo": "SK",
+    "firstName": "SHAHIL",
+    "lastName": "AHMED",
+    "subtitle": "OFFENSIVE SECURITY / PENETRATION TESTER / RED TEAM",
+    "location": "Mangaluru, Karnataka • Available for Projects",
+    "videoUrl": "vid.mp4",
+    "stats": [
+      {
+        "value": "50+",
+        "label": "HTB Machines"
+      },
+      {
+        "value": "10+",
+        "label": "Apps Tested"
+      },
+      {
+        "value": "1+",
+        "label": "Years VAPT"
+      }
+    ]
+  },
+  "about": {
+    "intro": "Offensive security professional with 1+ year of specialized experience in Vulnerability Assessment and Penetration Testing (VAPT).",
+    "paragraph1": "Focused on web applications, APIs, and Android security. Proven track record in discovering and exploiting critical vulnerabilities across diverse attack surfaces.",
+    "paragraph2": "Passionate about red team operations, security automation, and continuous research in emerging threat vectors. Active contributor to cybersecurity community through CTF platforms and open-source security tooling.",
+    "education": [
+      {
+        "degree": "Bachelor of Vocation in Software Development",
+        "institution": "St Aloysius College",
+        "years": "2021-2024"
+      }
+    ],
+    "certifications": [
+      "PortSwigger Web Security Academy",
+      "50+ HackTheBox Machines",
+      "Burp Suite Academy"
+    ]
+  },
+  "experience": [
+    {
+      "company": "Freelance Services",
+      "role": "Network Technician",
+      "date": "AUG 2025 — PRESENT",
+      "highlights": [
+        "Maintained 99.9% network uptime for SMB clients through proactive infrastructure monitoring",
+        "Reduced hardware failure incidents by 15% through systematic preventive maintenance schedules",
+        "Deployed hardened Linux server environments with optimized boot processes and secure partition schemes"
+      ]
+    },
+    {
+      "company": "EyeQ Dot Net Pvt. Ltd",
+      "role": "Security Analyst",
+      "date": "JUN 2024 — AUG 2025",
+      "highlights": [
+        "Executed comprehensive Web Application Penetration Testing identifying high-severity vulnerabilities across 10+ production applications",
+        "Conducted in-depth API Security Assessments targeting RESTful and GraphQL endpoints",
+        "Performed extensive Android Application Security Testing identifying client-side vulnerabilities",
+        "Engineered comprehensive penetration testing reports with CVSS-based risk scoring",
+        "Collaborated with development teams resulting in 25% improvement in overall security posture",
+        "Developed automation scripts reducing tool configuration time by 50%+"
+      ]
+    },
+    {
+      "company": "Connectia Technology & STPI",
+      "role": "Frontend Web Developer",
+      "date": "AUG 2023 — SEP 2023",
+      "highlights": [
+        "Enhanced user engagement metrics by 20% through comprehensive UI/UX redesign",
+        "Accelerated development velocity by implementing reusable component architecture"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "name": "AndroidVaptTools",
+      "description": "Comprehensive automation suite streamlining Android penetration testing tool installations and environment configuration for security assessments",
+      "tech": [
+        "bash",
+        "automation",
+        "security"
+      ],
+      "stars": 3,
+      "link": "https://github.com/shahil-sk/AndroidVaptTools"
+    },
+    {
+      "name": "streamline",
+      "description": "Terminal-based YouTube video/audio downloader featuring parallel downloads and format conversion capabilities written in Go",
+      "tech": [
+        "go",
+        "cli",
+        "multimedia"
+      ],
+      "stars": 0,
+      "link": "https://github.com/shahil-sk/streamline"
+    },
+    {
+      "name": "CertWizard",
+      "description": "Professional certificate generator desktop application developed in Python with GUI for bulk certificate generation from templates and Excel data",
+      "tech": [
+        "python",
+        "gui",
+        "automation"
+      ],
+      "stars": 1,
+      "link": "https://github.com/shahil-sk/CertWizard"
+    },
+    {
+      "name": "sk00pium",
+      "description": "Custom Linux distribution built from scratch demonstrating deep understanding of Linux internals, package management, and system architecture",
+      "tech": [
+        "linux",
+        "distro",
+        "systems"
+      ],
+      "stars": 1,
+      "link": "https://github.com/shahil-sk/sk00pium"
+    },
+    {
+      "name": "emu-loader",
+      "description": "Bash automation framework for configuring Frida-Server on Genymotion Android emulators, enabling seamless rooted testing environments",
+      "tech": [
+        "bash",
+        "frida",
+        "android"
+      ],
+      "stars": 0,
+      "link": "https://github.com/shahil-sk/emu-loader"
+    },
+    {
+      "name": "bash-web-server",
+      "description": "Lightweight HTTP server implementation written entirely in Bash scripting, showcasing understanding of network protocols",
+      "tech": [
+        "bash",
+        "networking",
+        "servers"
+      ],
+      "stars": 0,
+      "link": "https://github.com/shahil-sk/bash-web-server"
+    }
+  ],
+  "skills": {
+    "WEB SECURITY": [
+      "SQL Injection",
+      "XSS (Stored/Reflected/DOM)",
+      "CSRF, IDOR, SSRF",
+      "Command Injection, XXE",
+      "Directory Traversal",
+      "Authentication/Authorization Flaws",
+      "Business Logic Exploitation",
+      "OWASP Top 10"
+    ],
+    "ANDROID SECURITY": [
+      "Activity/Intent Manipulation",
+      "Broadcast Receiver Exploitation",
+      "Content Provider Vulnerabilities",
+      "WebView Exploitation",
+      "Deep Link Vulnerabilities",
+      "SSL Pinning Bypass",
+      "Root Detection Evasion",
+      "Frida Dynamic Instrumentation"
+    ],
+    "API SECURITY": [
+      "REST/GraphQL API Testing",
+      "BOLA/IDOR",
+      "Authentication Bypass",
+      "Mass Assignment",
+      "Rate Limiting Bypass",
+      "API Key Exposure",
+      "Broken Object-Level Authorization",
+      "OWASP API Security Top 10"
+    ],
+    "TOOLS & ARSENAL": [
+      "Burp Suite Professional",
+      "Metasploit Framework",
+      "Frida, Objection, Drozer",
+      "MobSF, Jadx, apktool",
+      "Nmap, SQLmap, Gobuster",
+      "Wireshark, John the Ripper",
+      "Wazuh SIEM, IDS/IPS"
+    ],
+    "PROGRAMMING": [
+      "Python (Security Automation)",
+      "Bash Scripting",
+      "Kotlin (Android)",
+      "Go, JavaScript",
+      "C/C++"
+    ]
+  },
+  "contact": [
+    {
+      "label": "EMAIL",
+      "value": "shahilforbusiness@gmail.com",
+      "link": "mailto:shahilforbusiness@gmail.com"
+    },
+    {
+      "label": "GITHUB",
+      "value": "shahil-sk",
+      "link": "https://github.com/shahil-sk"
+    },
+    {
+      "label": "LINKEDIN",
+      "value": "shahil-ahmed",
+      "link": "https://linkedin.com/in/shahil-ahmed-533266310"
+    },
+    {
+      "label": "TWITTER",
+      "value": "@shahil_s_k",
+      "link": "https://twitter.com/shahil_s_k"
+    }
+  ],
+  "footer": {
+    "copyright": "© 2026 SHAHIL AHMED",
+    "quote": "\"I don't know why i like 1's and 0's\""
+  }
+}
