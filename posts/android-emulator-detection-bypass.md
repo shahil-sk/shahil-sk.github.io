@@ -1,12 +1,12 @@
 ---
 
 title: Android emulator detection bypass
-date: 2025-06-19
+date: 2025-06-04
 author: Shahil Ahmed
 tags:
-  - android
-  - frida
-  - pentesting
+  - Android
+  - Frida
+  - Pentesting
 ---
 
 # Emulator Bypass

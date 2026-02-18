@@ -3,9 +3,8 @@ title: How to Root Genymotion Emulator and Set Up BurpSuite for HTTPS Intercepti
 date: 2025-06-19
 author: Shahil Ahmed
 tags:
-  - android
-  - burpsuite
-  - pentesting
+  - Android
+  - Burpsuite
 ---
 
 

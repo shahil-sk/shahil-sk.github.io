@@ -1,12 +1,12 @@
 ---
 
-title: Root detection and ssl-pinning bypass using Objection And Frida
-date: 2026-02-15
+title: Root detection and SSL-pinning bypass using Objection And Frida
+date: 2024-12-05
 author: Shahil Ahmed
 tags:
-  - android
-  - frida
-  - pentesting
+  - Android
+  - Frida
+  - Pentesting
 ---
 
 # Objection

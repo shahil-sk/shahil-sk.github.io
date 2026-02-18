@@ -11,36 +11,46 @@
     ]
   },
   {
-    "slug": "root-detection-and-ssl-pinning-bypass-using-objection-and-frida",
-    "title": "Root detection and ssl-pinning bypass using Objection And Frida",
-    "date": "2026-02-15",
-    "excerpt": "",
-    "tags": [
-      "android",
-      "frida",
-      "pentesting"
-    ]
-  },
-  {
-    "slug": "android-emulator-detection-bypass",
-    "title": "Android emulator detection bypass",
-    "date": "2025-06-19",
-    "excerpt": "",
-    "tags": [
-      "android",
-      "frida",
-      "pentesting"
-    ]
-  },
-  {
     "slug": "how-to-root-genymotion-emulator-and-set-up-burpsuite-for-https-interception",
     "title": "How to Root Genymotion Emulator and Set Up BurpSuite for HTTPS Interception",
     "date": "2025-06-19",
     "excerpt": "",
     "tags": [
-      "android",
-      "burpsuite",
-      "pentesting"
+      "Android",
+      "Burpsuite"
+    ]
+  },
+  {
+    "slug": "android-emulator-detection-bypass",
+    "title": "Android emulator detection bypass",
+    "date": "2025-06-04",
+    "excerpt": "",
+    "tags": [
+      "Android",
+      "Frida",
+      "Pentesting"
+    ]
+  },
+  {
+    "slug": "root-detection-and-ssl-pinning-bypass-using-objection-and-frida",
+    "title": "Root detection and SSL-pinning bypass using Objection And Frida",
+    "date": "2024-12-05",
+    "excerpt": "",
+    "tags": [
+      "Android",
+      "Frida",
+      "Pentesting"
+    ]
+  },
+  {
+    "slug": "setup-android-emulator-for-burpsuite-frida",
+    "title": "Setup Android emulator for Burpsuite & frida.",
+    "date": "2024-11-27",
+    "excerpt": "",
+    "tags": [
+      "Android",
+      "Frida",
+      "Burpsuite"
     ]
   }
 ]
