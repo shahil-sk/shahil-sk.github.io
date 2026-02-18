@@ -1,1 +1,46 @@
-[]
+[
+  {
+    "slug": "bypassing-ssl-pinning-on-android-apps-with-frida",
+    "title": "Bypassing SSL Pinning on Android Apps with Frida",
+    "date": "2026-02-15",
+    "excerpt": "",
+    "tags": [
+      "android",
+      "frida",
+      "pentesting"
+    ]
+  },
+  {
+    "slug": "root-detection-and-ssl-pinning-bypass-using-objection-and-frida",
+    "title": "Root detection and ssl-pinning bypass using Objection And Frida",
+    "date": "2026-02-15",
+    "excerpt": "",
+    "tags": [
+      "android",
+      "frida",
+      "pentesting"
+    ]
+  },
+  {
+    "slug": "android-emulator-detection-bypass",
+    "title": "Android emulator detection bypass",
+    "date": "2025-06-19",
+    "excerpt": "",
+    "tags": [
+      "android",
+      "frida",
+      "pentesting"
+    ]
+  },
+  {
+    "slug": "how-to-root-genymotion-emulator-and-set-up-burpsuite-for-https-interception",
+    "title": "How to Root Genymotion Emulator and Set Up BurpSuite for HTTPS Interception",
+    "date": "2025-06-19",
+    "excerpt": "",
+    "tags": [
+      "android",
+      "burpsuite",
+      "pentesting"
+    ]
+  }
+]
