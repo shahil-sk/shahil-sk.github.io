@@ -106,7 +106,7 @@ async function populateBlogPreview() {
     const res = await fetch('posts/index.json');
     if (!res.ok) throw new Error();
     const posts = await res.json();
-    const latest = posts.slice(0, 3);
+    const latest = posts.slice(0, 4);
     grid.innerHTML = latest.map((post, i) => `
       <a href="blog-post.html?post=${post.slug}" class="blog-card" style="transition-delay:${i * 0.08}s">
         <span class="blog-card-date">${post.date}</span>
@@ -306,3 +306,5 @@ new MutationObserver(() => {
     document.body.style.overflow = '';
   }));
 })();
+
+
