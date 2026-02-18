@@ -1,26 +1,25 @@
-// Individual post reader
+// Individual blog post reader
+// Fixes: CRLF-safe frontmatter parser, marked v9 API, image path resolution
 (async function initPost() {
+
   const params = new URLSearchParams(window.location.search);
-  const slug = params.get('post');
+  const slug   = params.get('post');
 
   if (!slug) {
     window.location.href = 'blog.html';
     return;
   }
 
-  // Update page title while loading
   document.title = 'Loading... — Shahil Ahmed';
 
   try {
-    // Fetch the markdown file
-    const mdRes = await fetch(`posts/${slug}.md`);
-    if (!mdRes.ok) throw new Error('Post not found');
+    const mdRes = await fetch('posts/' + slug + '.md');
+    if (!mdRes.ok) throw new Error('Post not found (' + mdRes.status + ')');
     const raw = await mdRes.text();
 
-    // Parse frontmatter (--- ... ---) and body
     const { frontmatter, body } = parseFrontmatter(raw);
 
-    // Set meta
+    // ── Page title ──────────────────────────────────────────
     document.title = (frontmatter.title || slug) + ' — Shahil Ahmed';
 
     const titleEl = document.getElementById('post-title');
@@ -32,86 +31,116 @@
     if (titleEl) titleEl.textContent = frontmatter.title || slug;
 
     if (metaEl) {
-      metaEl.innerHTML = `
-        <span>${frontmatter.date || ''}</span>
-        ${frontmatter.author ? `<span>by ${frontmatter.author}</span>` : ''}
-      `;
+      metaEl.innerHTML =
+        '<span>' + (frontmatter.date || '') + '</span>' +
+        (frontmatter.author ? '<span>by ' + frontmatter.author + '</span>' : '');
     }
 
-    if (tagsEl && frontmatter.tags) {
-      const tags = Array.isArray(frontmatter.tags)
-        ? frontmatter.tags
-        : frontmatter.tags.split(',').map(t => t.trim());
-      tagsEl.innerHTML = tags.map(t => `<span class="blog-tag">${t}</span>`).join('');
+    if (tagsEl && frontmatter.tags && frontmatter.tags.length) {
+      tagsEl.innerHTML = frontmatter.tags
+        .map(function(t) { return '<span class="blog-tag">' + t + '</span>'; })
+        .join('');
     }
 
-    // Reading time estimate
-    const words = body.trim().split(/\s+/).length;
-    const mins = Math.max(1, Math.round(words / 200));
-    if (readEl) readEl.textContent = `${mins} min read  •  ${words} words`;
+    var wordCount = body.trim().split(/\s+/).filter(Boolean).length;
+    var mins      = Math.max(1, Math.round(wordCount / 200));
+    if (readEl) readEl.textContent = mins + ' min read  \u2022  ' + wordCount + ' words';
 
-    // Render markdown
+    // ── Render Markdown ──────────────────────────────────────
     if (bodyEl && typeof marked !== 'undefined') {
-      marked.setOptions({
+
+      // marked v9+ API: use marked.use() with a custom renderer extension
+      marked.use({
+        gfm:    true,
         breaks: true,
-        gfm: true,
+        renderer: {
+          // Resolve relative image paths to posts/images/<filename>
+          image: function(token) {
+            var href  = token.href  || token.src  || '';
+            var text  = token.text  || token.alt  || '';
+            var title = token.title || '';
+
+            var src = href;
+            if (src && !src.match(/^https?:\/\//) && !src.startsWith('/') && !src.startsWith('data:')) {
+              src = 'posts/images/' + src;
+            }
+
+            var titleAttr = title ? ' title="' + title + '"' : '';
+            return '<figure>' +
+              '<img src="' + src + '" alt="' + text + '"' + titleAttr + ' loading="lazy">' +
+              (text ? '<figcaption>' + text + '</figcaption>' : '') +
+              '</figure>';
+          }
+        }
       });
 
-      // Custom renderer for images — resolve relative paths
-      const renderer = new marked.Renderer();
-      renderer.image = function(href, title, text) {
-        // If it's a relative path (not http/https), prepend posts/images/ path
-        let src = href;
-        if (src && !src.startsWith('http') && !src.startsWith('/') && !src.startsWith('data:')) {
-          src = `posts/images/${src}`;
-        }
-        const titleAttr = title ? ` title="${title}"` : '';
-        return `<figure><img src="${src}" alt="${text || ''}"${titleAttr} loading="lazy"><figcaption>${text || ''}</figcaption></figure>`;
-      };
-
-      bodyEl.innerHTML = marked.parse(body, { renderer });
+      bodyEl.innerHTML = marked.parse(body);
 
       // Syntax highlighting
       if (typeof hljs !== 'undefined') {
-        bodyEl.querySelectorAll('pre code').forEach(block => {
+        bodyEl.querySelectorAll('pre code').forEach(function(block) {
           hljs.highlightElement(block);
         });
       }
+
     } else if (bodyEl) {
       bodyEl.textContent = body;
     }
 
   } catch (err) {
-    document.getElementById('post-title').textContent = '404 — Post not found';
-    document.getElementById('post-body').innerHTML =
-      '<p>This post could not be loaded. <a href="blog.html">Go back to blog.</a></p>';
+    var t = document.getElementById('post-title');
+    var b = document.getElementById('post-body');
+    if (t) t.textContent = 'Post not found';
+    if (b) b.innerHTML   = '<p>This post could not be loaded. <a href="blog.html">Go back to blog.</a></p><p style="font-family:monospace;font-size:0.8rem;opacity:0.5">' + err.message + '</p>';
+    console.error('[post.js]', err);
   }
 
+  // ── Frontmatter parser (CRLF + LF safe) ─────────────────
   function parseFrontmatter(raw) {
-    const fmMatch = raw.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
-    if (!fmMatch) return { frontmatter: {}, body: raw };
+    // Normalise line endings
+    var text = raw.replace(/\r\n/g, '\n').replace(/\r/g, '\n').trim();
 
-    const fmLines = fmMatch[1].split('\n');
-    const frontmatter = {};
-    let currentKey = null;
-    const tagLines = [];
-
-    for (const line of fmLines) {
-      // tags as YAML list
-      if (currentKey === 'tags' && line.startsWith('  - ')) {
-        tagLines.push(line.replace('  - ', '').trim());
-        continue;
-      }
-      const kv = line.match(/^([\w-]+):\s*(.*)$/);
-      if (kv) {
-        currentKey = kv[1];
-        frontmatter[kv[1]] = kv[2].trim();
-      }
+    // Must start with ---
+    if (!text.startsWith('---')) {
+      return { frontmatter: {}, body: text };
     }
 
-    if (tagLines.length) frontmatter.tags = tagLines;
-    else if (frontmatter.tags) frontmatter.tags = frontmatter.tags;
+    // Find closing ---
+    var closeIdx = text.indexOf('\n---', 3);
+    if (closeIdx === -1) {
+      return { frontmatter: {}, body: text };
+    }
 
-    return { frontmatter, body: fmMatch[2] };
+    var fmBlock = text.slice(3, closeIdx).trim();
+    var body    = text.slice(closeIdx + 4).replace(/^\n+/, '');
+
+    var frontmatter = {};
+    var currentKey  = null;
+    var tagLines    = [];
+
+    fmBlock.split('\n').forEach(function(line) {
+      // YAML list item under tags:
+      if (currentKey === 'tags' && /^\s+-\s+/.test(line)) {
+        tagLines.push(line.replace(/^\s+-\s+/, '').trim());
+        return;
+      }
+      var kv = line.match(/^([\w-]+):\s*(.*)$/);
+      if (kv) {
+        currentKey          = kv[1];
+        frontmatter[kv[1]] = kv[2].trim();
+      }
+    });
+
+    if (tagLines.length) {
+      frontmatter.tags = tagLines;
+    } else if (frontmatter.tags) {
+      // inline tags: "android, pentesting"
+      frontmatter.tags = frontmatter.tags.split(',').map(function(t) { return t.trim(); }).filter(Boolean);
+    } else {
+      frontmatter.tags = [];
+    }
+
+    return { frontmatter: frontmatter, body: body };
   }
+
 })();
