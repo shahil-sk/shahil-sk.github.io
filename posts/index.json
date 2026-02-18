@@ -1,0 +1,9 @@
+[
+  {
+    "slug": "android-ssl-pinning-bypass",
+    "title": "Bypassing SSL Pinning on Android Apps with Frida",
+    "date": "2026-02-15",
+    "excerpt": "A practical walkthrough of bypassing certificate pinning on modern Android applications using Frida dynamic instrumentation.",
+    "tags": ["android", "frida", "pentesting"]
+  }
+]

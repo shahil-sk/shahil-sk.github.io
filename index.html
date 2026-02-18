@@ -11,33 +11,27 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Scroll Progress -->
     <div class="scroll-progress" id="scroll-progress"></div>
-
-    <!-- Custom Cursor -->
     <div class="cursor" id="cursor"></div>
     <div class="cursor-follower" id="cursor-follower"></div>
-
-    <!-- Matrix Rain Canvas -->
     <canvas id="matrix-canvas"></canvas>
-
-    <!-- Scanlines Overlay -->
     <div class="scanlines"></div>
 
     <!-- Header -->
     <header class="header" id="header">
         <div class="header-inner">
-            <a href="#" class="logo" id="logo-link">
+            <a href="/" class="logo" id="logo-link">
                 <span class="logo-bracket">[</span>
                 <span class="logo-text">SK</span>
                 <span class="logo-bracket">]</span>
             </a>
             <nav class="nav" id="nav">
-                <a href="#about" class="nav-link" data-text="ABOUT">ABOUT</a>
-                <a href="#work" class="nav-link" data-text="WORK">WORK</a>
-                <a href="#projects" class="nav-link" data-text="PROJECTS">PROJECTS</a>
-                <a href="#skills" class="nav-link" data-text="SKILLS">SKILLS</a>
-                <a href="#contact" class="nav-link" data-text="CONTACT">CONTACT</a>
+                <a href="#about" class="nav-link">ABOUT</a>
+                <a href="#work" class="nav-link">WORK</a>
+                <a href="#projects" class="nav-link">PROJECTS</a>
+                <a href="#skills" class="nav-link">SKILLS</a>
+                <a href="#blog" class="nav-link">BLOG</a>
+                <a href="#contact" class="nav-link">CONTACT</a>
             </nav>
             <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">
                 <span></span><span></span><span></span>
@@ -52,6 +46,7 @@
             <a href="#work" class="mobile-nav-link">WORK</a>
             <a href="#projects" class="mobile-nav-link">PROJECTS</a>
             <a href="#skills" class="mobile-nav-link">SKILLS</a>
+            <a href="#blog" class="mobile-nav-link">BLOG</a>
             <a href="#contact" class="mobile-nav-link">CONTACT</a>
         </nav>
     </div>
@@ -85,17 +80,17 @@
             </div>
         </div>
         <div class="hero-stats">
-            <div class="stat-item" style="--i:0">
+            <div class="stat-item">
                 <span class="stat-val" id="stat-1-value">50+</span>
                 <span class="stat-lbl" id="stat-1-label">HTB Machines</span>
             </div>
             <div class="stat-divider"></div>
-            <div class="stat-item" style="--i:1">
+            <div class="stat-item">
                 <span class="stat-val" id="stat-2-value">10+</span>
                 <span class="stat-lbl" id="stat-2-label">Apps Tested</span>
             </div>
             <div class="stat-divider"></div>
-            <div class="stat-item" style="--i:2">
+            <div class="stat-item">
                 <span class="stat-val" id="stat-3-value">1+</span>
                 <span class="stat-lbl" id="stat-3-label">Years VAPT</span>
             </div>
@@ -123,14 +118,12 @@
                 <div class="about-side">
                     <div class="info-card reveal" style="--d:0.1s">
                         <div class="info-card-header">
-                            <span class="info-card-icon">🎓</span>
                             <h3>EDUCATION</h3>
                         </div>
                         <div id="education-content"></div>
                     </div>
                     <div class="info-card reveal" style="--d:0.2s">
                         <div class="info-card-header">
-                            <span class="info-card-icon">🏆</span>
                             <h3>CERTIFICATIONS</h3>
                         </div>
                         <div id="certifications-content"></div>
@@ -176,11 +169,27 @@
         </div>
     </section>
 
+    <!-- Blog -->
+    <section id="blog" class="section">
+        <div class="section-inner">
+            <div class="section-label reveal">
+                <span class="label-num">005</span>
+                <span class="label-line"></span>
+                <span class="label-text">BLOG</span>
+            </div>
+            <div class="blog-header reveal">
+                <p class="blog-sub">Writeups, research notes, and things I find interesting.</p>
+                <a href="blog.html" class="btn-secondary">ALL POSTS →</a>
+            </div>
+            <div class="blog-grid" id="blog-preview-grid"></div>
+        </div>
+    </section>
+
     <!-- Contact -->
     <section id="contact" class="section">
         <div class="section-inner">
             <div class="section-label reveal">
-                <span class="label-num">005</span>
+                <span class="label-num">006</span>
                 <span class="label-line"></span>
                 <span class="label-text">CONTACT</span>
             </div>
