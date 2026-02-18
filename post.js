@@ -13,7 +13,7 @@
   document.title = 'Loading... — Shahil Ahmed';
 
   try {
-    const mdRes = await fetch('posts/' + slug + '.md');
+    const mdRes = await fetch('https://raw.githubusercontent.com/shahil-sk/shahil-sk.github.io/main/posts/' + slug + '.md');
     if (!mdRes.ok) throw new Error('Post not found (' + mdRes.status + ')');
     const raw = await mdRes.text();
 
