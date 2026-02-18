@@ -1,342 +1,347 @@
-// Custom cursor
-document.addEventListener('DOMContentLoaded', () => {
-    const cursor = document.querySelector('.cursor-dot');
-    
-    document.addEventListener('mousemove', (e) => {
-        cursor.style.left = e.clientX + 'px';
-        cursor.style.top = e.clientY + 'px';
+// ========================
+// Data Loading
+// ========================
+fetch('data.json')
+  .then(r => r.json())
+  .then(data => {
+    populateHero(data.hero);
+    populateAbout(data.about);
+    populateExperience(data.experience);
+    populateProjects(data.projects);
+    populateSkills(data.skills);
+    populateContact(data.contact);
+    populateFooter(data.footer);
+    initTypewriter(data.hero.subtitle);
+  })
+  .catch(() => {
+    // Fallback: use static content already in HTML
+    initTypewriter('OFFENSIVE SECURITY / PENETRATION TESTER / RED TEAM');
+  });
+
+function populateHero(hero) {
+  if (!hero) return;
+  const logoEl = document.getElementById('logo-link');
+  if (logoEl) logoEl.querySelector('.logo-text').textContent = hero.logo || 'SK';
+  const first = document.getElementById('hero-name-first');
+  const last = document.getElementById('hero-name-last');
+  if (first) first.textContent = hero.firstName || 'SHAHIL';
+  if (last) { last.textContent = hero.lastName || 'AHMED'; last.setAttribute('data-text', hero.lastName || 'AHMED'); }
+  const loc = document.getElementById('hero-location');
+  if (loc) loc.textContent = hero.location || '';
+  if (hero.stats) {
+    hero.stats.forEach((s, i) => {
+      const v = document.getElementById(`stat-${i+1}-value`);
+      const l = document.getElementById(`stat-${i+1}-label`);
+      if (v) v.textContent = s.value;
+      if (l) l.textContent = s.label;
     });
-
-    // Cursor interaction
-    const interactiveElements = document.querySelectorAll('a, button, .project-card, .exp-item, .skill-category, .contact-card');
-    interactiveElements.forEach(el => {
-        el.addEventListener('mouseenter', () => cursor.classList.add('active'));
-        el.addEventListener('mouseleave', () => cursor.classList.remove('active'));
-    });
-
-    // Scroll progress bar
-    createScrollProgress();
-
-    // Load data
-    loadPortfolioData();
-
-    // Intersection Observer for animations
-    observeElements();
-
-    // Header hide on scroll down
-    handleHeaderScroll();
-});
-
-// Scroll progress bar
-function createScrollProgress() {
-    const progressBar = document.querySelector('.scroll-progress');
-
-    window.addEventListener('scroll', () => {
-        const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-        const scrolled = (window.scrollY / windowHeight) * 100;
-        progressBar.style.width = scrolled + '%';
-    });
+  }
 }
 
-// Header hide/show on scroll
-function handleHeaderScroll() {
-    let lastScroll = 0;
-    const header = document.querySelector('.header');
-
-    window.addEventListener('scroll', () => {
-        const currentScroll = window.pageYOffset;
-
-        if (currentScroll <= 0) {
-            header.classList.remove('hidden');
-            return;
-        }
-
-        if (currentScroll > lastScroll && currentScroll > 100) {
-            header.classList.add('hidden');
-        } else {
-            header.classList.remove('hidden');
-        }
-
-        lastScroll = currentScroll;
-    });
+function populateAbout(about) {
+  if (!about) return;
+  setText('about-intro', about.intro);
+  setText('about-para-1', about.paragraph1);
+  setText('about-para-2', about.paragraph2);
+  const edu = document.getElementById('education-content');
+  if (edu && about.education) {
+    edu.innerHTML = about.education.map(e =>
+      `<p>${e.degree}</p><span class="small">${e.institution} · ${e.years}</span>`
+    ).join('');
+  }
+  const certs = document.getElementById('certifications-content');
+  if (certs && about.certifications) {
+    certs.innerHTML = about.certifications.map(c =>
+      `<div class="cert-item">${c}</div>`
+    ).join('');
+  }
 }
 
-// Intersection Observer for scroll animations
-function observeElements() {
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -100px 0px'
-    };
+function populateExperience(experience) {
+  if (!experience) return;
+  const list = document.getElementById('experience-list');
+  if (!list) return;
+  list.innerHTML = experience.map((exp, i) => `
+    <div class="exp-item" style="transition-delay:${i * 0.15}s">
+      <div class="exp-meta">
+        <span class="exp-date">${exp.date}</span>
+      </div>
+      <div class="exp-company">${exp.company}</div>
+      <div class="exp-role">${exp.role}</div>
+      <ul class="exp-highlights">
+        ${exp.highlights.map(h => `<li>${h}</li>`).join('')}
+      </ul>
+    </div>
+  `).join('');
+}
 
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry, index) => {
-            if (entry.isIntersecting) {
-                setTimeout(() => {
-                    entry.target.classList.add('visible');
-                }, index * 100);
-            }
+function populateProjects(projects) {
+  if (!projects) return;
+  const grid = document.getElementById('projects-grid');
+  if (!grid) return;
+  grid.innerHTML = projects.map((p, i) => `
+    <div class="project-card" style="transition-delay:${(i % 3) * 0.1}s">
+      <div class="project-num">PROJECT_${String(i + 1).padStart(2, '0')}</div>
+      <div class="project-name">${p.name}</div>
+      <p class="project-desc">${p.description}</p>
+      <div class="project-tech">${p.tech.map(t => `<span class="tech-tag">${t}</span>`).join('')}</div>
+      <div class="project-footer">
+        <span class="project-stars">★ ${p.stars || 0}</span>
+        <a href="${p.link}" target="_blank" rel="noopener" class="project-link">VIEW <span>→</span></a>
+      </div>
+    </div>
+  `).join('');
+}
+
+function populateSkills(skills) {
+  if (!skills) return;
+  const grid = document.getElementById('skills-grid');
+  if (!grid) return;
+  grid.innerHTML = Object.entries(skills).map(([cat, list]) => `
+    <div class="skill-category">
+      <div class="skill-cat-header">
+        <span class="skill-cat-title">${cat}</span>
+        <span class="skill-cat-line"></span>
+      </div>
+      <ul class="skill-list">
+        ${list.map(s => `<li>${s}</li>`).join('')}
+      </ul>
+    </div>
+  `).join('');
+}
+
+function populateContact(contact) {
+  if (!contact) return;
+  const grid = document.getElementById('contact-grid');
+  if (!grid) return;
+  grid.innerHTML = contact.map(c => `
+    <a href="${c.link}" target="_blank" rel="noopener" class="contact-card">
+      <span class="contact-label">${c.label}</span>
+      <span class="contact-value">${c.value}</span>
+    </a>
+  `).join('');
+}
+
+function populateFooter(footer) {
+  if (!footer) return;
+  setText('footer-copyright', footer.copyright);
+  setText('footer-quote', footer.quote);
+}
+
+function setText(id, text) {
+  const el = document.getElementById(id);
+  if (el && text) el.textContent = text;
+}
+
+// ========================
+// Typewriter
+// ========================
+function initTypewriter(fullText) {
+  const el = document.getElementById('tagline-text');
+  if (!el || !fullText) return;
+  let i = 0;
+  let isDeleting = false;
+  let currentText = '';
+  const phrases = fullText.split(' / ');
+  let phraseIndex = 0;
+
+  function type() {
+    const phrase = phrases[phraseIndex] || phrases[0];
+    if (!isDeleting) {
+      currentText = phrase.slice(0, i + 1);
+      i++;
+      if (i > phrase.length) {
+        isDeleting = true;
+        setTimeout(type, 1800);
+        return;
+      }
+    } else {
+      currentText = phrase.slice(0, i - 1);
+      i--;
+      if (i === 0) {
+        isDeleting = false;
+        phraseIndex = (phraseIndex + 1) % phrases.length;
+      }
+    }
+    el.textContent = currentText;
+    setTimeout(type, isDeleting ? 50 : 80);
+  }
+  setTimeout(type, 1200);
+}
+
+// ========================
+// Matrix Rain Canvas
+// ========================
+(function initMatrix() {
+  const canvas = document.getElementById('matrix-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let cols, drops;
+  const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+  const fontSize = 14;
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    cols = Math.floor(canvas.width / fontSize);
+    drops = new Array(cols).fill(1);
+  }
+
+  function draw() {
+    ctx.fillStyle = 'rgba(3, 3, 3, 0.05)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#FF0000';
+    ctx.font = `${fontSize}px JetBrains Mono, monospace`;
+    for (let i = 0; i < drops.length; i++) {
+      const char = chars[Math.floor(Math.random() * chars.length)];
+      ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+      if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+      drops[i]++;
+    }
+  }
+
+  resize();
+  window.addEventListener('resize', resize);
+  setInterval(draw, 50);
+})();
+
+// ========================
+// Custom Cursor
+// ========================
+(function initCursor() {
+  const cursor = document.getElementById('cursor');
+  const follower = document.getElementById('cursor-follower');
+  if (!cursor || !follower) return;
+
+  let mx = 0, my = 0, fx = 0, fy = 0;
+
+  window.addEventListener('mousemove', e => {
+    mx = e.clientX;
+    my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+  });
+
+  function animateFollower() {
+    fx += (mx - fx) * 0.12;
+    fy += (my - fy) * 0.12;
+    follower.style.left = fx + 'px';
+    follower.style.top = fy + 'px';
+    requestAnimationFrame(animateFollower);
+  }
+  animateFollower();
+
+  document.querySelectorAll('a, button, .project-card, .contact-card, .info-card').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.classList.add('hover');
+      follower.classList.add('hover');
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.classList.remove('hover');
+      follower.classList.remove('hover');
+    });
+  });
+})();
+
+// ========================
+// Scroll Progress
+// ========================
+(function initScrollProgress() {
+  const bar = document.getElementById('scroll-progress');
+  if (!bar) return;
+  window.addEventListener('scroll', () => {
+    const max = document.body.scrollHeight - window.innerHeight;
+    const pct = (window.scrollY / max) * 100;
+    bar.style.width = pct + '%';
+  }, { passive: true });
+})();
+
+// ========================
+// Header Scroll Effect
+// ========================
+(function initHeader() {
+  const header = document.getElementById('header');
+  if (!header) return;
+  let lastY = 0;
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    if (y > 80) {
+      header.classList.add('scrolled');
+    } else {
+      header.classList.remove('scrolled');
+    }
+    lastY = y;
+  }, { passive: true });
+})();
+
+// ========================
+// Active Nav Link
+// ========================
+(function initActiveNav() {
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-link');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(link => {
+          link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
         });
-    }, observerOptions);
-
-    // Observe sections
-    document.querySelectorAll('.section').forEach(section => {
-        observer.observe(section);
+      }
     });
+  }, { threshold: 0.4 });
 
-    // Observe cards with delay
-    const cards = document.querySelectorAll('.exp-item, .project-card, .skill-category');
-    cards.forEach((card, index) => {
-        card.style.transitionDelay = `${index * 0.1}s`;
-        observer.observe(card);
+  sections.forEach(s => observer.observe(s));
+})();
+
+// ========================
+// Reveal on Scroll
+// ========================
+(function initReveal() {
+  const revealEls = document.querySelectorAll('.reveal, .exp-item, .project-card, .skill-category');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
     });
-}
+  }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
 
-// Load and render data
-async function loadPortfolioData() {
-    try {
-        const response = await fetch('data.json');
-        if (!response.ok) {
-            throw new Error('Failed to load data.json');
-        }
-        const data = await response.json();
-        renderData(data);
-    } catch (error) {
-        console.error('Error loading data:', error);
-        showFallbackMessage();
-    }
-}
+  revealEls.forEach(el => observer.observe(el));
 
-function showFallbackMessage() {
-    const fallbackStyle = 'color: var(--gray); padding: 2rem; text-align: center;';
-    document.getElementById('experience-list').innerHTML = `<p style="${fallbackStyle}">Loading experience data...</p>`;
-    document.getElementById('projects-grid').innerHTML = `<p style="${fallbackStyle}">Loading projects data...</p>`;
-    document.getElementById('skills-grid').innerHTML = `<p style="${fallbackStyle}">Loading skills data...</p>`;
-}
-
-function renderData(data) {
-    // Render Hero
-    if (data.hero) {
-        if (data.hero.logo) {
-            document.getElementById('header-logo').textContent = data.hero.logo;
-        }
-        if (data.hero.firstName) {
-            document.getElementById('hero-name-first').textContent = data.hero.firstName;
-        }
-        if (data.hero.lastName) {
-            document.getElementById('hero-name-last').textContent = data.hero.lastName;
-        }
-        if (data.hero.subtitle) {
-            document.getElementById('hero-role').textContent = data.hero.subtitle.toUpperCase();
-        }
-        if (data.hero.location) {
-            document.getElementById('hero-location').textContent = data.hero.location;
-        }
-        if (data.hero.videoUrl) {
-            const video = document.getElementById('hero-video');
-            video.src = data.hero.videoUrl;
-        }
-        if (data.hero.stats && data.hero.stats.length > 0) {
-            data.hero.stats.forEach((stat, index) => {
-                const valueEl = document.getElementById(`stat-${index + 1}-value`);
-                const labelEl = document.getElementById(`stat-${index + 1}-label`);
-                if (valueEl) valueEl.textContent = stat.value;
-                if (labelEl) labelEl.textContent = stat.label;
-            });
-        }
-    }
-
-    // Render About
-    if (data.about) {
-        if (data.about.intro) {
-            document.getElementById('about-intro').textContent = data.about.intro;
-        }
-        if (data.about.paragraph1) {
-            document.getElementById('about-para-1').textContent = data.about.paragraph1;
-        }
-        if (data.about.paragraph2) {
-            document.getElementById('about-para-2').textContent = data.about.paragraph2;
-        }
-        
-        // Education
-        if (data.about.education && data.about.education.length > 0) {
-            const eduContent = document.getElementById('education-content');
-            eduContent.innerHTML = data.about.education.map(edu => `
-                <p>${edu.degree}</p>
-                <p class="small">${edu.institution} • ${edu.years}</p>
-            `).join('');
-        }
-        
-        // Certifications
-        if (data.about.certifications && data.about.certifications.length > 0) {
-            const certContent = document.getElementById('certifications-content');
-            certContent.innerHTML = data.about.certifications.map(cert => `<p>${cert}</p>`).join('');
-        }
-    }
-
-    // Render Experience
-    if (data.experience && data.experience.length > 0) {
-        const expList = document.getElementById('experience-list');
-        expList.innerHTML = data.experience.map(exp => `
-            <div class="exp-item">
-                <div class="exp-header">
-                    <div>
-                        <div class="exp-role">${exp.role}</div>
-                        <div class="exp-company">${exp.company}</div>
-                    </div>
-                    <div class="exp-date">${exp.date}</div>
-                </div>
-                <ul class="exp-highlights">
-                    ${exp.highlights.map(highlight => `<li>${highlight}</li>`).join('')}
-                </ul>
-            </div>
-        `).join('');
-        
-        // Re-observe new elements
-        setTimeout(() => {
-            document.querySelectorAll('.exp-item').forEach(item => {
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add('visible');
-                        }
-                    });
-                }, { threshold: 0.1 });
-                observer.observe(item);
-            });
-        }, 100);
-    }
-
-    // Render Projects
-    if (data.projects && data.projects.length > 0) {
-        const projectsGrid = document.getElementById('projects-grid');
-        projectsGrid.innerHTML = data.projects.map(project => `
-            <div class="project-card">
-                <div class="project-header">
-                    <h3 class="project-name">${project.name}</h3>
-                    ${project.stars !== undefined ? `<span class="project-stars">★ ${project.stars}</span>` : ''}
-                </div>
-                <p class="project-desc">${project.description}</p>
-                <div class="project-tech">
-                    ${project.tech.map(tech => `<span class="tech-tag">${tech}</span>`).join('')}
-                </div>
-                <a href="${project.link}" target="_blank" rel="noopener" class="project-link">View Project</a>
-            </div>
-        `).join('');
-        
-        // Re-observe new elements
-        setTimeout(() => {
-            document.querySelectorAll('.project-card').forEach(card => {
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add('visible');
-                        }
-                    });
-                }, { threshold: 0.1 });
-                observer.observe(card);
-            });
-        }, 100);
-    }
-
-    // Render Skills
-    if (data.skills && Object.keys(data.skills).length > 0) {
-        const skillsGrid = document.getElementById('skills-grid');
-        skillsGrid.innerHTML = Object.entries(data.skills).map(([category, skills]) => `
-            <div class="skill-category">
-                <h3>${category}</h3>
-                <ul class="skill-list">
-                    ${skills.map(skill => `<li>${skill}</li>`).join('')}
-                </ul>
-            </div>
-        `).join('');
-        
-        // Re-observe new elements
-        setTimeout(() => {
-            document.querySelectorAll('.skill-category').forEach(cat => {
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add('visible');
-                        }
-                    });
-                }, { threshold: 0.1 });
-                observer.observe(cat);
-            });
-        }, 100);
-    }
-
-    // Render Contact
-    if (data.contact && data.contact.length > 0) {
-        const contactGrid = document.getElementById('contact-grid');
-        contactGrid.innerHTML = data.contact.map(contact => `
-            <a href="${contact.link}" target="_blank" rel="noopener" class="contact-card">
-                <span class="contact-label">${contact.label}</span>
-                <span class="contact-value">${contact.value}</span>
-            </a>
-        `).join('');
-    }
-
-    // Render Footer
-    if (data.footer) {
-        if (data.footer.copyright) {
-            document.getElementById('footer-copyright').textContent = data.footer.copyright;
-        }
-        if (data.footer.quote) {
-            document.getElementById('footer-quote').textContent = data.footer.quote;
-        }
-    }
-
-    // Add cursor interaction to newly created elements
-    const interactiveElements = document.querySelectorAll('.project-card, .exp-item, .skill-category, .contact-card');
-    const cursor = document.querySelector('.cursor-dot');
-    interactiveElements.forEach(el => {
-        el.addEventListener('mouseenter', () => cursor.classList.add('active'));
-        el.addEventListener('mouseleave', () => cursor.classList.remove('active'));
+  // Also observe dynamically added elements
+  const mo = new MutationObserver(() => {
+    document.querySelectorAll('.reveal:not(.visible), .exp-item:not(.visible), .project-card:not(.visible), .skill-category:not(.visible)').forEach(el => {
+      observer.observe(el);
     });
-}
+  });
+  mo.observe(document.body, { childList: true, subtree: true });
+})();
 
-// Smooth scroll
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            const headerOffset = 80;
-            const elementPosition = target.getBoundingClientRect().top;
-            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+// ========================
+// Mobile Menu
+// ========================
+(function initMobileMenu() {
+  const toggle = document.getElementById('menu-toggle');
+  const menu = document.getElementById('mobile-menu');
+  const links = document.querySelectorAll('.mobile-nav-link');
 
-            window.scrollTo({
-                top: offsetPosition,
-                behavior: 'smooth'
-            });
-        }
+  if (!toggle || !menu) return;
+
+  toggle.addEventListener('click', () => {
+    toggle.classList.toggle('open');
+    menu.classList.toggle('open');
+    document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
+  });
+
+  links.forEach(link => {
+    link.addEventListener('click', () => {
+      toggle.classList.remove('open');
+      menu.classList.remove('open');
+      document.body.style.overflow = '';
     });
-});
-
-// Active nav link on scroll
-let sections = [];
-let navLinks = [];
-
-window.addEventListener('load', () => {
-    sections = document.querySelectorAll('.section[id]');
-    navLinks = document.querySelectorAll('.nav a[href^="#"]');
-});
-
-window.addEventListener('scroll', () => {
-    let current = '';
-    
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
-        if (pageYOffset >= (sectionTop - 200)) {
-            current = section.getAttribute('id');
-        }
-    });
-
-    navLinks.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href') === `#${current}`) {
-            link.classList.add('active');
-        }
-    });
-});
+  });
+})();

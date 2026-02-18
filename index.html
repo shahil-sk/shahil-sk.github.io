@@ -3,84 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>shahil ahmed</title>
+    <title>Shahil Ahmed — Offensive Security</title>
     <meta name="description" content="Offensive security professional specializing in penetration testing and vulnerability research">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <!-- Scroll Progress -->
-    <div class="scroll-progress"></div>
-    
-    <!-- Cursor Follower -->
-    <div class="cursor-dot"></div>
-    
+    <div class="scroll-progress" id="scroll-progress"></div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-follower" id="cursor-follower"></div>
+
+    <!-- Matrix Rain Canvas -->
+    <canvas id="matrix-canvas"></canvas>
+
+    <!-- Scanlines Overlay -->
+    <div class="scanlines"></div>
+
     <!-- Header -->
-    <header class="header">
-        <div class="header-content">
-            <a href="#" class="logo" id="header-logo">SK</a>
-            <nav class="nav">
-                <a href="#about">ABOUT</a>
-                <a href="#work">WORK</a>
-                <a href="#projects">PROJECTS</a>
-                <a href="#contact">CONTACT</a>
+    <header class="header" id="header">
+        <div class="header-inner">
+            <a href="#" class="logo" id="logo-link">
+                <span class="logo-bracket">[</span>
+                <span class="logo-text">SK</span>
+                <span class="logo-bracket">]</span>
+            </a>
+            <nav class="nav" id="nav">
+                <a href="#about" class="nav-link" data-text="ABOUT">ABOUT</a>
+                <a href="#work" class="nav-link" data-text="WORK">WORK</a>
+                <a href="#projects" class="nav-link" data-text="PROJECTS">PROJECTS</a>
+                <a href="#skills" class="nav-link" data-text="SKILLS">SKILLS</a>
+                <a href="#contact" class="nav-link" data-text="CONTACT">CONTACT</a>
             </nav>
+            <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
         </div>
     </header>
 
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobile-menu">
+        <nav class="mobile-nav">
+            <a href="#about" class="mobile-nav-link">ABOUT</a>
+            <a href="#work" class="mobile-nav-link">WORK</a>
+            <a href="#projects" class="mobile-nav-link">PROJECTS</a>
+            <a href="#skills" class="mobile-nav-link">SKILLS</a>
+            <a href="#contact" class="mobile-nav-link">CONTACT</a>
+        </nav>
+    </div>
+
     <!-- Hero -->
-    <section class="hero">
-        <div class="hero-video-container">
-            <video class="hero-video" autoplay muted loop playsinline id="hero-video">
-                <source src="hero-video.mp4" type="video/mp4">
-            </video>
-            <div class="hero-video-overlay"></div>
+    <section class="hero" id="hero">
+        <div class="hero-inner">
+            <div class="hero-eyebrow">
+                <span class="terminal-prompt">~/portfolio$</span>
+                <span class="terminal-cursor">_</span>
+            </div>
+            <h1 class="hero-name">
+                <span class="hero-name-line" id="hero-name-first">SHAHIL</span>
+                <span class="hero-name-line glitch" id="hero-name-last" data-text="AHMED">AHMED</span>
+            </h1>
+            <div class="hero-tagline">
+                <span class="tagline-prefix">// </span>
+                <span class="tagline-text" id="tagline-text"></span>
+                <span class="tagline-cursor">|</span>
+            </div>
+            <p class="hero-location">
+                <span class="status-dot"></span>
+                <span id="hero-location">Mangaluru, Karnataka — Available for Projects</span>
+            </p>
+            <div class="hero-cta">
+                <a href="#projects" class="btn-primary">
+                    <span class="btn-text">VIEW WORK</span>
+                    <span class="btn-arrow">→</span>
+                </a>
+                <a href="#contact" class="btn-secondary">GET IN TOUCH</a>
+            </div>
         </div>
-        <div class="hero-wrapper">
-            <div class="hero-text">
-                <h1 class="hero-name">
-                    <span id="hero-name-first">SHAHIL</span>
-                    <span id="hero-name-last">AHMED</span>
-                </h1>
-                <p class="hero-role" id="hero-role">OFFENSIVE SECURITY PROFESSIONAL</p>
-                <p class="hero-location" id="hero-location">Mangaluru, Karnataka • Available for Projects</p>
+        <div class="hero-stats">
+            <div class="stat-item" style="--i:0">
+                <span class="stat-val" id="stat-1-value">50+</span>
+                <span class="stat-lbl" id="stat-1-label">HTB Machines</span>
             </div>
-            <div class="hero-stats">
-                <div class="stat-box">
-                    <span class="stat-value" id="stat-1-value">50+</span>
-                    <span class="stat-label" id="stat-1-label">HTB Machines</span>
-                </div>
-                <div class="stat-box">
-                    <span class="stat-value" id="stat-2-value">10+</span>
-                    <span class="stat-label" id="stat-2-label">Apps Tested</span>
-                </div>
-                <div class="stat-box">
-                    <span class="stat-value" id="stat-3-value">1+</span>
-                    <span class="stat-label" id="stat-3-label">Years VAPT</span>
-                </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item" style="--i:1">
+                <span class="stat-val" id="stat-2-value">10+</span>
+                <span class="stat-lbl" id="stat-2-label">Apps Tested</span>
             </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item" style="--i:2">
+                <span class="stat-val" id="stat-3-value">1+</span>
+                <span class="stat-lbl" id="stat-3-label">Years VAPT</span>
+            </div>
+        </div>
+        <div class="hero-scroll-hint">
+            <span>SCROLL</span>
+            <div class="scroll-line"></div>
         </div>
     </section>
 
     <!-- About -->
-    <section id="about" class="section about">
-        <div class="section-wrapper">
-            <div class="section-header">
-                <span class="section-number">001</span>
-                <h2 class="section-title">ABOUT</h2>
+    <section id="about" class="section">
+        <div class="section-inner">
+            <div class="section-label reveal">
+                <span class="label-num">001</span>
+                <span class="label-line"></span>
+                <span class="label-text">ABOUT</span>
             </div>
-            <div class="about-content">
-                <div class="about-main">
-                    <p class="large-text" id="about-intro"></p>
-                    <p id="about-para-1"></p>
-                    <p id="about-para-2"></p>
+            <div class="about-grid">
+                <div class="about-main reveal">
+                    <p class="about-intro" id="about-intro"></p>
+                    <p class="about-body" id="about-para-1"></p>
+                    <p class="about-body" id="about-para-2"></p>
                 </div>
                 <div class="about-side">
-                    <div class="info-block">
-                        <h3>EDUCATION</h3>
+                    <div class="info-card reveal" style="--d:0.1s">
+                        <div class="info-card-header">
+                            <span class="info-card-icon">🎓</span>
+                            <h3>EDUCATION</h3>
+                        </div>
                         <div id="education-content"></div>
                     </div>
-                    <div class="info-block">
-                        <h3>CERTIFICATIONS</h3>
+                    <div class="info-card reveal" style="--d:0.2s">
+                        <div class="info-card-header">
+                            <span class="info-card-icon">🏆</span>
+                            <h3>CERTIFICATIONS</h3>
+                        </div>
                         <div id="certifications-content"></div>
                     </div>
                 </div>
@@ -89,62 +141,62 @@
     </section>
 
     <!-- Experience -->
-    <section id="work" class="section experience">
-        <div class="section-wrapper">
-            <div class="section-header">
-                <span class="section-number">002</span>
-                <h2 class="section-title">EXPERIENCE</h2>
+    <section id="work" class="section">
+        <div class="section-inner">
+            <div class="section-label reveal">
+                <span class="label-num">002</span>
+                <span class="label-line"></span>
+                <span class="label-text">EXPERIENCE</span>
             </div>
-            <div class="experience-list" id="experience-list">
-                <!-- Loaded from data.json -->
-            </div>
+            <div class="timeline" id="experience-list"></div>
         </div>
     </section>
 
     <!-- Projects -->
-    <section id="projects" class="section projects">
-        <div class="section-wrapper">
-            <div class="section-header">
-                <span class="section-number">003</span>
-                <h2 class="section-title">PROJECTS</h2>
+    <section id="projects" class="section">
+        <div class="section-inner">
+            <div class="section-label reveal">
+                <span class="label-num">003</span>
+                <span class="label-line"></span>
+                <span class="label-text">PROJECTS</span>
             </div>
-            <div class="projects-grid" id="projects-grid">
-                <!-- Loaded from data.json -->
-            </div>
+            <div class="projects-grid" id="projects-grid"></div>
         </div>
     </section>
 
     <!-- Skills -->
-    <section class="section skills">
-        <div class="section-wrapper">
-            <div class="section-header">
-                <span class="section-number">004</span>
-                <h2 class="section-title">SKILLS</h2>
+    <section id="skills" class="section">
+        <div class="section-inner">
+            <div class="section-label reveal">
+                <span class="label-num">004</span>
+                <span class="label-line"></span>
+                <span class="label-text">SKILLS</span>
             </div>
-            <div class="skills-grid" id="skills-grid">
-                <!-- Loaded from data.json -->
-            </div>
+            <div class="skills-grid" id="skills-grid"></div>
         </div>
     </section>
 
     <!-- Contact -->
-    <section id="contact" class="section contact">
-        <div class="section-wrapper">
-            <div class="section-header">
-                <span class="section-number">005</span>
-                <h2 class="section-title">CONTACT</h2>
+    <section id="contact" class="section">
+        <div class="section-inner">
+            <div class="section-label reveal">
+                <span class="label-num">005</span>
+                <span class="label-line"></span>
+                <span class="label-text">CONTACT</span>
             </div>
-            <div class="contact-grid" id="contact-grid">
-                <!-- Loaded from data.json -->
+            <div class="contact-cta reveal">
+                <h2 class="contact-heading">LET'S WORK<br><em>TOGETHER</em></h2>
+                <p class="contact-sub">Open to penetration testing contracts, red team engagements, and security consulting.</p>
             </div>
+            <div class="contact-links" id="contact-grid"></div>
         </div>
     </section>
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="footer-content">
+        <div class="footer-inner">
             <p id="footer-copyright">© 2026 SHAHIL AHMED</p>
-            <p id="footer-quote">"I don't know why i like 1's and 0's"</p>
+            <p class="footer-quote" id="footer-quote">"I don't know why i like 1's and 0's"</p>
         </div>
     </footer>
 
