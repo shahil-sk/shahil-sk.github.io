@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — SK Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <div class="admin-shell">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">[SK] <span>ADMIN</span></div>
+      <nav class="sidebar-nav">
+        <button class="nav-btn active" data-tab="hero">HERO</button>
+        <button class="nav-btn" data-tab="about">ABOUT</button>
+        <button class="nav-btn" data-tab="experience">EXPERIENCE</button>
+        <button class="nav-btn" data-tab="projects">PROJECTS</button>
+        <button class="nav-btn" data-tab="skills">SKILLS</button>
+        <button class="nav-btn" data-tab="contact">CONTACT</button>
+        <button class="nav-btn" data-tab="footer">FOOTER</button>
+        <div class="nav-divider"></div>
+        <button class="nav-btn nav-blog" data-tab="blog">BLOG EDITOR</button>
+      </nav>
+      <div class="sidebar-actions">
+        <button class="btn-generate" onclick="generateJSON()">GENERATE JSON</button>
+        <button class="btn-push" onclick="pushToGitHub()">PUSH TO GITHUB</button>
+        <div class="gh-token-row">
+          <input type="password" id="gh-token" placeholder="GitHub PAT token" />
+          <button class="btn-save-token" onclick="saveToken()">SAVE</button>
+        </div>
+        <div id="push-status" class="push-status"></div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+      <!-- HERO -->
+      <div class="tab-content active" id="tab-hero">
+        <h2 class="section-heading">HERO SECTION</h2>
+        <div class="form-grid">
+          <div class="field"><label>Logo Text</label><input id="hero-logo" type="text"></div>
+          <div class="field"><label>First Name</label><input id="hero-firstname" type="text"></div>
+          <div class="field"><label>Last Name</label><input id="hero-lastname" type="text"></div>
+          <div class="field full"><label>Subtitle / Role (separate with " / ")</label><input id="hero-subtitle" type="text"></div>
+          <div class="field full"><label>Location</label><input id="hero-location" type="text"></div>
+          <div class="field full"><label>Video URL / Filename</label><input id="hero-video" type="text"></div>
+        </div>
+        <div class="sub-section">
+          <div class="sub-header">
+            <h3>HERO STATS</h3>
+            <button class="btn-add" onclick="addStat()">+ ADD STAT</button>
+          </div>
+          <div id="stats-list" class="card-list"></div>
+        </div>
+      </div>
+
+      <!-- ABOUT -->
+      <div class="tab-content" id="tab-about">
+        <h2 class="section-heading">ABOUT SECTION</h2>
+        <div class="form-grid">
+          <div class="field full"><label>Intro (large text)</label><textarea id="about-intro" rows="3"></textarea></div>
+          <div class="field full"><label>Paragraph 1</label><textarea id="about-para1" rows="3"></textarea></div>
+          <div class="field full"><label>Paragraph 2</label><textarea id="about-para2" rows="3"></textarea></div>
+        </div>
+        <div class="sub-section">
+          <div class="sub-header"><h3>EDUCATION</h3><button class="btn-add" onclick="addEducation()">+ ADD</button></div>
+          <div id="education-list" class="card-list"></div>
+        </div>
+        <div class="sub-section">
+          <div class="sub-header"><h3>CERTIFICATIONS</h3><button class="btn-add" onclick="addCert()">+ ADD</button></div>
+          <div id="cert-list" class="card-list"></div>
+        </div>
+      </div>
+
+      <!-- EXPERIENCE -->
+      <div class="tab-content" id="tab-experience">
+        <h2 class="section-heading">EXPERIENCE</h2>
+        <div class="sub-header"><span class="hint">Drag to reorder</span><button class="btn-add" onclick="addExperience()">+ ADD</button></div>
+        <div id="experience-list" class="card-list"></div>
+      </div>
+
+      <!-- PROJECTS -->
+      <div class="tab-content" id="tab-projects">
+        <h2 class="section-heading">PROJECTS</h2>
+        <div class="sub-header"><span class="hint">Drag to reorder</span><button class="btn-add" onclick="addProject()">+ ADD PROJECT</button></div>
+        <div id="projects-list" class="card-list"></div>
+      </div>
+
+      <!-- SKILLS -->
+      <div class="tab-content" id="tab-skills">
+        <h2 class="section-heading">SKILLS</h2>
+        <div class="sub-header"><span class="hint">Drag to reorder</span><button class="btn-add" onclick="addSkillCategory()">+ ADD CATEGORY</button></div>
+        <div id="skills-list" class="card-list"></div>
+      </div>
+
+      <!-- CONTACT -->
+      <div class="tab-content" id="tab-contact">
+        <h2 class="section-heading">CONTACT</h2>
+        <div class="sub-header"><button class="btn-add" onclick="addContact()">+ ADD</button></div>
+        <div id="contact-list" class="card-list"></div>
+      </div>
+
+      <!-- FOOTER -->
+      <div class="tab-content" id="tab-footer">
+        <h2 class="section-heading">FOOTER</h2>
+        <div class="form-grid">
+          <div class="field full"><label>Copyright</label><input id="footer-copyright" type="text"></div>
+          <div class="field full"><label>Quote</label><input id="footer-quote" type="text"></div>
+        </div>
+      </div>
+
+      <!-- BLOG EDITOR -->
+      <div class="tab-content" id="tab-blog">
+        <h2 class="section-heading">BLOG EDITOR</h2>
+
+        <div class="blog-editor-layout">
+          <!-- Left: post list -->
+          <div class="blog-post-list" id="blog-post-list">
+            <div class="blog-list-header">
+              <span>POSTS</span>
+              <button class="btn-add" onclick="newPost()">+ NEW</button>
+            </div>
+            <div id="post-entries"><div class="hint">Loading posts...</div></div>
+          </div>
+
+          <!-- Right: editor -->
+          <div class="blog-editor-panel" id="blog-editor-panel">
+            <div class="editor-toolbar">
+              <div class="editor-meta-row">
+                <div class="field"><label>TITLE</label><input id="post-title" type="text" placeholder="Post title"></div>
+                <div class="field"><label>SLUG</label><input id="post-slug" type="text" placeholder="post-slug-here"></div>
+                <div class="field"><label>DATE</label><input id="post-date" type="date"></div>
+                <div class="field"><label>TAGS (comma separated)</label><input id="post-tags" type="text" placeholder="android, pentesting"></div>
+                <div class="field full"><label>EXCERPT (shown on blog listing)</label><input id="post-excerpt" type="text" placeholder="One sentence summary"></div>
+              </div>
+              <div class="md-toolbar">
+                <button onclick="mdWrap('**','**')" title="Bold"><b>B</b></button>
+                <button onclick="mdWrap('*','*')" title="Italic"><i>I</i></button>
+                <button onclick="mdWrap('`','`')" title="Inline code">&#96;code&#96;</button>
+                <button onclick="mdBlock('```\n','\n```')" title="Code block">```</button>
+                <button onclick="mdHeading(2)" title="H2">H2</button>
+                <button onclick="mdHeading(3)" title="H3">H3</button>
+                <button onclick="mdWrap('**','**', true)" title="Link">LINK</button>
+                <button onclick="insertImageHelper()" title="Image">IMG</button>
+                <button onclick="mdLine('> ')" title="Blockquote">&gt;</button>
+                <button onclick="mdLine('- ')" title="List item">LIST</button>
+                <button onclick="insertHr()" title="Divider">HR</button>
+              </div>
+            </div>
+            <div class="editor-split">
+              <textarea id="post-body" class="md-editor" placeholder="Write your post in Markdown here...\n\nImages: use ![alt text](filename.png)\nThe image file goes in posts/images/ folder on GitHub."></textarea>
+              <div class="md-preview" id="md-preview"></div>
+            </div>
+            <div class="editor-footer">
+              <div class="editor-info" id="editor-info">0 words</div>
+              <div class="editor-btns">
+                <button class="btn-discard" onclick="discardPost()">DISCARD</button>
+                <button class="btn-save-post" onclick="savePostLocal()">SAVE LOCALLY</button>
+                <button class="btn-publish" onclick="publishPost()">PUBLISH TO GITHUB</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- JSON Preview Modal -->
+  <div class="modal-overlay" id="modal" onclick="closeModal(event)">
+    <div class="modal">
+      <div class="modal-header">
+        <span>data.json PREVIEW</span>
+        <div>
+          <button class="btn-copy" onclick="copyJSON()">COPY</button>
+          <button class="btn-download" onclick="downloadJSON()">DOWNLOAD</button>
+          <button class="btn-push-modal" onclick="pushDataJSON()">PUSH TO GITHUB</button>
+          <button class="btn-close" onclick="document.getElementById('modal').style.display='none'">X</button>
+        </div>
+      </div>
+      <pre id="json-output"></pre>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
