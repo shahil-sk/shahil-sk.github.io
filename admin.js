@@ -11,10 +11,10 @@ let data = {
   footer:     { copyright:'© 2026 SHAHIL AHMED', quote:'"I don\'t know why i like 1\'s and 0\'s"' }
 };
 
-let posts       = [];    // posts/index.json array
-let currentPost = null;  // post currently open in editor
-let ghToken     = '';
-let previewTimer = null; // debounce handle
+let posts        = [];    // posts/index.json array
+let currentPost  = null;  // post currently open in editor
+let ghToken      = '';
+let previewTimer = null;  // debounce handle
 
 // ============================================================
 // INIT
@@ -34,8 +34,7 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Blog editor: live preview (debounced) + word count
-  // NOTE: autoSlug is NOT called here — it's only triggered by the title field
+  // Live preview — debounced, body only
   const bodyEl = document.getElementById('post-body');
   if (bodyEl) {
     bodyEl.addEventListener('input', () => {
@@ -45,11 +44,11 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Slug auto-generation from title only
+  // Slug auto-gen from title only
   const titleEl = document.getElementById('post-title');
   if (titleEl) titleEl.addEventListener('input', autoSlug);
 
-  // Mark slug as manually edited once user types in it
+  // Mark slug as manually edited
   const slugEl = document.getElementById('post-slug');
   if (slugEl) slugEl.addEventListener('input', function() { this.dataset.auto = 'false'; });
 
@@ -131,9 +130,9 @@ function renderStats() {
       </div>
     </div>`).join('');
 }
-function addStat()       { data.hero.stats.push({value:'',label:''}); renderStats(); }
-function removeStat(i)   { data.hero.stats.splice(i,1); renderStats(); }
-function collectStats()  {
+function addStat()      { data.hero.stats.push({value:'',label:''}); renderStats(); }
+function removeStat(i)  { data.hero.stats.splice(i,1); renderStats(); }
+function collectStats() {
   document.querySelectorAll('#stats-list .card').forEach((card,i) => {
     const ins = card.querySelectorAll('input');
     if (data.hero.stats[i]) { data.hero.stats[i].value=ins[0].value; data.hero.stats[i].label=ins[1].value; }
@@ -158,7 +157,8 @@ function collectAbout() {
 function renderEducation() {
   document.getElementById('education-list').innerHTML = (data.about.education||[]).map((e,i)=>`
     <div class="card">
-      <div class="card-header"><span class="card-title">${esc(e.institution)||'New'}</span><button class="btn-remove" onclick="removeEdu(${i})">REMOVE</button></div>
+      <div class="card-header"><span class="card-title">${esc(e.institution)||'New'}</span>
+        <button class="btn-remove" onclick="removeEdu(${i})">REMOVE</button></div>
       <div class="form-grid">
         <div class="field full"><label>DEGREE</label><input value="${esc(e.degree)}" onchange="data.about.education[${i}].degree=this.value"></div>
         <div class="field"><label>INSTITUTION</label><input value="${esc(e.institution)}" onchange="data.about.education[${i}].institution=this.value"></div>
@@ -166,24 +166,29 @@ function renderEducation() {
       </div>
     </div>`).join('');
 }
-function addEducation()  { data.about.education.push({degree:'',institution:'',years:''}); renderEducation(); }
-function removeEdu(i)    { data.about.education.splice(i,1); renderEducation(); }
+function addEducation() { data.about.education.push({degree:'',institution:'',years:''}); renderEducation(); }
+function removeEdu(i)   { data.about.education.splice(i,1); renderEducation(); }
 function collectEducation() {
   document.querySelectorAll('#education-list .card').forEach((card,i) => {
     const ins = card.querySelectorAll('input');
-    if (data.about.education[i]) { data.about.education[i].degree=ins[0].value; data.about.education[i].institution=ins[1].value; data.about.education[i].years=ins[2].value; }
+    if (data.about.education[i]) {
+      data.about.education[i].degree=ins[0].value;
+      data.about.education[i].institution=ins[1].value;
+      data.about.education[i].years=ins[2].value;
+    }
   });
 }
 function renderCerts() {
   document.getElementById('cert-list').innerHTML = (data.about.certifications||[]).map((c,i)=>`
     <div class="card">
-      <div class="card-header"><span class="card-title">${esc(c)||'New'}</span><button class="btn-remove" onclick="removeCert(${i})">REMOVE</button></div>
+      <div class="card-header"><span class="card-title">${esc(c)||'New'}</span>
+        <button class="btn-remove" onclick="removeCert(${i})">REMOVE</button></div>
       <div class="field"><label>CERTIFICATION</label><input value="${esc(c)}" onchange="data.about.certifications[${i}]=this.value"></div>
     </div>`).join('');
 }
-function addCert()       { data.about.certifications.push(''); renderCerts(); }
-function removeCert(i)   { data.about.certifications.splice(i,1); renderCerts(); }
-function collectCerts()  {
+function addCert()     { data.about.certifications.push(''); renderCerts(); }
+function removeCert(i) { data.about.certifications.splice(i,1); renderCerts(); }
+function collectCerts() {
   document.querySelectorAll('#cert-list .card').forEach((card,i) => {
     const inp = card.querySelector('input');
     if (data.about.certifications[i] !== undefined) data.about.certifications[i] = inp.value;
@@ -218,10 +223,10 @@ function renderExperience() {
     </div>`).join('');
   initDrag('experience-list','experience');
 }
-function addExperience()        { data.experience.unshift({company:'',role:'',date:'',highlights:[]}); renderExperience(); }
-function removeExp(i)           { data.experience.splice(i,1); renderExperience(); }
-function addHighlight(i)        { data.experience[i].highlights.push(''); renderExperience(); }
-function removeHighlight(i,j)   { data.experience[i].highlights.splice(j,1); renderExperience(); }
+function addExperience()      { data.experience.unshift({company:'',role:'',date:'',highlights:[]}); renderExperience(); }
+function removeExp(i)         { data.experience.splice(i,1); renderExperience(); }
+function addHighlight(i)      { data.experience[i].highlights.push(''); renderExperience(); }
+function removeHighlight(i,j) { data.experience[i].highlights.splice(j,1); renderExperience(); }
 function collectExperience() {
   document.querySelectorAll('#experience-list .card').forEach((card,i) => {
     const ins = card.querySelectorAll('.form-grid input');
@@ -257,8 +262,8 @@ function renderProjects() {
     </div>`).join('');
   initDrag('projects-list','projects');
 }
-function addProject()       { data.projects.unshift({name:'',description:'',tech:[],stars:0,link:''}); renderProjects(); }
-function removeProject(i)   { data.projects.splice(i,1); renderProjects(); }
+function addProject()     { data.projects.unshift({name:'',description:'',tech:[],stars:0,link:''}); renderProjects(); }
+function removeProject(i) { data.projects.splice(i,1); renderProjects(); }
 
 // ============================================================
 // SKILLS
@@ -281,14 +286,14 @@ function renderSkills() {
 }
 function addSkillCategory()       { data.skills['NEW CATEGORY'] = []; renderSkills(); }
 function removeSkillCat(cat)      { delete data.skills[cat]; renderSkills(); }
-function updateSkillList(cat,val) { if (data.skills[cat]) data.skills[cat] = val.split('\n').map(s=>s.trim()).filter(Boolean); }
+function updateSkillList(cat,val) { if (data.skills[cat] !== undefined) data.skills[cat] = val.split('\n').map(s=>s.trim()).filter(Boolean); }
 function renameSkillCat(oldName, newName) {
   if (oldName === newName || !newName.trim()) return;
   const keys = Object.keys(data.skills);
   const vals = Object.values(data.skills);
-  const newSkills = {};
-  keys.forEach((k,i) => { newSkills[k === oldName ? newName : k] = vals[i]; });
-  data.skills = newSkills;
+  const ns   = {};
+  keys.forEach((k,i) => { ns[k === oldName ? newName : k] = vals[i]; });
+  data.skills = ns;
   renderSkills();
 }
 
@@ -298,7 +303,8 @@ function renameSkillCat(oldName, newName) {
 function renderContact() {
   document.getElementById('contact-list').innerHTML = (data.contact||[]).map((c,i)=>`
     <div class="card">
-      <div class="card-header"><span class="card-title">${esc(c.label)||'New'}</span><button class="btn-remove" onclick="removeContact(${i})">REMOVE</button></div>
+      <div class="card-header"><span class="card-title">${esc(c.label)||'New'}</span>
+        <button class="btn-remove" onclick="removeContact(${i})">REMOVE</button></div>
       <div class="form-grid">
         <div class="field"><label>LABEL</label><input value="${esc(c.label)}" onchange="data.contact[${i}].label=this.value"></div>
         <div class="field"><label>VALUE</label><input value="${esc(c.value)}" onchange="data.contact[${i}].value=this.value"></div>
@@ -306,8 +312,8 @@ function renderContact() {
       </div>
     </div>`).join('');
 }
-function addContact()       { data.contact.push({label:'',value:'',link:''}); renderContact(); }
-function removeContact(i)   { data.contact.splice(i,1); renderContact(); }
+function addContact()     { data.contact.push({label:'',value:'',link:''}); renderContact(); }
+function removeContact(i) { data.contact.splice(i,1); renderContact(); }
 
 // ============================================================
 // FOOTER
@@ -357,9 +363,7 @@ function copyJSON() {
 }
 function downloadJSON() {
   collectAll();
-  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
-  const a = Object.assign(document.createElement('a'), {href:URL.createObjectURL(blob), download:'data.json'});
-  a.click();
+  dlFile('data.json', JSON.stringify(data, null, 2), 'application/json');
 }
 
 // ============================================================
@@ -425,6 +429,54 @@ function setStatus(msg, type) {
 }
 
 // ============================================================
+// REBUILD INDEX FROM REPO
+// Scans posts/ folder on GitHub, reads each .md frontmatter,
+// rebuilds posts/index.json and pushes it.
+// ============================================================
+async function rebuildIndex() {
+  const token = ghToken || localStorage.getItem('sk_gh_token');
+  if (!token) { setStatus('No token for rebuild.', 'err'); return; }
+  setStatus('Scanning posts/ folder…', '');
+  try {
+    // List all files in posts/ directory
+    const dir = await ghAPI('contents/posts?ref=' + BRANCH, 'GET');
+    const mdFiles = dir.filter(f => f.type === 'file' && f.name.endsWith('.md'));
+
+    setStatus(`Reading ${mdFiles.length} post(s)…`, '');
+
+    const entries = [];
+    for (const file of mdFiles) {
+      const slug = file.name.replace(/\.md$/, '');
+      try {
+        // Fetch file content (base64 encoded)
+        const res  = await ghAPI('contents/posts/' + file.name + '?ref=' + BRANCH, 'GET');
+        const raw  = decodeURIComponent(escape(atob(res.content.replace(/\n/g,''))));
+        const { frontmatter } = parseMdFrontmatter(raw);
+        entries.push({
+          slug,
+          title:   frontmatter.title   || slug,
+          date:    frontmatter.date    || '',
+          excerpt: frontmatter.excerpt || '',
+          tags:    frontmatter.tags    || []
+        });
+      } catch(e) {
+        console.warn('Could not read', file.name, e);
+      }
+    }
+
+    // Sort newest first by date
+    entries.sort((a,b) => (b.date > a.date ? 1 : b.date < a.date ? -1 : 0));
+
+    await pushFile('posts/index.json', JSON.stringify(entries, null, 2), 'chore: rebuild blog index from md files');
+    posts = entries;
+    renderPostList();
+    setStatus('Index rebuilt: ' + entries.length + ' posts.', 'ok');
+  } catch(e) {
+    setStatus('Rebuild failed: ' + e.message, 'err');
+  }
+}
+
+// ============================================================
 // DRAG & DROP
 // ============================================================
 let _dragFrom = -1;
@@ -446,8 +498,8 @@ function initDrag(listId, type) {
       card.classList.remove('drag-over');
       const toIdx = parseInt(card.dataset.index);
       if (_dragFrom < 0 || _dragFrom === toIdx) return;
-      if (type === 'experience') reorderArr(data.experience, _dragFrom, toIdx, renderExperience);
-      else if (type === 'projects') reorderArr(data.projects, _dragFrom, toIdx, renderProjects);
+      if      (type === 'experience') reorderArr(data.experience, _dragFrom, toIdx, renderExperience);
+      else if (type === 'projects')   reorderArr(data.projects,   _dragFrom, toIdx, renderProjects);
       else if (type === 'skills') {
         const keys = Object.keys(data.skills);
         const vals = Object.values(data.skills);
@@ -508,7 +560,6 @@ function loadDraft(key) {
     document.getElementById('post-date').value    = d.date    || '';
     document.getElementById('post-tags').value    = (d.tags||[]).join(', ');
     document.getElementById('post-excerpt').value = d.excerpt || '';
-    // Strip frontmatter if present
     const body = (d.fullMd || '').replace(/^---[\s\S]*?---\n?/, '');
     document.getElementById('post-body').value = body;
     renderPreview();
@@ -534,8 +585,7 @@ function openPost(index) {
   document.getElementById('post-date').value    = post.date  || '';
   document.getElementById('post-tags').value    = (post.tags||[]).join(', ');
   document.getElementById('post-excerpt').value = post.excerpt || '';
-
-  fetch(`posts/${post.slug}.md?` + Date.now())
+  fetch('posts/' + post.slug + '.md?' + Date.now())
     .then(r => r.ok ? r.text() : '')
     .then(md => {
       document.getElementById('post-body').value = md.replace(/^---[\s\S]*?---\n?/, '');
@@ -561,8 +611,8 @@ function newPost() {
 }
 
 function discardPost() {
-  if (currentPost?._isNew)                newPost();
-  else if (currentPost?._index != null)   openPost(currentPost._index);
+  if (currentPost?._isNew)              newPost();
+  else if (currentPost?._index != null) openPost(currentPost._index);
 }
 
 // ============================================================
@@ -571,28 +621,56 @@ function discardPost() {
 function autoSlug() {
   const slugEl = document.getElementById('post-slug');
   if (!slugEl || slugEl.dataset.auto === 'false') return;
-  const title = document.getElementById('post-title').value;
-  slugEl.value = title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  slugEl.value = document.getElementById('post-title').value
+    .toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
 }
 
 function renderPreview() {
-  const md = document.getElementById('post-body')?.value || '';
+  const md      = document.getElementById('post-body')?.value || '';
   const preview = document.getElementById('md-preview');
   if (!preview) return;
-  if (typeof marked !== 'undefined') {
-    preview.innerHTML = marked.parse(md);
-  }
+  if (typeof marked !== 'undefined') preview.innerHTML = marked.parse(md);
 }
 
 function updateWordCount() {
-  const words = (document.getElementById('post-body')?.value || '').trim().split(/\s+/).filter(Boolean).length;
+  const words = (document.getElementById('post-body')?.value||'').trim().split(/\s+/).filter(Boolean).length;
   const mins  = Math.max(1, Math.round(words / 200));
   const el    = document.getElementById('editor-info');
-  if (el) el.textContent = `${words} words  ·  ~${mins} min read`;
+  if (el) el.textContent = words + ' words  ·  ~' + mins + ' min read';
 }
 
 // ============================================================
-// BLOG EDITOR — SAVE / PUBLISH
+// BLOG EDITOR — SAVE LOCALLY (downloads files to your machine)
+// ============================================================
+function savePostLocal() {
+  const slug = document.getElementById('post-slug').value.trim();
+  if (!slug) { blogToast('Enter a slug first.', 'err'); return; }
+
+  const { title, date, tags, excerpt, fullMd } = buildPostData();
+
+  // 1. Download the .md file — browser saves it, you move it into posts/
+  dlFile(slug + '.md', fullMd, 'text/markdown');
+
+  // 2. Update in-memory posts index and download updated index.json too
+  const entry = { slug, title, date, excerpt, tags };
+  const idx   = posts.findIndex(p => p.slug === slug);
+  if (idx >= 0) posts[idx] = entry;
+  else          posts.unshift(entry);
+
+  // Small delay so browser doesn’t block two simultaneous downloads
+  setTimeout(() => dlFile('index.json', JSON.stringify(posts, null, 2), 'application/json'), 400);
+
+  // Also persist as localStorage draft so you can reload it
+  try {
+    localStorage.setItem('draft_' + slug, JSON.stringify(buildPostData()));
+    renderDraftList();
+  } catch(e) {}
+
+  blogToast('Downloaded: ' + slug + '.md + index.json', 'ok');
+}
+
+// ============================================================
+// BLOG EDITOR — PUBLISH TO GITHUB
 // ============================================================
 function buildPostData() {
   const title   = document.getElementById('post-title').value.trim();
@@ -601,21 +679,9 @@ function buildPostData() {
   const tags    = document.getElementById('post-tags').value.split(',').map(t=>t.trim()).filter(Boolean);
   const excerpt = document.getElementById('post-excerpt').value.trim();
   const body    = document.getElementById('post-body').value;
-  const fm = `---\ntitle: ${title}\ndate: ${date}\nauthor: Shahil Ahmed\ntags:\n${tags.map(t=>'  - '+t).join('\n')}\n---\n\n`;
+  const fm      = '---\ntitle: ' + title + '\ndate: ' + date + '\nauthor: Shahil Ahmed\ntags:\n' +
+                  tags.map(t => '  - ' + t).join('\n') + '\n---\n\n';
   return { title, slug, date, tags, excerpt, fullMd: fm + body };
-}
-
-function savePostLocal() {
-  const slug = document.getElementById('post-slug').value.trim();
-  if (!slug) { blogToast('Enter a slug first.', 'err'); return; }
-  const draft = buildPostData();
-  try {
-    localStorage.setItem('draft_' + slug, JSON.stringify(draft));
-    renderDraftList();
-    blogToast('Draft saved: draft_' + slug, 'ok');
-  } catch(e) {
-    blogToast('Save failed: ' + e.message, 'err');
-  }
 }
 
 async function publishPost() {
@@ -627,20 +693,22 @@ async function publishPost() {
 
   blogToast('Publishing…', '');
   try {
-    await pushFile(`posts/${slug}.md`, fullMd, `post: ${currentPost?._isNew?'add':'update'} "${title}"`);
+    // Push .md file
+    await pushFile('posts/' + slug + '.md', fullMd,
+      'post: ' + (currentPost?._isNew ? 'add' : 'update') + ' "' + title + '"');
 
+    // Update index
     const entry = { slug, title, date, excerpt, tags };
     const idx   = posts.findIndex(p => p.slug === slug);
     if (idx >= 0) posts[idx] = entry;
-    else posts.unshift(entry);
+    else          posts.unshift(entry);
 
-    await pushFile('posts/index.json', JSON.stringify(posts, null, 2), `chore: update blog index for "${title}"`);
+    await pushFile('posts/index.json', JSON.stringify(posts, null, 2),
+      'chore: update blog index for "' + title + '"');
 
-    // Remove draft if one existed
     localStorage.removeItem('draft_' + slug);
     renderDraftList();
     renderPostList();
-
     blogToast('Published: ' + slug, 'ok');
     currentPost = { ...currentPost, _isNew: false, slug };
   } catch(e) {
@@ -649,7 +717,7 @@ async function publishPost() {
 }
 
 // ============================================================
-// BLOG TOAST (visible inside the editor panel)
+// BLOG TOAST
 // ============================================================
 let _toastTimer = null;
 function blogToast(msg, type) {
@@ -663,7 +731,7 @@ function blogToast(msg, type) {
   el.textContent = msg;
   el.className   = 'blog-toast ' + type + ' show';
   clearTimeout(_toastTimer);
-  _toastTimer = setTimeout(() => el.classList.remove('show'), 3000);
+  _toastTimer = setTimeout(() => el.classList.remove('show'), 3500);
 }
 
 // ============================================================
@@ -672,13 +740,13 @@ function blogToast(msg, type) {
 function mdWrap(before, after) {
   const ta = document.getElementById('post-body');
   const s  = ta.selectionStart, e = ta.selectionEnd;
-  ta.setRangeText(before + (ta.value.slice(s,e) || 'text') + after, s, e, 'select');
+  ta.setRangeText(before + (ta.value.slice(s,e)||'text') + after, s, e, 'select');
   ta.focus(); clearTimeout(previewTimer); previewTimer = setTimeout(renderPreview, 300);
 }
 function mdBlock(before, after) {
   const ta = document.getElementById('post-body');
   const s  = ta.selectionStart, e = ta.selectionEnd;
-  ta.setRangeText(before + (ta.value.slice(s,e) || 'code here') + after, s, e, 'end');
+  ta.setRangeText(before + (ta.value.slice(s,e)||'code here') + after, s, e, 'end');
   ta.focus(); clearTimeout(previewTimer); previewTimer = setTimeout(renderPreview, 300);
 }
 function mdHeading(level) {
@@ -705,21 +773,52 @@ function insertImageHelper() {
   const filename = prompt('Image filename (e.g. screenshot.png)\nUpload the file to posts/images/ on GitHub.');
   if (!filename) return;
   const alt = prompt('Alt text / caption:') || '';
-  mdLine(`![${alt}](${filename})`);
+  mdLine('![' + alt + '](' + filename + ')');
 }
 
 // ============================================================
 // UTILS
 // ============================================================
-function v(id, val) {
-  const el = document.getElementById(id);
-  if (el) el.value = val || '';
-}
-function g(id) {
-  const el = document.getElementById(id);
-  return el ? el.value.trim() : '';
-}
-// Escape HTML special chars for safe injection into innerHTML attributes
+function v(id, val) { const el = document.getElementById(id); if (el) el.value = val||''; }
+function g(id)      { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
 function esc(str) {
   return String(str||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// Generic file download helper
+function dlFile(filename, content, mime) {
+  const blob = new Blob([content], { type: mime });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+// Frontmatter parser used by rebuildIndex (CRLF-safe)
+function parseMdFrontmatter(raw) {
+  const text = raw.replace(/\r\n/g,'\n').replace(/\r/g,'\n').trim();
+  if (!text.startsWith('---')) return { frontmatter:{}, body:text };
+  const closeIdx = text.indexOf('\n---', 3);
+  if (closeIdx === -1) return { frontmatter:{}, body:text };
+  const fmBlock = text.slice(3, closeIdx).trim();
+  const body    = text.slice(closeIdx + 4).replace(/^\n+/, '');
+  const fm      = {};
+  let curKey    = null;
+  const tagLines = [];
+  fmBlock.split('\n').forEach(line => {
+    if (curKey === 'tags' && /^\s+-\s+/.test(line)) {
+      tagLines.push(line.replace(/^\s+-\s+/,'').trim());
+      return;
+    }
+    const kv = line.match(/^([\w-]+):\s*(.*)$/);
+    if (kv) { curKey = kv[1]; fm[kv[1]] = kv[2].trim(); }
+  });
+  if (tagLines.length) fm.tags = tagLines;
+  else if (fm.tags)    fm.tags = fm.tags.split(',').map(t=>t.trim()).filter(Boolean);
+  else                 fm.tags = [];
+  return { frontmatter: fm, body };
 }
