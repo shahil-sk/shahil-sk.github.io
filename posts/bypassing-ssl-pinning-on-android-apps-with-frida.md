@@ -1,4 +1,5 @@
 ---
+
 title: Bypassing SSL Pinning on Android Apps with Frida
 date: 2026-02-15
 author: Shahil Ahmed
