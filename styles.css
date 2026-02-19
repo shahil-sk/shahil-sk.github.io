@@ -403,9 +403,9 @@ body {
     display: flex; align-items: center; gap: 1.5rem;
     margin-bottom: 4.5rem;
 }
-.label-num { font-family: var(--mono); font-size: 1.7rem; color: var(--red); letter-spacing: 0.1em; }
+.label-num { font-family: var(--mono); font-size: 1.0rem; color: var(--red); letter-spacing: 0.1em; }
 .label-line { flex: 1; max-width: 80px; height: 1px; background: var(--border); }
-.label-text { font-family: var(--mono); font-size: 2.50rem; font-weight: 700; color: var(--text-muted); letter-spacing: 0.2em; }
+.label-text { font-family: var(--mono); font-size: 1.5rem; font-weight: 700; color: var(--text-muted); letter-spacing: 0.2em; }
 
 /* Reveal */
 .reveal {
