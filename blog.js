@@ -56,7 +56,8 @@
             title:   frontmatter.title   || slug,
             date:    frontmatter.date    || '',
             excerpt: frontmatter.excerpt || '',
-            tags:    frontmatter.tags    || []
+            tags:    frontmatter.tags    || [],
+            url:     `posts/${slug}.html` // Construct static URL manually
           };
         })
       );
@@ -118,15 +119,19 @@
       return;
     }
 
-    grid.innerHTML = filtered.map((post, i) => `
-      <a href=\"blog-post.html?post=${post.slug}\" class=\"blog-card\" style=\"transition-delay:${(i % 3) * 0.08}s\">
+    grid.innerHTML = filtered.map((post, i) => {
+        // Fallback to legacy URL if 'url' prop is missing
+        const postUrl = post.url || `blog-post.html?post=${post.slug}`;
+        
+        return `
+      <a href=\"${postUrl}\" class=\"blog-card\" style=\"transition-delay:${(i % 3) * 0.08}s\">
         <span class=\"blog-card-date\">${post.date}</span>
         <span class=\"blog-card-title\">${htmlEsc(post.title)}</span>
         <span class=\"blog-card-excerpt\">${htmlEsc(post.excerpt)}</span>
         <div class=\"blog-card-tags\">${(post.tags || []).map(t => `<span class=\"blog-tag\">${htmlEsc(t)}</span>`).join('')}</div>
         <span class=\"blog-card-arrow\">READ →</span>
       </a>
-    `).join('');
+    `}).join('');
     
     // Trigger animations
     setTimeout(() => {

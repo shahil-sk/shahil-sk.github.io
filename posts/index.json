@@ -3,54 +3,59 @@
     "slug": "bypassing-ssl-pinning-on-android-apps-with-frida",
     "title": "Bypassing SSL Pinning on Android Apps with Frida",
     "date": "2026-02-15",
-    "excerpt": "",
+    "excerpt": "## Overview\n\nSSL pinning is a technique used by mobile apps to prevent MITM attacks by hardcoding the server certificate (or its public key hash) insi...",
     "tags": [
       "android",
       "frida",
       "pentesting"
-    ]
+    ],
+    "readTime": "2 min read"
   },
   {
     "slug": "how-to-root-genymotion-emulator-and-set-up-burpsuite-for-https-interception",
     "title": "How to Root Genymotion Emulator and Set Up BurpSuite for HTTPS Interception",
     "date": "2025-06-19",
-    "excerpt": "",
+    "excerpt": "## **Step 1: Create a Virtual Device**\n\n1. Open **Genymotion** and create a new virtual device.\n2. Select **Android** Version.\n\t *( In this blog i'm g...",
     "tags": [
       "Android",
       "Burpsuite"
-    ]
+    ],
+    "readTime": "2 min read"
   },
   {
     "slug": "android-emulator-detection-bypass",
     "title": "Android emulator detection bypass",
     "date": "2025-06-04",
-    "excerpt": "",
+    "excerpt": "# Emulator Bypass\n## The Application that I'm using is [AndroGoat](https://github.com/satishpatnayak/MyTest/tree/master)\n\nOne of the best techniques t...",
     "tags": [
       "Android",
       "Frida",
       "Pentesting"
-    ]
+    ],
+    "readTime": "2 min read"
   },
   {
     "slug": "root-detection-and-ssl-pinning-bypass-using-objection-and-frida",
     "title": "Root detection and SSL-pinning bypass using Objection And Frida",
     "date": "2024-12-05",
-    "excerpt": "",
+    "excerpt": "# Objection\n\n> [!IMPORTANT]\n> 1) Make sure adb is installed.\n> 2) Use a quality USB cable.\n> 3) Install frida\n### The Application that I'm using today...",
     "tags": [
       "Android",
       "Frida",
       "Pentesting"
-    ]
+    ],
+    "readTime": "2 min read"
   },
   {
     "slug": "setup-android-emulator-for-burpsuite-frida",
     "title": "Setup Android emulator for Burpsuite & frida.",
     "date": "2024-11-27",
-    "excerpt": "",
+    "excerpt": "## Emulator setup\n\n> [!IMPORTANT]\n> Download & Install Android Studio from [here](https://developer.android.com/studio)\n\n- Create a Virtual Device in ...",
     "tags": [
       "Android",
       "Frida",
       "Burpsuite"
-    ]
+    ],
+    "readTime": "2 min read"
   }
 ]
