@@ -107,15 +107,19 @@ async function populateBlogPreview() {
     if (!res.ok) throw new Error();
     const posts = await res.json();
     const latest = posts.slice(0, 4);
-    grid.innerHTML = latest.map((post, i) => `
-      <a href="blog-post.html?post=${post.slug}" class="blog-card" style="transition-delay:${i * 0.08}s">
+    grid.innerHTML = latest.map((post, i) => {
+        // Use static URL from index.json, or construct it
+        const postUrl = post.url || `posts/${post.slug}.html`;
+        
+        return `
+      <a href="${postUrl}" class="blog-card" style="transition-delay:${i * 0.08}s">
         <span class="blog-card-date">${post.date}</span>
         <span class="blog-card-title">${post.title}</span>
         <span class="blog-card-excerpt">${post.excerpt || ''}</span>
         <div class="blog-card-tags">${(post.tags||[]).map(t=>`<span class="blog-tag">${t}</span>`).join('')}</div>
         <span class="blog-card-arrow">READ →</span>
       </a>
-    `).join('');
+    `}).join('');
     grid.querySelectorAll('.blog-card').forEach(el => revealObserver.observe(el));
   } catch(e) {
     grid.innerHTML = '<div style="padding:2rem;color:var(--text-muted);font-family:var(--mono);font-size:.875rem">No posts yet.</div>';
@@ -306,5 +310,3 @@ new MutationObserver(() => {
     document.body.style.overflow = '';
   }));
 })();
-
-
