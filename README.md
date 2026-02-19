@@ -4,7 +4,7 @@ This repository hosts my personal portfolio and technical blog, accessible at [s
 
 It is a **static website** built with HTML, CSS, and Vanilla JavaScript, featuring a custom **Python-based Static Site Generator (SSG)** that converts Markdown content into SEO-friendly HTML pages.
 
-## 🚀 Key Features
+##  Key Features
 
 *   **Custom SSG**: A lightweight Python script (`scripts/manage_posts.py`) compiles Markdown to static HTML.
 *   **SEO Optimized**: Blog posts are pre-rendered as real HTML files with proper meta tags, ensuring search engine indexing.
@@ -12,15 +12,15 @@ It is a **static website** built with HTML, CSS, and Vanilla JavaScript, featuri
 *   **Zero-Dependency Runtime**: The live site uses only vanilla JavaScript—no React, Vue, or heavy frameworks.
 *   **Automated Deployment**: GitHub Actions handles the build and publishing process automatically.
 
-## 📂 Project Structure
+##  Project Structure
 
-*   `content/posts/` 📝 **Source Code**: Write your Markdown files here.
-*   `content/posts/images/` 🖼️ **Source Images**: Place blog images here.
-*   `posts/` ⚙️ **Generated Output**: The build script outputs the final HTML files here. **Do not edit these manually.**
-*   `scripts/manage_posts.py` 🛠️ **The Builder**: The Python script that handles the conversion.
-*   `.github/workflows/` 🤖 **Automation**: CI/CD configuration.
+*   `content/posts/`  **Source Code**: Write your Markdown files here.
+*   `content/posts/images/`  **Source Images**: Place blog images here.
+*   `posts/`  **Generated Output**: The build script outputs the final HTML files here. **Do not edit these manually.**
+*   `scripts/manage_posts.py`  **The Builder**: The Python script that handles the conversion.
+*   `.github/workflows/`  **Automation**: CI/CD configuration.
 
-## ✍️ How to Write a New Blog Post
+##  How to Write a New Blog Post
 
 The workflow is simple: **Write in Markdown -> Push -> Live.**
 
@@ -65,7 +65,7 @@ The **GitHub Action** will automatically:
 3.  Update the `index.json` and `sitemap.xml`.
 4.  Publish the changes live.
 
-## 🛠️ Local Development (Optional)
+##  Local Development (Optional)
 
 If you want to preview changes or generate the site locally before pushing:
 
@@ -83,12 +83,12 @@ If you want to preview changes or generate the site locally before pushing:
 3.  **Preview**:
     Open `index.html` in your browser.
 
-## 🎨 Customization
+##  Customization
 
 *   **Blog Template**: Edit `blog-post.html` to change the layout of all generated blog pages.
 *   **Styles**: `styles.css` (global) and `post.css` (blog-specific).
 *   **Logic**: `script.js` handles the portfolio interactions, while the blog pages are static HTML.
 
-## 📜 License
+##  License
 
 © 2026 Shahil Ahmed. All rights reserved.
