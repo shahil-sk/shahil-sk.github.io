@@ -1,10 +1,11 @@
-name: Build Blog Index
+name: Build Blog
 
 on:
   push:
     paths:
       - 'posts/*.md'
       - 'scripts/manage_posts.py'
+      - 'blog-post.html'
   workflow_dispatch:
 
 permissions:
@@ -22,7 +23,11 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: Build Index
+      - name: Install dependencies
+        run: |
+          pip install markdown
+
+      - name: Build Static Site
         run: |
           python scripts/manage_posts.py build
 
@@ -30,11 +35,11 @@ jobs:
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add posts/index.json
+          git add posts/*.html posts/index.json sitemap.xml
           # Check if there are changes to commit
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "chore: update blog index [skip ci]"
+            git commit -m "chore: generate static blog pages [skip ci]"
             git push
           fi
