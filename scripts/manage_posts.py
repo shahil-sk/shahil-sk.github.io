@@ -112,6 +112,24 @@ def build_index_and_static_pages():
             # Prepare template replacements
             page_html = template
             
+            # FIX: Adjust relative paths for CSS/JS since file is in /posts/
+            # Replace href="styles.css" with href="../styles.css"
+            # We match common asset patterns to prepend ../
+            page_html = page_html.replace('href="styles.css"', 'href="../styles.css"')
+            page_html = page_html.replace('href="post.css"', 'href="../post.css"')
+            page_html = page_html.replace('src="script.js"', 'src="../script.js"')
+            # Note: post.js is removed entirely below, but if referenced:
+            page_html = page_html.replace('src="post.js"', 'src="../post.js"')
+            # Fix navigation links
+            page_html = page_html.replace('href="index.html"', 'href="../index.html"')
+            page_html = page_html.replace('href="blog.html"', 'href="../blog.html"')
+            page_html = page_html.replace('href="blog-post.html"', 'href="../blog-post.html"')
+            # Fix logo link
+            page_html = page_html.replace('href="/"', 'href="../index.html"')
+            # Fix anchor links
+            page_html = page_html.replace('href="/#', 'href="../index.html#')
+
+            
             # Title
             title = fm.get('title', 'Untitled')
             page_html = page_html.replace('<title>Post — Shahil Ahmed</title>', f'<title>{title} — Shahil Ahmed</title>')
@@ -129,9 +147,11 @@ def build_index_and_static_pages():
             page_html = page_html.replace('<div class="post-reading-time" id="post-reading-time"></div>', f'<div class="post-reading-time" id="post-reading-time">{read_time_str}</div>')
             
             # Body
-            # Also remove the script that loads the MD dynamically to prevent double rendering
+            # Remove dynamic loader script
+            page_html = page_html.replace('<script src="post.js"></script>', '')
+            # Inject content
             page_html = page_html.replace('<article class="post-body" id="post-body"></article>', f'<article class="post-body" id="post-body">{html_content}</article>')
-            page_html = page_html.replace('<script src="post.js"></script>', '') # Remove dynamic loader
+            
             
             # SEO Meta tags
             meta_desc = fm.get('excerpt', body[:150].replace('\n', ' '))
