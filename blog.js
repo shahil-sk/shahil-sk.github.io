@@ -51,13 +51,14 @@
           const text   = await r.text();
           const slug   = file.name.replace(/\.md$/, '');
           const { frontmatter } = parseFrontmatter(text);
+          // Fallback to JS viewer if static page doesn't exist
           return {
             slug,
             title:   frontmatter.title   || slug,
             date:    frontmatter.date    || '',
             excerpt: frontmatter.excerpt || '',
             tags:    frontmatter.tags    || [],
-            url:     `posts/${slug}.html` // Construct static URL manually
+            url:     `posts/${slug}.html`
           };
         })
       );
@@ -120,8 +121,10 @@
     }
 
     grid.innerHTML = filtered.map((post, i) => {
-        // Fallback to legacy URL if 'url' prop is missing
-        const postUrl = post.url || `blog-post.html?post=${post.slug}`;
+        // PREFER STATIC HTML: If post.url is set (from index.json), use it.
+        // If not (API fallback), construct standard static path.
+        // We avoid blog-post.html?post=slug entirely now.
+        const postUrl = post.url || `posts/${post.slug}.html`;
         
         return `
       <a href=\"${postUrl}\" class=\"blog-card\" style=\"transition-delay:${(i % 3) * 0.08}s\">
