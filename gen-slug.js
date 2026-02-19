@@ -15,8 +15,8 @@
 const fs   = require('fs');
 const path = require('path');
 
-const POSTS_DIR    = path.join(__dirname, 'posts');
-const INDEX_FILE   = path.join(POSTS_DIR, 'index.json');
+const POSTS_DIR    = path.join(__dirname, 'content/posts');
+const INDEX_FILE   = path.join('posts/index.json');
 const APPLY        = process.argv.includes('--apply');
 const CLEAN_TITLE  = process.argv.includes('--clean-title');
 
