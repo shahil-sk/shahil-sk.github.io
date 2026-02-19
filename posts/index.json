@@ -5,9 +5,9 @@
     "date": "2026-02-15",
     "excerpt": "## Overview\n\nSSL pinning is a technique used by mobile apps to prevent MITM attacks by hardcoding the server certificate (or its public key hash) insi...",
     "tags": [
-      "android",
-      "frida",
-      "pentesting"
+      "Android",
+      "Frida",
+      "Pentesting"
     ],
     "readTime": "2 min read",
     "url": "posts/bypassing-ssl-pinning-on-android-apps-with-frida.html"
