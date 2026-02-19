@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setup pf-sense in VM & Configure — Shahil Ahmed</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../post.css">
+
+    <meta name="description" content="Before creating the pfSense VM, set up a custom internal network bridge for LAN traffic and link it to your main `virbr0`.​  1. Create the network def">
+    <meta property="og:title" content="Setup pf-sense in VM & Configure">
+    <meta property="og:description" content="Before creating the pfSense VM, set up a custom internal network bridge for LAN traffic and link it to your main `virbr0`.​  1. Create the network def">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://shahil-sk.github.io/posts/setup-pf-sense-in-vm-configure.html">
+            
+</head>
+<body>
+    <div class="scroll-progress" id="scroll-progress"></div>
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-follower" id="cursor-follower"></div>
+    <div class="scanlines"></div>
+
+    <header class="header scrolled" id="header">
+        <div class="header-inner">
+            <a href="../index.html" class="logo">
+                <span class="logo-bracket">[</span>
+                <span class="logo-text">SK</span>
+                <span class="logo-bracket">]</span>
+            </a>
+            <nav class="nav">
+                <a href="../index.html#about" class="nav-link">ABOUT</a>
+                <a href="../index.html#work" class="nav-link">WORK</a>
+                <a href="../index.html#projects" class="nav-link">PROJECTS</a>
+                <a href="../blog.html" class="nav-link active">BLOG</a>
+                <a href="../index.html#contact" class="nav-link">CONTACT</a>
+            </nav>
+            <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+
+    <div class="mobile-menu" id="mobile-menu">
+        <nav class="mobile-nav">
+            <a href="../index.html#about" class="mobile-nav-link">ABOUT</a>
+            <a href="../index.html#work" class="mobile-nav-link">WORK</a>
+            <a href="../index.html#projects" class="mobile-nav-link">PROJECTS</a>
+            <a href="../blog.html" class="mobile-nav-link">BLOG</a>
+            <a href="../index.html#contact" class="mobile-nav-link">CONTACT</a>
+        </nav>
+    </div>
+
+    <main class="post-main">
+        <div class="post-inner">
+            <!-- Back -->
+            <a href="../blog.html" class="post-back">← BACK TO BLOG</a>
+
+            <!-- Meta -->
+            <div class="post-meta" id="post-meta">2025-12-11</div>
+
+            <!-- Title -->
+            <h1 class="post-title" id="post-title">Setup pf-sense in VM & Configure</h1>
+
+            <!-- Tags -->
+            <div class="post-tags" id="post-tags"><span class="blog-tag">Setup</span><span class="blog-tag">Pfsense</span><span class="blog-tag">Firewall</span><span class="blog-tag">VM</span></div>
+
+            <!-- Reading time -->
+            <div class="post-reading-time" id="post-reading-time">4 min read</div>
+
+            <!-- Article body -->
+            <article class="post-body" id="post-body"><p>Before creating the pfSense VM, set up a custom internal network bridge for LAN traffic and link it to your main <code>virbr0</code>.​</p>
+<ol>
+<li>
+<p>Create the network definition file:</p>
+<p>bash
+<code>sudo nano /etc/libvirt/qemu/networks/pfsense.xml</code></p>
+</li>
+<li>
+<p>Use a definition similar to:</p>
+<p>bash
+<code>sudo virsh net-define /dev/stdin &lt;&lt;EOF &lt;network&gt;   &lt;name&gt;pfsense-lan&lt;/name&gt;  &lt;forward mode='none'/&gt;  &lt;bridge name='pfsense-lan' stp='on' delay='0'/&gt; &lt;/network&gt; EOF</code></p>
+</li>
+<li>
+<p>Enable and autostart the network:</p>
+<p>bash
+<code>sudo virsh net-start pfsense-lan sudo virsh net-autostart pfsense-lan</code></p>
+</li>
+</ol>
+<hr />
+<h2>2. Create and install the pfSense VM</h2>
+<p>Create the VM with two network interfaces: one for WAN (to the internet) and one for LAN (internal VMs).​</p>
+<ol>
+<li>
+<p>In virt-manager, create a new VM and choose “Generic Linux 2024” as the OS type, then tick “Customize before installation”.​</p>
+</li>
+<li>
+<p>Add two NICs:</p>
+<ul>
+<li>
+<p>WAN: attach to your external network (e.g. <code>default</code> / <code>virbr0</code>).</p>
+</li>
+<li>
+<p>LAN: attach to the <code>pfsense-lan</code> network created earlier via “Add Hardware → Network”.​</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Start the installation and accept the default pfSense installation settings
+![[pfsense-ip-setup.png]]</p>
+</li>
+</ol>
+<hr />
+<h2>3. Basic pfSense configuration</h2>
+<p>After installation, perform initial setup and make sure management access and DNS work.​</p>
+<ol>
+<li>
+<p>From the pfSense console menu, select option <code>14</code> to enable SSH if you want remote shell access.​</p>
+</li>
+<li>
+<p>Access the Web UI using the LAN gateway IP shown on the console (for example <code>https://192.168.100.1</code>).​</p>
+</li>
+<li>
+<p>In the setup wizard, configure DNS:</p>
+<ul>
+<li>
+<p>Primary DNS: <code>1.1.1.1</code></p>
+</li>
+<li>
+<p>Secondary DNS: <code>9.9.9.9</code><br />
+    Then click through the wizard and change the admin password if desired.​
+![[pfsense-web.png]]</p>
+</li>
+</ul>
+</li>
+<li>
+<p>To see connected devices, go to:<br />
+<code>Status → DHCP Leases</code> and verify that your LAN VMs appear with hostname and IP.​</p>
+</li>
+<li>
+<p>If LAN VMs do not have internet access, add a LAN rule allowing HTTP/HTTPS outbound:</p>
+<ul>
+<li>
+<p>Go to <code>Firewall → Rules → LAN</code> and create a rule:</p>
+<ul>
+<li>
+<p>Action: Pass</p>
+</li>
+<li>
+<p>Interface: LAN</p>
+</li>
+<li>
+<p>Address Family: IPv4</p>
+</li>
+<li>
+<p>Protocol: TCP/UDP</p>
+</li>
+<li>
+<p>Source: LAN net or LAN address</p>
+</li>
+<li>
+<p>Destination: Any</p>
+</li>
+<li>
+<p>Destination ports: HTTP (80) and HTTPS (443) (using the port range fields).​</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<p>![[Pasted image 20251211084755.png]]</p>
+<hr />
+<h2>4. Blocking domains and countries (pfBlockerNG + DNS)</h2>
+<p>You can block specific domains via DNS overrides and block countries or IP ranges using pfBlockerNG with GeoIP.​</p>
+<ol>
+<li>
+<p><strong>Block a single domain via DNS Resolver</strong> (example: youtube.com):</p>
+<ul>
+<li>
+<p>Go to <code>Services → DNS Resolver</code>.</p>
+</li>
+<li>
+<p>Scroll down to “Domain Overrides” and add:</p>
+<ul>
+<li>
+<p>Domain: <code>youtube.com</code></p>
+</li>
+<li>
+<p>IP Address: <code>0.0.0.0</code></p>
+</li>
+<li>
+<p>Description: e.g. “block youtube”.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Save and apply settings. This causes lookups for that domain to resolve to <code>0.0.0.0</code>.​</p>
+</li>
+<li>![[Screenshot_20251127_181726.png]]</li>
+</ul>
+</li>
+<li>
+<p><strong>Install pfBlockerNG-devel</strong>:</p>
+<ul>
+<li>
+<p>Go to <code>System → Package Manager → Available Packages</code> and install <code>pfBlockerNG-devel</code>.​</p>
+</li>
+<li>
+<p>After installation, go to <code>Firewall → pfBlockerNG-devel</code>.​</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Configure GeoIP (MaxMind)</strong>:</p>
+<ul>
+<li>
+<p>Navigate to <code>Firewall → pfBlockerNG-devel → IP</code>, then scroll to the MaxMind configuration section.​</p>
+</li>
+<li>
+<p>Obtain a free MaxMind account ID and license key from the MaxMind website and enter them in the pfBlockerNG GeoIP settings.​</p>
+<p>![[Screenshot_20251211_092535.png]]</p>
+</li>
+<li>
+<p>Save changes and reboot the pfSense VM  so the GeoIP databases download.​</p>
+<p>![[Screenshot_20251211_082531.png]]</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Block traffic from/to specific countries (example: Russia)</strong>:</p>
+<ul>
+<li>
+<p>Open <code>Firewall → pfBlockerNG-devel → IP → GeoIP</code>.​
+    now open <a href="www.yandex.ru">www.yandex.ru</a> in new tab, which is russian website we'll try to block russian websites</p>
+<p>![[Pasted image 20251211085836.png]]</p>
+</li>
+<li>
+<p>In the country list (IPv4), hold <code>Ctrl</code> and select the countries you want to block, e.g. “Russia [RU]” and “Russia [RU_rep]”.​</p>
+</li>
+<li>
+<p>Set “List Action” to <strong>Deny Outbound</strong> so outbound connections to those countries are blocked.​</p>
+</li>
+<li>
+<p>Enable logging if desired and click <strong>Save</strong>.​</p>
+<p>![[Screenshot_20251211_085305.png]]</p>
+<p>![[Screenshot_20251211_085526.png]]</p>
+</li>
+<li>
+<p>Go to <code>Firewall → pfBlockerNG-devel → Update</code> and click <strong>Run</strong> to apply and build the rules.​</p>
+</li>
+<li>
+<p>After this, connections to sites hosted in those countries (e.g. <code>www.yandex.ru</code>) should fail.​</p>
+</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h2>5. Blocking YouTube with a firewall rule</h2>
+<p>In addition to DNS-based blocking, you can block specific IPs or networks with a firewall rule on the LAN interface.​</p>
+<ol>
+<li>
+<p>Go to <code>Firewall → Rules → LAN</code> and click <strong>Add</strong> (typically at the bottom).​</p>
+</li>
+<li>
+<p>Create a rule similar to:</p>
+<ul>
+<li>
+<p>Action: Block</p>
+</li>
+<li>
+<p>Interface: LAN</p>
+</li>
+<li>
+<p>Address Family: IPv4</p>
+</li>
+<li>
+<p>Protocol: TCP/UDP</p>
+</li>
+<li>
+<p>Source: LAN net or LAN address</p>
+</li>
+<li>
+<p>Destination: Single host or alias (for example, a specific YouTube IP like <code>74.125.130.91</code>, or better an alias containing YouTube IP ranges).</p>
+</li>
+<li>
+<p>Destination port range: From HTTP (80) to HTTPS (443).​</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Save and apply changes; traffic from LAN to that IP on ports 80/443 will now be blocked.​</p>
+<p>![[Screenshot_20251211_091333.png]]</p>
+</li>
+</ol>
+<p>next i'll be looking into vlans static ips.</p></article>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>© 2026 SHAHIL AHMED</p>
+            <p class="footer-quote">"I don't know why i like 1's and 0's"</p>
+        </div>
+    </footer>
+
+    <!-- marked.js for Markdown parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- highlight.js for code syntax -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/highlight.min.js"></script>
+    <script src="../script.js"></script>
+    
+</body>
+</html>

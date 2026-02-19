@@ -8,6 +8,7 @@ tags:
   - Android
   - Frida
   - Burpsuite
+  - Setup
 
 ---
 ## Emulator setup
