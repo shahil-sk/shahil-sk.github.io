@@ -9,6 +9,9 @@ import shutil
 BASE_DIR = os.getcwd()
 POSTS_OUTPUT_DIR = os.path.join(BASE_DIR, 'posts')      # Where HTML files go
 CONTENT_DIR = os.path.join(BASE_DIR, 'content', 'posts') # Where MD files live
+IMAGES_SRC_DIR = os.path.join(CONTENT_DIR, 'images')
+IMAGES_DST_DIR = os.path.join(POSTS_OUTPUT_DIR, 'images')
+
 INDEX_FILE = os.path.join(POSTS_OUTPUT_DIR, 'index.json')
 TEMPLATE_FILE = os.path.join(BASE_DIR, 'blog-post.html')
 SITEMAP_FILE = os.path.join(BASE_DIR, 'sitemap.xml')
@@ -39,6 +42,20 @@ def migrate_content():
             # Move file
             shutil.move(src, dst)
             print(f"Migrated {filename} to {CONTENT_DIR}")
+
+def copy_images():
+    """
+    Copies the images directory from content/posts/images to posts/images
+    so they are served correctly relative to the static HTML files.
+    """
+    if os.path.exists(IMAGES_SRC_DIR):
+        if os.path.exists(IMAGES_DST_DIR):
+            shutil.rmtree(IMAGES_DST_DIR) # Clean old images
+        
+        shutil.copytree(IMAGES_SRC_DIR, IMAGES_DST_DIR)
+        print(f"Copied images from {IMAGES_SRC_DIR} to {IMAGES_DST_DIR}")
+    else:
+        print(f"No images directory found at {IMAGES_SRC_DIR}")
 
 def parse_frontmatter(content):
     content = content.replace('\r\n', '\n').strip()
@@ -81,6 +98,9 @@ def build_blog():
     # 1. Migrate any legacy files first
     migrate_content()
     
+    # 2. Copy images
+    copy_images()
+    
     print(f"Scanning {CONTENT_DIR}...")
     posts = []
     
@@ -115,6 +135,8 @@ def build_blog():
 
         # Generate HTML
         if HAS_MARKDOWN and template:
+            # Note: We don't need a special image extension if the markdown uses standard relative paths like ![alt](images/file.png)
+            # because we are copying images/ to posts/images/.
             html_content = markdown.markdown(body, extensions=['fenced_code', 'tables'])
             page_html = template
 
