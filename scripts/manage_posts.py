@@ -9,7 +9,7 @@ import shutil
 BASE_DIR = os.getcwd()
 POSTS_OUTPUT_DIR = os.path.join(BASE_DIR, 'posts')      # Where HTML files go
 CONTENT_DIR = os.path.join(BASE_DIR, 'content', 'posts') # Where MD files live
-IMAGES_SRC_DIR = os.path.join(CONTENT_DIR, 'images')
+IMAGES_SRC_DIR = os.path.join(BASE_DIR, 'content', 'images')
 IMAGES_DST_DIR = os.path.join(POSTS_OUTPUT_DIR, 'images')
 
 INDEX_FILE = os.path.join(POSTS_OUTPUT_DIR, 'index.json')
