@@ -109,7 +109,7 @@
 </li>
 <li>
 <p>Start the installation and accept the default pfSense installation settings
-![[pfsense-ip-setup.png]]</p>
+<img alt="pfsense-ip-setup.png" src="images/pfsense-ip-setup.png" /></p>
 </li>
 </ol>
 <hr />
@@ -131,7 +131,7 @@
 <li>
 <p>Secondary DNS: <code>9.9.9.9</code><br />
     Then click through the wizard and change the admin password if desired.​
-![[pfsense-web.png]]</p>
+<img alt="pfsense-web.png" src="images/pfsense-web.png" /></p>
 </li>
 </ul>
 </li>
@@ -171,7 +171,7 @@
 </ul>
 </li>
 </ol>
-<p>![[Pasted image 20251211084755.png]]</p>
+<p><img alt="Pasted image 20251211084755.png" src="images/Pasted image 20251211084755.png" /></p>
 <hr />
 <h2>4. Blocking domains and countries (pfBlockerNG + DNS)</h2>
 <p>You can block specific domains via DNS overrides and block countries or IP ranges using pfBlockerNG with GeoIP.​</p>
@@ -199,7 +199,7 @@
 <li>
 <p>Save and apply settings. This causes lookups for that domain to resolve to <code>0.0.0.0</code>.​</p>
 </li>
-<li>![[Screenshot_20251127_181726.png]]</li>
+<li><img alt="Screenshot_20251127_181726.png" src="images/Screenshot_20251127_181726.png" /></li>
 </ul>
 </li>
 <li>
@@ -221,11 +221,11 @@
 </li>
 <li>
 <p>Obtain a free MaxMind account ID and license key from the MaxMind website and enter them in the pfBlockerNG GeoIP settings.​</p>
-<p>![[Screenshot_20251211_092535.png]]</p>
+<p><img alt="Screenshot_20251211_092535.png" src="images/Screenshot_20251211_092535.png" /></p>
 </li>
 <li>
 <p>Save changes and reboot the pfSense VM  so the GeoIP databases download.​</p>
-<p>![[Screenshot_20251211_082531.png]]</p>
+<p><img alt="Screenshot_20251211_082531.png" src="images/Screenshot_20251211_082531.png" /></p>
 </li>
 </ul>
 </li>
@@ -235,7 +235,7 @@
 <li>
 <p>Open <code>Firewall → pfBlockerNG-devel → IP → GeoIP</code>.​
     now open <a href="www.yandex.ru">www.yandex.ru</a> in new tab, which is russian website we'll try to block russian websites</p>
-<p>![[Pasted image 20251211085836.png]]</p>
+<p><img alt="Pasted image 20251211085836.png" src="images/Pasted image 20251211085836.png" /></p>
 </li>
 <li>
 <p>In the country list (IPv4), hold <code>Ctrl</code> and select the countries you want to block, e.g. “Russia [RU]” and “Russia [RU_rep]”.​</p>
@@ -245,8 +245,8 @@
 </li>
 <li>
 <p>Enable logging if desired and click <strong>Save</strong>.​</p>
-<p>![[Screenshot_20251211_085305.png]]</p>
-<p>![[Screenshot_20251211_085526.png]]</p>
+<p><img alt="Screenshot_20251211_085305.png" src="images/Screenshot_20251211_085305.png" /></p>
+<p><img alt="Screenshot_20251211_085526.png" src="images/Screenshot_20251211_085526.png" /></p>
 </li>
 <li>
 <p>Go to <code>Firewall → pfBlockerNG-devel → Update</code> and click <strong>Run</strong> to apply and build the rules.​</p>
@@ -292,7 +292,7 @@
 </li>
 <li>
 <p>Save and apply changes; traffic from LAN to that IP on ports 80/443 will now be blocked.​</p>
-<p>![[Screenshot_20251211_091333.png]]</p>
+<p><img alt="Screenshot_20251211_091333.png" src="images/Screenshot_20251211_091333.png" /></p>
 </li>
 </ol>
 <p>next i'll be looking into vlans static ips.</p></article>
