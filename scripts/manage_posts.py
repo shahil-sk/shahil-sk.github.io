@@ -57,6 +57,23 @@ def copy_images():
     else:
         print(f"No images directory found at {IMAGES_SRC_DIR}")
 
+def fix_image_links(content):
+    """
+    Converts Obsidian-style links ![[image.png]] to standard Markdown ![image.png](images/image.png)
+    """
+    # Regex for ![[filename.png]] -> ![filename.png](images/filename.png)
+    # This handles common image extensions
+    pattern = r'!\[\[(.*?)\]\]'
+    
+    def replace_link(match):
+        filename = match.group(1)
+        # Check if it looks like an image
+        if any(filename.lower().endswith(ext) for ext in ['.png', '.jpg', '.jpeg', '.gif', '.svg', '.webp']):
+            return f'![{filename}](images/{filename})'
+        return match.group(0) # Return original if not an image (or logic could be extended)
+
+    return re.sub(pattern, replace_link, content)
+
 def parse_frontmatter(content):
     content = content.replace('\r\n', '\n').strip()
     if not content.startswith('---'):
@@ -133,17 +150,18 @@ def build_blog():
         read_time = max(1, round(word_count / 200))
         read_time_str = f"{read_time} min read"
 
+        # Transform Obsidian links before Markdown processing
+        body = fix_image_links(body)
+
         # Generate HTML
         if HAS_MARKDOWN and template:
-            # Note: We don't need a special image extension if the markdown uses standard relative paths like ![alt](images/file.png)
-            # because we are copying images/ to posts/images/.
             html_content = markdown.markdown(body, extensions=['fenced_code', 'tables'])
             page_html = template
 
             # Cleanups
             page_html = page_html.replace('<script src="post.js"></script>', '')
             
-            # Paths (We are in posts/slug.html, so we need ../)
+            # Paths
             page_html = page_html.replace('href="styles.css"', 'href="../styles.css"')
             page_html = page_html.replace('href="post.css"', 'href="../post.css"')
             page_html = page_html.replace('src="script.js"', 'src="../script.js"')
