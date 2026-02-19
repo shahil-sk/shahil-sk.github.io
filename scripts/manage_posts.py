@@ -3,11 +3,15 @@ import json
 import argparse
 import datetime
 import re
+import shutil
 
-POSTS_DIR = 'posts'
-INDEX_FILE = os.path.join(POSTS_DIR, 'index.json')
-TEMPLATE_FILE = 'blog-post.html'
-SITEMAP_FILE = 'sitemap.xml'
+# Directories
+BASE_DIR = os.getcwd()
+POSTS_OUTPUT_DIR = os.path.join(BASE_DIR, 'posts')      # Where HTML files go
+CONTENT_DIR = os.path.join(BASE_DIR, 'content', 'posts') # Where MD files live
+INDEX_FILE = os.path.join(POSTS_OUTPUT_DIR, 'index.json')
+TEMPLATE_FILE = os.path.join(BASE_DIR, 'blog-post.html')
+SITEMAP_FILE = os.path.join(BASE_DIR, 'sitemap.xml')
 BASE_URL = 'https://shahil-sk.github.io'
 
 try:
@@ -15,6 +19,26 @@ try:
     HAS_MARKDOWN = True
 except ImportError:
     HAS_MARKDOWN = False
+
+def migrate_content():
+    """
+    Moves any .md files found in posts/ to content/posts/
+    to separate source code from generated output.
+    """
+    if not os.path.exists(CONTENT_DIR):
+        os.makedirs(CONTENT_DIR)
+        print(f"Created directory: {CONTENT_DIR}")
+
+    # Find .md files in the output directory (legacy location)
+    if os.path.exists(POSTS_OUTPUT_DIR):
+        files = [f for f in os.listdir(POSTS_OUTPUT_DIR) if f.endswith('.md')]
+        for filename in files:
+            src = os.path.join(POSTS_OUTPUT_DIR, filename)
+            dst = os.path.join(CONTENT_DIR, filename)
+            
+            # Move file
+            shutil.move(src, dst)
+            print(f"Migrated {filename} to {CONTENT_DIR}")
 
 def parse_frontmatter(content):
     content = content.replace('\r\n', '\n').strip()
@@ -53,53 +77,61 @@ def parse_frontmatter(content):
     except ValueError:
         return {}, content
 
-def build_index_and_static_pages():
-    print(f"Scanning {POSTS_DIR}...")
+def build_blog():
+    # 1. Migrate any legacy files first
+    migrate_content()
+    
+    print(f"Scanning {CONTENT_DIR}...")
     posts = []
-    if not os.path.exists(POSTS_DIR):
-        os.makedirs(POSTS_DIR)
-    files = [f for f in os.listdir(POSTS_DIR) if f.endswith('.md')]
+    
+    if not os.path.exists(CONTENT_DIR):
+        os.makedirs(CONTENT_DIR)
+        
+    if not os.path.exists(POSTS_OUTPUT_DIR):
+        os.makedirs(POSTS_OUTPUT_DIR)
+
+    files = [f for f in os.listdir(CONTENT_DIR) if f.endswith('.md')]
     template = ""
     if os.path.exists(TEMPLATE_FILE):
         with open(TEMPLATE_FILE, 'r', encoding='utf-8') as f:
             template = f.read()
     else:
-        print(f"Warning: Template file {TEMPLATE_FILE} not found. Skipping static page generation.")
+        print(f"Warning: Template file {TEMPLATE_FILE} not found.")
 
     for filename in files:
-        filepath = os.path.join(POSTS_DIR, filename)
+        filepath = os.path.join(CONTENT_DIR, filename)
         with open(filepath, 'r', encoding='utf-8') as f:
             content = f.read()
+            
         fm, body = parse_frontmatter(content)
         if not fm.get('title'):
             print(f"Warning: Skipping {filename} (no title)")
             continue
+            
         slug = filename.replace('.md', '')
         word_count = len(body.split())
         read_time = max(1, round(word_count / 200))
         read_time_str = f"{read_time} min read"
 
+        # Generate HTML
         if HAS_MARKDOWN and template:
             html_content = markdown.markdown(body, extensions=['fenced_code', 'tables'])
             page_html = template
 
-            # 1. Remove the dynamic loader script FIRST (before path replacement)
-            # This is critical to prevent the redirect loop
+            # Cleanups
             page_html = page_html.replace('<script src="post.js"></script>', '')
             
-            # 2. Fix CSS/JS paths
+            # Paths (We are in posts/slug.html, so we need ../)
             page_html = page_html.replace('href="styles.css"', 'href="../styles.css"')
             page_html = page_html.replace('href="post.css"', 'href="../post.css"')
             page_html = page_html.replace('src="script.js"', 'src="../script.js"')
-            
-            # 3. Fix navigation links
             page_html = page_html.replace('href="index.html"', 'href="../index.html"')
             page_html = page_html.replace('href="blog.html"', 'href="../blog.html"')
             page_html = page_html.replace('href="blog-post.html"', 'href="../blog-post.html"')
             page_html = page_html.replace('href="/"', 'href="../index.html"')
             page_html = page_html.replace('href="/#', 'href="../index.html#')
 
-            # 4. Inject Content
+            # Content Injection
             title = fm.get('title', 'Untitled')
             page_html = page_html.replace('<title>Post — Shahil Ahmed</title>', f'<title>{title} — Shahil Ahmed</title>')
             page_html = page_html.replace('<h1 class="post-title" id="post-title">Loading...</h1>', f'<h1 class="post-title" id="post-title">{title}</h1>')
@@ -110,7 +142,7 @@ def build_index_and_static_pages():
             page_html = page_html.replace('<div class="post-reading-time" id="post-reading-time"></div>', f'<div class="post-reading-time" id="post-reading-time">{read_time_str}</div>')
             page_html = page_html.replace('<article class="post-body" id="post-body"></article>', f'<article class="post-body" id="post-body">{html_content}</article>')
             
-            # 5. SEO Meta
+            # SEO Meta
             meta_desc = fm.get('excerpt', body[:150].replace('\n', ' '))
             meta_tags = f'''
     <meta name="description" content="{meta_desc}">
@@ -121,10 +153,10 @@ def build_index_and_static_pages():
             '''
             page_html = page_html.replace('</head>', f'{meta_tags}\n</head>')
 
-            out_path = os.path.join(POSTS_DIR, f"{slug}.html")
+            out_path = os.path.join(POSTS_OUTPUT_DIR, f"{slug}.html")
             with open(out_path, 'w', encoding='utf-8') as f:
                 f.write(page_html)
-            print(f"Generated static page: {out_path}")
+            print(f"Generated: {out_path}")
         
         post_data = {
             'slug': slug,
@@ -140,7 +172,7 @@ def build_index_and_static_pages():
     posts.sort(key=lambda x: x['date'], reverse=True)
     with open(INDEX_FILE, 'w', encoding='utf-8') as f:
         json.dump(posts, f, indent=2)
-    print(f"Successfully indexed {len(posts)} posts to {INDEX_FILE}")
+    print(f"Indexed {len(posts)} posts.")
     generate_sitemap(posts)
 
 def generate_sitemap(posts):
@@ -153,7 +185,6 @@ def generate_sitemap(posts):
     xml.append('</urlset>')
     with open(SITEMAP_FILE, 'w', encoding='utf-8') as f:
         f.write('\n'.join(xml))
-    print(f"Generated {SITEMAP_FILE}")
 
 def new_post(title):
     slug = title.lower().replace(' ', '-')
@@ -163,30 +194,35 @@ def new_post(title):
 title: {title}
 date: {today}
 author: Shahil Ahmed
-excerpt: Short description of the post.
+excerpt: Short description...
 tags:
   - Tech
 ---
 
 Write your content here...
 """
-    filepath = os.path.join(POSTS_DIR, f"{slug}.md")
+    # Ensure dir exists
+    if not os.path.exists(CONTENT_DIR):
+        os.makedirs(CONTENT_DIR)
+        
+    filepath = os.path.join(CONTENT_DIR, f"{slug}.md")
     if os.path.exists(filepath):
-        print(f"Error: File {filepath} already exists.")
+        print(f"Error: {filepath} exists.")
         return
     with open(filepath, 'w', encoding='utf-8') as f:
         f.write(content)
-    print(f"Created new post: {filepath}")
+    print(f"Created: {filepath}")
 
 def main():
-    parser = argparse.ArgumentParser(description="Manage blog posts")
-    subparsers = parser.add_subparsers(dest='command', help='Command to run')
-    subparsers.add_parser('build', help='Rebuild index.json & static HTML from markdown')
-    new_parser = subparsers.add_parser('new', help='Create a new post')
-    new_parser.add_argument('title', help='Title of the post')
+    parser = argparse.ArgumentParser()
+    subparsers = parser.add_subparsers(dest='command')
+    subparsers.add_parser('build')
+    new_p = subparsers.add_parser('new')
+    new_p.add_argument('title')
     args = parser.parse_args()
+    
     if args.command == 'build':
-        build_index_and_static_pages()
+        build_blog()
     elif args.command == 'new':
         new_post(args.title)
     else:
