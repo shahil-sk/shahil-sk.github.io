@@ -7,8 +7,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="post.css">
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="../post.css">
 
     <meta name="description" content="## Overview  SSL pinning is a technique used by mobile apps to prevent MITM attacks by hardcoding the server certificate (or its public key hash) insi">
     <meta property="og:title" content="Bypassing SSL Pinning on Android Apps with Frida">
@@ -25,17 +25,17 @@
 
     <header class="header scrolled" id="header">
         <div class="header-inner">
-            <a href="/" class="logo">
+            <a href="../index.html" class="logo">
                 <span class="logo-bracket">[</span>
                 <span class="logo-text">SK</span>
                 <span class="logo-bracket">]</span>
             </a>
             <nav class="nav">
-                <a href="/#about" class="nav-link">ABOUT</a>
-                <a href="/#work" class="nav-link">WORK</a>
-                <a href="/#projects" class="nav-link">PROJECTS</a>
-                <a href="blog.html" class="nav-link active">BLOG</a>
-                <a href="/#contact" class="nav-link">CONTACT</a>
+                <a href="../index.html#about" class="nav-link">ABOUT</a>
+                <a href="../index.html#work" class="nav-link">WORK</a>
+                <a href="../index.html#projects" class="nav-link">PROJECTS</a>
+                <a href="../blog.html" class="nav-link active">BLOG</a>
+                <a href="../index.html#contact" class="nav-link">CONTACT</a>
             </nav>
             <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">
                 <span></span><span></span><span></span>
@@ -45,18 +45,18 @@
 
     <div class="mobile-menu" id="mobile-menu">
         <nav class="mobile-nav">
-            <a href="/#about" class="mobile-nav-link">ABOUT</a>
-            <a href="/#work" class="mobile-nav-link">WORK</a>
-            <a href="/#projects" class="mobile-nav-link">PROJECTS</a>
-            <a href="blog.html" class="mobile-nav-link">BLOG</a>
-            <a href="/#contact" class="mobile-nav-link">CONTACT</a>
+            <a href="../index.html#about" class="mobile-nav-link">ABOUT</a>
+            <a href="../index.html#work" class="mobile-nav-link">WORK</a>
+            <a href="../index.html#projects" class="mobile-nav-link">PROJECTS</a>
+            <a href="../blog.html" class="mobile-nav-link">BLOG</a>
+            <a href="../index.html#contact" class="mobile-nav-link">CONTACT</a>
         </nav>
     </div>
 
     <main class="post-main">
         <div class="post-inner">
             <!-- Back -->
-            <a href="blog.html" class="post-back">← BACK TO BLOG</a>
+            <a href="../blog.html" class="post-back">← BACK TO BLOG</a>
 
             <!-- Meta -->
             <div class="post-meta" id="post-meta">2026-02-15</div>
@@ -140,7 +140,7 @@ adb shell &quot;/data/local/tmp/frida-server &amp;&quot;
     <!-- highlight.js for code syntax -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css">
     <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/highlight.min.js"></script>
-    <script src="script.js"></script>
-    
+    <script src="../script.js"></script>
+    <script src="../post.js"></script>
 </body>
 </html>
