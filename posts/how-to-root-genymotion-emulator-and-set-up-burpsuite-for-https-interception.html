@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to Root Genymotion Emulator and Set Up BurpSuite for HTTPS Interception — Shahil Ahmed</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="post.css">
+
+    <meta name="description" content="## **Step 1: Create a Virtual Device**  1. Open **Genymotion** and create a new virtual device. 2. Select **Android** Version. 	 *( In this blog i'm g">
+    <meta property="og:title" content="How to Root Genymotion Emulator and Set Up BurpSuite for HTTPS Interception">
+    <meta property="og:description" content="## **Step 1: Create a Virtual Device**  1. Open **Genymotion** and create a new virtual device. 2. Select **Android** Version. 	 *( In this blog i'm g">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://shahil-sk.github.io/posts/how-to-root-genymotion-emulator-and-set-up-burpsuite-for-https-interception.html">
+            
+</head>
+<body>
+    <div class="scroll-progress" id="scroll-progress"></div>
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-follower" id="cursor-follower"></div>
+    <div class="scanlines"></div>
+
+    <header class="header scrolled" id="header">
+        <div class="header-inner">
+            <a href="/" class="logo">
+                <span class="logo-bracket">[</span>
+                <span class="logo-text">SK</span>
+                <span class="logo-bracket">]</span>
+            </a>
+            <nav class="nav">
+                <a href="/#about" class="nav-link">ABOUT</a>
+                <a href="/#work" class="nav-link">WORK</a>
+                <a href="/#projects" class="nav-link">PROJECTS</a>
+                <a href="blog.html" class="nav-link active">BLOG</a>
+                <a href="/#contact" class="nav-link">CONTACT</a>
+            </nav>
+            <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+
+    <div class="mobile-menu" id="mobile-menu">
+        <nav class="mobile-nav">
+            <a href="/#about" class="mobile-nav-link">ABOUT</a>
+            <a href="/#work" class="mobile-nav-link">WORK</a>
+            <a href="/#projects" class="mobile-nav-link">PROJECTS</a>
+            <a href="blog.html" class="mobile-nav-link">BLOG</a>
+            <a href="/#contact" class="mobile-nav-link">CONTACT</a>
+        </nav>
+    </div>
+
+    <main class="post-main">
+        <div class="post-inner">
+            <!-- Back -->
+            <a href="blog.html" class="post-back">← BACK TO BLOG</a>
+
+            <!-- Meta -->
+            <div class="post-meta" id="post-meta">2025-06-19</div>
+
+            <!-- Title -->
+            <h1 class="post-title" id="post-title">How to Root Genymotion Emulator and Set Up BurpSuite for HTTPS Interception</h1>
+
+            <!-- Tags -->
+            <div class="post-tags" id="post-tags"><span class="blog-tag">Android</span><span class="blog-tag">Burpsuite</span></div>
+
+            <!-- Reading time -->
+            <div class="post-reading-time" id="post-reading-time">2 min read</div>
+
+            <!-- Article body -->
+            <article class="post-body" id="post-body"><h2><strong>Step 1: Create a Virtual Device</strong></h2>
+<ol>
+<li>Open <strong>Genymotion</strong> and create a new virtual device.</li>
+<li>Select <strong>Android</strong> Version.
+     <em>( In this blog i'm going to use Android 12 has a base )</em></li>
+<li>Start the newly created virtual device.</li>
+</ol>
+<h2><strong>Step 2: Enable Root Access</strong></h2>
+<p>Make sure <strong>ADB</strong> is installed and configured. Once the emulator starts, run the following command to enable root access:</p>
+<pre><code class="language-sh">adb shell setprop persist.sys.root_access 3
+</code></pre>
+<p><em>(This command needs to be executed every time you start the emulator. in order to maintain the root access inside the emulator)</em></p>
+<h2><strong>Step 3: Install Magisk</strong></h2>
+<ol>
+<li><strong>Drag and drop</strong> the <a href="https://github.com/topjohnwu/magisk/releases">Magisk.apk</a> onto the emulator.</li>
+<li>Open the Magisk app and <strong>grant root access</strong> when prompted.</li>
+<li>Restart the Magisk app.</li>
+<li>Inside the Magisk app, install Magisk using the <strong>Direct Install</strong> method.</li>
+<li>Drag and drop the <a href="https://drive.google.com/file/d/1OF8zx6p46t8BcKuO5A6Ncq46zLpFfps-/view">Magisk_rebuilt_1c8ebfac_x86_64.zip</a> file into the emulator.</li>
+<li>Reboot the emulator.</li>
+<li>
+<p>Once the emulator restarts, <strong>run the root access command again</strong>:</p>
+<p><code>sh
+adb shell setprop persist.sys.root_access 3</code></p>
+<p><em>(This command needs to be executed every time you start the emulator. in order to maintain the root access inside the emulator)</em></p>
+</li>
+</ol>
+<h2><strong>Step 4: Setting Up BurpSuite</strong></h2>
+<ol>
+<li><strong>Ensure BurpSuite is running.</strong></li>
+<li>Open BurpSuite and navigate to <strong>Proxy &gt; Options</strong> to find the <strong>CA certificate</strong>.</li>
+<li>
+<p>Download the BurpSuite certificate from:</p>
+<p><code>http://localhost:8080</code></p>
+</li>
+</ol>
+<h2><strong>Step 5: Install the BurpSuite Certificate</strong></h2>
+<ol>
+<li>Drag and drop the <strong>cacert.der</strong> file into the emulator.</li>
+<li>Install the certificate manually:<ul>
+<li><strong>Settings</strong> &gt; <strong>Security</strong> &gt; <strong>Encryption &amp; Credentials</strong> &gt; <strong>Install a certificate</strong> &gt; <strong>CA certificate</strong>.</li>
+</ul>
+</li>
+</ol>
+<h2><strong>Step 6: Install AlwaysTrustUserCerts Module</strong></h2>
+<ol>
+<li>Drag and drop the <a href="https://github.com/NVISOsecurity/MagiskTrustUserCerts/releases/tag/v0.4.1">AlwaysTrustUserCerts.zip</a> file into the emulator.</li>
+<li>Open the <strong>Magisk app</strong> and install the <strong>AlwaysTrustUserCerts</strong> module.</li>
+<li>Restart the emulator.</li>
+<li>Verify the certificate installation:<ul>
+<li><strong>Settings</strong> &gt; <strong>Security</strong> &gt; <strong>Encryption &amp; Credentials</strong> &gt; <strong>Trusted Credentials</strong>.</li>
+<li>Check if <strong>PortSwigger</strong> is listed.</li>
+</ul>
+</li>
+</ol>
+<h2><strong>Step 7: Forward Emulator Traffic to BurpSuite</strong></h2>
+<p>To capture network traffic from the emulator, forward its <strong>TCP:3333</strong> port to BurpSuite's <strong>8080</strong> port:</p>
+<pre><code class="language-sh">adb shell settings put global http_proxy localhost:3333
+adb reverse tcp:3333 tcp:8080
+</code></pre>
+<h2><strong>Step 8: Verify HTTPS Traffic Interception</strong></h2>
+<ol>
+<li>Open a browser on the emulator and visit a website.</li>
+<li>Check the <strong>BurpSuite Proxy History</strong> to confirm that requests are being captured.</li>
+</ol>
+<hr />
+<h2><strong>Conclusion</strong></h2>
+<p>By following these steps, you now have a <strong>rooted Genymotion emulator</strong> with <strong>Magisk</strong> installed and <strong>BurpSuite configured for HTTPS traffic interception</strong>. This setup is useful for <strong>security testing, app pentesting, and network analysis</strong>.</p>
+<p>If you restart the emulator, remember to re-run:</p>
+<pre><code class="language-sh">adb shell setprop persist.sys.root_access 3
+</code></pre>
+<p>to regain root access.</p></article>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>© 2026 SHAHIL AHMED</p>
+            <p class="footer-quote">"I don't know why i like 1's and 0's"</p>
+        </div>
+    </footer>
+
+    <!-- marked.js for Markdown parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- highlight.js for code syntax -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/highlight.min.js"></script>
+    <script src="script.js"></script>
+    
+</body>
+</html>

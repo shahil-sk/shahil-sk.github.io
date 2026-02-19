@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Android emulator detection bypass — Shahil Ahmed</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="post.css">
+
+    <meta name="description" content="# Emulator Bypass ## The Application that I'm using is [AndroGoat](https://github.com/satishpatnayak/MyTest/tree/master)  One of the best techniques t">
+    <meta property="og:title" content="Android emulator detection bypass">
+    <meta property="og:description" content="# Emulator Bypass ## The Application that I'm using is [AndroGoat](https://github.com/satishpatnayak/MyTest/tree/master)  One of the best techniques t">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://shahil-sk.github.io/posts/android-emulator-detection-bypass.html">
+            
+</head>
+<body>
+    <div class="scroll-progress" id="scroll-progress"></div>
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-follower" id="cursor-follower"></div>
+    <div class="scanlines"></div>
+
+    <header class="header scrolled" id="header">
+        <div class="header-inner">
+            <a href="/" class="logo">
+                <span class="logo-bracket">[</span>
+                <span class="logo-text">SK</span>
+                <span class="logo-bracket">]</span>
+            </a>
+            <nav class="nav">
+                <a href="/#about" class="nav-link">ABOUT</a>
+                <a href="/#work" class="nav-link">WORK</a>
+                <a href="/#projects" class="nav-link">PROJECTS</a>
+                <a href="blog.html" class="nav-link active">BLOG</a>
+                <a href="/#contact" class="nav-link">CONTACT</a>
+            </nav>
+            <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+
+    <div class="mobile-menu" id="mobile-menu">
+        <nav class="mobile-nav">
+            <a href="/#about" class="mobile-nav-link">ABOUT</a>
+            <a href="/#work" class="mobile-nav-link">WORK</a>
+            <a href="/#projects" class="mobile-nav-link">PROJECTS</a>
+            <a href="blog.html" class="mobile-nav-link">BLOG</a>
+            <a href="/#contact" class="mobile-nav-link">CONTACT</a>
+        </nav>
+    </div>
+
+    <main class="post-main">
+        <div class="post-inner">
+            <!-- Back -->
+            <a href="blog.html" class="post-back">← BACK TO BLOG</a>
+
+            <!-- Meta -->
+            <div class="post-meta" id="post-meta">2025-06-04</div>
+
+            <!-- Title -->
+            <h1 class="post-title" id="post-title">Android emulator detection bypass</h1>
+
+            <!-- Tags -->
+            <div class="post-tags" id="post-tags"><span class="blog-tag">Android</span><span class="blog-tag">Frida</span><span class="blog-tag">Pentesting</span></div>
+
+            <!-- Reading time -->
+            <div class="post-reading-time" id="post-reading-time">2 min read</div>
+
+            <!-- Article body -->
+            <article class="post-body" id="post-body"><h1>Emulator Bypass</h1>
+<h2>The Application that I'm using is <a href="https://github.com/satishpatnayak/MyTest/tree/master">AndroGoat</a></h2>
+<p>One of the best techniques to Bypass emulator detection is to modify the RETRUN_VALUE of the function that check for Emulator Activities. In AndroGoat Application There is Function (isEmulator) Responsible for emulator detection inside EmulatorDetectionActivity Activity.</p>
+<blockquote>
+<p>[!note]
+You can View the Source code Using <a href="https://github.com/skylot/jadx/releases">JADX-gui</a></p>
+</blockquote>
+<p>I will be Using Objection Tool to Modify the RETURN_VALUE of the isEmulator Function by hooking the Objection tool to the function call.</p>
+<p>1) First I'll start the application using Objection tool.
+    -  <code>objection -g owasp.sat.agoat explore</code>
+2) Modifying the RETURN_VALUE
+    -  <code>android hooking set return_valuowasp.sat.agoat.EmulatorDetectionActivity.isEmulator true</code>
+    (single line command)
+3) Check for emulation Detection in AndroGoat AppEmulator Bypass</p>
+<hr />
+<h1>Access Control Bypass</h1>
+<p>AndroGoat App Contains a section called "Unprotected Android Components" which a has PIN Security feature hiding some secret file maybe who knows?... to bypass this security check we scan the app with drozer to scan for any insecure Android Activities</p>
+<blockquote>
+<p>Make sure you set a pin first and verify the functioning</p>
+</blockquote>
+<p>1) Make sure the <a href="https://github.com/WithSecureLabs/drozer-agent/releases/tag/3.1.0">Drozer Agent</a> is running on your base device.
+2) forward the port to '31415'
+    -  via <code>adb forward tcp:31415 tcp:31415</code>
+3) Start the Drozer Console
+    - run <code>drozer console connect</code>
+4) Find the package name of your application
+    - run <code>run app.package.list -f agoat</code>
+5) scan for any insecure activites
+    - run <code>run app.activity.info -a owasp.sat.agoat</code></p>
+<p>6) Once the scanning is done, in order to know more about the vulnerability we need to reverse engineer the workings of the Application via JADX or any other decompiler
+    1) let do a quick search for the activity in JADX</p>
+<p>As we can see that the Activity "AccessControl1ViewActivity" is mentioned in some sort of verifyPIN function double click on that go to the code.</p>
+<p>Here if statement is used to verify the inserted PIN and start the activity if the PIN matches. NOTICE that the AccessControl1ViewActivity intent is started directly without any security measures
+which makes it vulnerable and it is Access Control Bypass bug</p>
+<p>7) we'll use drozer to bypass PIN verification and start the AccessControl1ViewActivity intent without any checks.
+    - run <code>run app.activity.start --component owasp.sat.agoat owasp.sat.agoat.AccessControl1ViewActivity</code>
+        (single line command)
+8) Now it should load the activity directly without any checks</p></article>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-inner">
+            <p>© 2026 SHAHIL AHMED</p>
+            <p class="footer-quote">"I don't know why i like 1's and 0's"</p>
+        </div>
+    </footer>
+
+    <!-- marked.js for Markdown parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- highlight.js for code syntax -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/highlight.min.js"></script>
+    <script src="script.js"></script>
+    
+</body>
+</html>

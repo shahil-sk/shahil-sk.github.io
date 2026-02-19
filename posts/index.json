@@ -9,7 +9,8 @@
       "frida",
       "pentesting"
     ],
-    "readTime": "2 min read"
+    "readTime": "2 min read",
+    "url": "posts/bypassing-ssl-pinning-on-android-apps-with-frida.html"
   },
   {
     "slug": "how-to-root-genymotion-emulator-and-set-up-burpsuite-for-https-interception",
@@ -20,7 +21,8 @@
       "Android",
       "Burpsuite"
     ],
-    "readTime": "2 min read"
+    "readTime": "2 min read",
+    "url": "posts/how-to-root-genymotion-emulator-and-set-up-burpsuite-for-https-interception.html"
   },
   {
     "slug": "android-emulator-detection-bypass",
@@ -32,7 +34,20 @@
       "Frida",
       "Pentesting"
     ],
-    "readTime": "2 min read"
+    "readTime": "2 min read",
+    "url": "posts/android-emulator-detection-bypass.html"
+  },
+  {
+    "slug": "Android Tools And Installation",
+    "title": "Android tools & Installation",
+    "date": "2024-12-09",
+    "excerpt": "## MobSF (Mobile Security Framework)\n--------------------------------------------------------------------------\n\nMobSF is an open-source tool for auto...",
+    "tags": [
+      "Android",
+      "Tools"
+    ],
+    "readTime": "6 min read",
+    "url": "posts/Android Tools And Installation.html"
   },
   {
     "slug": "root-detection-and-ssl-pinning-bypass-using-objection-and-frida",
@@ -44,7 +59,8 @@
       "Frida",
       "Pentesting"
     ],
-    "readTime": "2 min read"
+    "readTime": "2 min read",
+    "url": "posts/root-detection-and-ssl-pinning-bypass-using-objection-and-frida.html"
   },
   {
     "slug": "setup-android-emulator-for-burpsuite-frida",
@@ -56,6 +72,7 @@
       "Frida",
       "Burpsuite"
     ],
-    "readTime": "2 min read"
+    "readTime": "2 min read",
+    "url": "posts/setup-android-emulator-for-burpsuite-frida.html"
   }
 ]
