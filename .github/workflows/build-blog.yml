@@ -5,6 +5,7 @@ on:
     paths:
       - 'posts/*.md'
       - 'content/posts/*.md'
+      - 'content/posts/images/**'
       - 'scripts/manage_posts.py'
       - 'blog-post.html'
   workflow_dispatch:
@@ -30,7 +31,7 @@ jobs:
 
       - name: Build Static Site
         run: |
-          # This script handles migration from posts/ to content/posts/
+          # This script handles migration and asset copying
           python scripts/manage_posts.py build
 
       - name: Commit and Push
@@ -38,19 +39,19 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           
-          # Add new content directory
+          # Add content directory (source)
           git add content/posts
           
-          # Add generated outputs
-          git add posts/*.html posts/index.json sitemap.xml
+          # Add generated outputs (HTML + copied images)
+          git add posts/*.html posts/index.json posts/images/ sitemap.xml
           
-          # Commit deletes of old .md files in posts/ if the script moved them
+          # Commit deletes of old .md files in posts/ if moved
           git add -u posts/
           
           # Check if there are changes to commit
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "chore: migrate content and build site [skip ci]"
+            git commit -m "chore: build site and update assets [skip ci]"
             git push
           fi
