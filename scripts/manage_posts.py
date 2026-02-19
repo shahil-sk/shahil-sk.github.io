@@ -10,7 +10,6 @@ TEMPLATE_FILE = 'blog-post.html'
 SITEMAP_FILE = 'sitemap.xml'
 BASE_URL = 'https://shahil-sk.github.io'
 
-# Try to import markdown, but don't fail if not present (allows basic operations)
 try:
     import markdown
     HAS_MARKDOWN = True
@@ -18,37 +17,26 @@ except ImportError:
     HAS_MARKDOWN = False
 
 def parse_frontmatter(content):
-    """
-    Parses basic YAML frontmatter from a markdown string.
-    Returns (frontmatter_dict, body_text)
-    """
     content = content.replace('\r\n', '\n').strip()
-    
     if not content.startswith('---'):
         return {}, content
-    
     try:
         end_idx = content.index('\n---', 3)
         fm_text = content[3:end_idx].strip()
         body = content[end_idx+4:].strip()
-        
         metadata = {}
         current_key = None
-        
         for line in fm_text.split('\n'):
             line = line.strip()
             if not line: continue
-            
             if line.startswith('- ') and current_key == 'tags':
                 if 'tags' not in metadata: metadata['tags'] = []
                 metadata['tags'].append(line[2:].strip())
                 continue
-            
             if ':' in line:
                 key, val = line.split(':', 1)
                 key = key.strip()
                 val = val.strip()
-                
                 if key == 'tags':
                     current_key = 'tags'
                     if val and val.startswith('[') and val.endswith(']'):
@@ -61,25 +49,16 @@ def parse_frontmatter(content):
                 else:
                     current_key = key
                     metadata[key] = val
-                    
         return metadata, body
-        
     except ValueError:
         return {}, content
 
 def build_index_and_static_pages():
-    """
-    Scans .md files, builds index.json, AND generates static HTML pages for SEO.
-    """
     print(f"Scanning {POSTS_DIR}...")
     posts = []
-    
     if not os.path.exists(POSTS_DIR):
         os.makedirs(POSTS_DIR)
-        
     files = [f for f in os.listdir(POSTS_DIR) if f.endswith('.md')]
-    
-    # Load HTML template
     template = ""
     if os.path.exists(TEMPLATE_FILE):
         with open(TEMPLATE_FILE, 'r', encoding='utf-8') as f:
@@ -91,69 +70,47 @@ def build_index_and_static_pages():
         filepath = os.path.join(POSTS_DIR, filename)
         with open(filepath, 'r', encoding='utf-8') as f:
             content = f.read()
-            
         fm, body = parse_frontmatter(content)
-        
         if not fm.get('title'):
             print(f"Warning: Skipping {filename} (no title)")
             continue
-            
         slug = filename.replace('.md', '')
-        
-        # Calculate read time
         word_count = len(body.split())
         read_time = max(1, round(word_count / 200))
         read_time_str = f"{read_time} min read"
-        
-        # --- STATIC HTML GENERATION ---
+
         if HAS_MARKDOWN and template:
             html_content = markdown.markdown(body, extensions=['fenced_code', 'tables'])
-            
-            # Prepare template replacements
             page_html = template
+
+            # 1. Remove the dynamic loader script FIRST (before path replacement)
+            # This is critical to prevent the redirect loop
+            page_html = page_html.replace('<script src="post.js"></script>', '')
             
-            # FIX: Adjust relative paths for CSS/JS since file is in /posts/
-            # Replace href="styles.css" with href="../styles.css"
-            # We match common asset patterns to prepend ../
+            # 2. Fix CSS/JS paths
             page_html = page_html.replace('href="styles.css"', 'href="../styles.css"')
             page_html = page_html.replace('href="post.css"', 'href="../post.css"')
             page_html = page_html.replace('src="script.js"', 'src="../script.js"')
-            # Note: post.js is removed entirely below, but if referenced:
-            page_html = page_html.replace('src="post.js"', 'src="../post.js"')
-            # Fix navigation links
+            
+            # 3. Fix navigation links
             page_html = page_html.replace('href="index.html"', 'href="../index.html"')
             page_html = page_html.replace('href="blog.html"', 'href="../blog.html"')
             page_html = page_html.replace('href="blog-post.html"', 'href="../blog-post.html"')
-            # Fix logo link
             page_html = page_html.replace('href="/"', 'href="../index.html"')
-            # Fix anchor links
             page_html = page_html.replace('href="/#', 'href="../index.html#')
 
-            
-            # Title
+            # 4. Inject Content
             title = fm.get('title', 'Untitled')
             page_html = page_html.replace('<title>Post — Shahil Ahmed</title>', f'<title>{title} — Shahil Ahmed</title>')
             page_html = page_html.replace('<h1 class="post-title" id="post-title">Loading...</h1>', f'<h1 class="post-title" id="post-title">{title}</h1>')
-            
-            # Meta
             date = fm.get('date', '')
             page_html = page_html.replace('<div class="post-meta" id="post-meta"></div>', f'<div class="post-meta" id="post-meta">{date}</div>')
-            
-            # Tags
             tags_html = "".join([f'<span class="blog-tag">{t}</span>' for t in fm.get('tags', [])])
             page_html = page_html.replace('<div class="post-tags" id="post-tags"></div>', f'<div class="post-tags" id="post-tags">{tags_html}</div>')
-            
-            # Reading Time
             page_html = page_html.replace('<div class="post-reading-time" id="post-reading-time"></div>', f'<div class="post-reading-time" id="post-reading-time">{read_time_str}</div>')
-            
-            # Body
-            # Remove dynamic loader script
-            page_html = page_html.replace('<script src="post.js"></script>', '')
-            # Inject content
             page_html = page_html.replace('<article class="post-body" id="post-body"></article>', f'<article class="post-body" id="post-body">{html_content}</article>')
             
-            
-            # SEO Meta tags
+            # 5. SEO Meta
             meta_desc = fm.get('excerpt', body[:150].replace('\n', ' '))
             meta_tags = f'''
     <meta name="description" content="{meta_desc}">
@@ -164,11 +121,9 @@ def build_index_and_static_pages():
             '''
             page_html = page_html.replace('</head>', f'{meta_tags}\n</head>')
 
-            # Write static file
             out_path = os.path.join(POSTS_DIR, f"{slug}.html")
             with open(out_path, 'w', encoding='utf-8') as f:
                 f.write(page_html)
-                
             print(f"Generated static page: {out_path}")
         
         post_data = {
@@ -178,45 +133,29 @@ def build_index_and_static_pages():
             'excerpt': fm.get('excerpt', body[:150] + '...'),
             'tags': fm.get('tags', []),
             'readTime': read_time_str,
-            'url': f"posts/{slug}.html" # Point to static HTML
+            'url': f"posts/{slug}.html"
         }
-        
         posts.append(post_data)
         
-    # Sort by date descending
     posts.sort(key=lambda x: x['date'], reverse=True)
-    
-    # Update Index
     with open(INDEX_FILE, 'w', encoding='utf-8') as f:
         json.dump(posts, f, indent=2)
-        
     print(f"Successfully indexed {len(posts)} posts to {INDEX_FILE}")
-    
-    # Generate Sitemap
     generate_sitemap(posts)
 
 def generate_sitemap(posts):
-    """Generates a simple sitemap.xml"""
     xml = ['<?xml version="1.0" encoding="UTF-8"?>']
     xml.append('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
-    
-    # Add main pages
     for page in ['', 'index.html', 'blog.html']:
         xml.append(f'  <url><loc>{BASE_URL}/{page}</loc><changefreq>weekly</changefreq></url>')
-        
-    # Add posts
     for p in posts:
         xml.append(f'  <url><loc>{BASE_URL}/posts/{p["slug"]}.html</loc><lastmod>{p["date"]}</lastmod></url>')
-        
     xml.append('</urlset>')
-    
     with open(SITEMAP_FILE, 'w', encoding='utf-8') as f:
         f.write('\n'.join(xml))
-        
     print(f"Generated {SITEMAP_FILE}")
 
 def new_post(title):
-    """Creates a new post with the given title."""
     slug = title.lower().replace(' ', '-')
     slug = re.sub(r'[^a-z0-9-]', '', slug)
     today = datetime.date.today().isoformat()
@@ -246,7 +185,6 @@ def main():
     new_parser = subparsers.add_parser('new', help='Create a new post')
     new_parser.add_argument('title', help='Title of the post')
     args = parser.parse_args()
-    
     if args.command == 'build':
         build_index_and_static_pages()
     elif args.command == 'new':
