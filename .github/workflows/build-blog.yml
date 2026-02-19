@@ -1,0 +1,40 @@
+name: Build Blog Index
+
+on:
+  push:
+    paths:
+      - 'posts/*.md'
+      - 'scripts/manage_posts.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Build Index
+        run: |
+          python scripts/manage_posts.py build
+
+      - name: Commit and Push
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add posts/index.json
+          # Check if there are changes to commit
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: update blog index [skip ci]"
+            git push
+          fi
