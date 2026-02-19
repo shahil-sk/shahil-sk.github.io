@@ -84,7 +84,8 @@
     "tags": [
       "Android",
       "Frida",
-      "Burpsuite"
+      "Burpsuite",
+      "Setup"
     ],
     "readTime": "2 min read",
     "url": "posts/setup-android-emulator-for-burpsuite-frida.html"
