@@ -1,7 +1,7 @@
 # Shahil Ahmed - Portfolio & Blog
 
 ## This Repo is strictly for PERSONAL USE
-###(github-pages doesn't work if the repo is private)
+### (github-pages doesn't work if the repo is private)
 
 This repository hosts my personal portfolio and technical blog, accessible at [shahil-sk.github.io](https://shahil-sk.github.io).
 
