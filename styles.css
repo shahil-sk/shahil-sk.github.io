@@ -25,6 +25,12 @@
 
 html { scroll-behavior: smooth; font-size: 16px; }
 
+::selection { background: rgba(255,0,0,0.3); color: var(--white); }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: rgba(255,0,0,0.25); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,0,0,0.5); }
+
 body {
     font-family: var(--sans);
     background: var(--bg);
@@ -215,6 +221,16 @@ body {
     max-width: 1440px;
     margin: 0 auto;
 }
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60vw; height: 60vw;
+    background: radial-gradient(circle, rgba(255,0,0,0.06) 0%, transparent 60%);
+    z-index: -1;
+    pointer-events: none;
+}
 .hero-eyebrow {
     font-family: var(--mono);
     font-size: 0.875rem;
@@ -315,6 +331,7 @@ body {
     letter-spacing: 0.1em;
     cursor: none;
     position: relative; overflow: hidden;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%);
     transition: box-shadow 0.3s;
 }
 .btn-primary::before {
@@ -403,7 +420,10 @@ body {
     display: flex; align-items: center; gap: 1.5rem;
     margin-bottom: 4.5rem;
 }
-.label-num { font-family: var(--mono); font-size: 1.0rem; color: var(--red); letter-spacing: 0.1em; }
+.label-num { font-family: var(--mono); font-size: 1.0rem; color: var(--red); letter-spacing: 0.1em; display: inline-flex; align-items: center; gap: 4px; }
+.label-num::before { content: '['; color: var(--text-muted); opacity: 0.5; }
+.label-num::after { content: ']'; color: var(--text-muted); opacity: 0.5; }
+
 .label-line { flex: 1; max-width: 80px; height: 1px; background: var(--border); }
 .label-text { font-family: var(--mono); font-size: 1.5rem; font-weight: 700; color: var(--text-muted); letter-spacing: 0.2em; }
 
@@ -411,10 +431,11 @@ body {
 .reveal {
     opacity: 0;
     transform: translateY(36px);
-    transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+    filter: blur(8px);
+    transition: opacity 0.8s var(--ease), transform 0.8s var(--ease), filter 0.8s var(--ease);
     transition-delay: var(--d, 0s);
 }
-.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal.visible { opacity: 1; transform: translateY(0); filter: blur(0); }
 
 /* ===== ABOUT ===== */
 .about-grid {
@@ -819,4 +840,31 @@ body {
 @media (max-width: 480px) {
     .hero-cta { flex-direction: column; align-items: flex-start; }
     .stat-val { font-size: 2rem; }
+}
+
+/* ===== SPOTLIGHT EFFECT ===== */
+.spotlight-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,0,0,0.06), transparent 40%);
+    opacity: 0;
+    transition: opacity 0.4s var(--ease);
+    z-index: 0;
+}
+.project-card:hover .spotlight-overlay,
+.skill-category:hover .spotlight-overlay,
+.blog-card:hover .spotlight-overlay,
+.info-card:hover .spotlight-overlay,
+.contact-card:hover .spotlight-overlay {
+    opacity: 1;
+}
+/* Ensure content stays above the spotlight */
+.project-card > *:not(.spotlight-overlay),
+.skill-category > *:not(.spotlight-overlay),
+.blog-card > *:not(.spotlight-overlay),
+.info-card > *:not(.spotlight-overlay),
+.contact-card > *:not(.spotlight-overlay) {
+    position: relative;
+    z-index: 1;
 }
