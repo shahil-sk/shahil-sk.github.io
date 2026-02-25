@@ -1,7 +1,7 @@
 // ========================
 // Data Loading
 // ========================
-if (document.getElementById('experience-list') || document.getElementById('projects-grid')) {
+if (document.getElementById('experience-list') || document.getElementById('projects-grid') || document.getElementById('certificates-grid')) {
   fetch('data.json')
     .then(r => r.json())
     .then(data => {
@@ -12,6 +12,7 @@ if (document.getElementById('experience-list') || document.getElementById('proje
       populateSkills(data.skills);
       populateBlogPreview();
       populateContact(data.contact);
+      populateCertificatesPage(data.about.certifications);
       populateFooter(data.footer);
       initTypewriter(data.hero.subtitle);
       setTimeout(initSpotlight, 100);
@@ -48,7 +49,7 @@ function populateAbout(about) {
   const certs = document.getElementById('certifications-content');
   if (certs && about.certifications) {
     const certsHTML = about.certifications.map(c =>
-      `<div class="cert-item">${c}</div>`
+      `<div class="cert-item">${typeof c === 'string' ? c : c.name}</div>`
     ).join('');
     certs.innerHTML = `
       <div class="cert-carousel-wrapper">
@@ -236,7 +237,7 @@ function initTypewriter(fullText) {
     requestAnimationFrame(anim);
   })();
 
-  document.querySelectorAll('a, button, .project-card, .contact-card, .info-card, .blog-card').forEach(el => {
+  document.querySelectorAll('a, button, .project-card, .contact-card, .info-card, .blog-card, .cert-page-card').forEach(el => {
     el.addEventListener('mouseenter', () => { cursor.classList.add('hover'); follower.classList.add('hover'); });
     el.addEventListener('mouseleave', () => { cursor.classList.remove('hover'); follower.classList.remove('hover'); });
   });
@@ -292,12 +293,12 @@ const revealObserver = new IntersectionObserver(entries => {
 }, { threshold: 0.08, rootMargin: '0px 0px -50px 0px' });
 
 function initReveal() {
-  document.querySelectorAll('.reveal, .exp-item, .project-card, .skill-category, .blog-card').forEach(el => revealObserver.observe(el));
+  document.querySelectorAll('.reveal, .exp-item, .project-card, .skill-category, .blog-card, .cert-page-card').forEach(el => revealObserver.observe(el));
 }
 initReveal();
 
 new MutationObserver(() => {
-  document.querySelectorAll('.reveal:not(.visible), .exp-item:not(.visible), .project-card:not(.visible), .skill-category:not(.visible), .blog-card:not(.visible)')
+  document.querySelectorAll('.reveal:not(.visible), .exp-item:not(.visible), .project-card:not(.visible), .skill-category:not(.visible), .blog-card:not(.visible), .cert-page-card:not(.visible)')
     .forEach(el => revealObserver.observe(el));
 }).observe(document.body, { childList: true, subtree: true });
 
@@ -324,7 +325,7 @@ new MutationObserver(() => {
 // Spotlight Effect
 // ========================
 function initSpotlight() {
-  const cards = document.querySelectorAll('.project-card, .skill-category, .blog-card, .info-card, .contact-card');
+  const cards = document.querySelectorAll('.project-card, .skill-category, .blog-card, .info-card, .contact-card, .cert-page-card');
   cards.forEach(card => {
     if (!card.querySelector('.spotlight-overlay')) {
       const overlay = document.createElement('div');
@@ -339,4 +340,23 @@ function initSpotlight() {
       card.style.setProperty('--mouse-y', `${y}px`);
     });
   });
+}
+
+// ========================
+// Certificates Page
+// ========================
+function populateCertificatesPage(certs) {
+  const grid = document.getElementById('certificates-grid');
+  if (!grid || !certs) return;
+  grid.innerHTML = certs.map((c, i) => `
+    <a href="${c.file || '#'}" target="_blank" rel="noopener" class="cert-page-card reveal" style="transition-delay:${(i % 3) * 0.08}s">
+      <div class="cert-page-meta">
+        <span class="cert-page-date">${c.date || ''}</span>
+        <span class="cert-page-issuer">${c.issuer || ''}</span>
+      </div>
+      <h3 class="cert-page-title">${typeof c === 'string' ? c : c.name}</h3>
+      <div class="cert-page-arrow">VIEW DOCUMENT ↗</div>
+    </a>
+  `).join('');
+  grid.querySelectorAll('.cert-page-card').forEach(el => revealObserver.observe(el));
 }

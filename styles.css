@@ -856,7 +856,8 @@ body {
 .skill-category:hover .spotlight-overlay,
 .blog-card:hover .spotlight-overlay,
 .info-card:hover .spotlight-overlay,
-.contact-card:hover .spotlight-overlay {
+.contact-card:hover .spotlight-overlay,
+.cert-page-card:hover .spotlight-overlay {
     opacity: 1;
 }
 /* Ensure content stays above the spotlight */
@@ -864,7 +865,52 @@ body {
 .skill-category > *:not(.spotlight-overlay),
 .blog-card > *:not(.spotlight-overlay),
 .info-card > *:not(.spotlight-overlay),
-.contact-card > *:not(.spotlight-overlay) {
+.contact-card > *:not(.spotlight-overlay),
+.cert-page-card > *:not(.spotlight-overlay) {
     position: relative;
     z-index: 1;
 }
+
+/* ===== CERTIFICATES PAGE ===== */
+.cert-page-inner { max-width: 1440px; margin: 0 auto; padding: 0 3rem 8rem; }
+.certificates-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+}
+.cert-page-card {
+    background: var(--bg);
+    padding: 2rem;
+    display: flex; flex-direction: column; gap: 0.75rem;
+    text-decoration: none;
+    cursor: none;
+    transition: background 0.3s;
+    position: relative; overflow: hidden;
+}
+.cert-page-card:hover { background: rgba(255,0,0,0.03); }
+.cert-page-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 1px;
+    background: var(--red);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.4s var(--ease);
+}
+.cert-page-card:hover::before { transform: scaleX(1); }
+
+.cert-page-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+.cert-page-date { font-family: var(--mono); font-size: 0.68rem; color: var(--red); letter-spacing: 0.1em; }
+.cert-page-issuer { font-family: var(--mono); font-size: 0.68rem; color: var(--text-muted); letter-spacing: 0.05em; border: 1px solid var(--border); padding: 0.2rem 0.5rem; }
+
+.cert-page-title { font-size: 1.125rem; font-weight: 600; color: var(--white); line-height: 1.4; transition: color 0.3s; flex-grow: 1; }
+.cert-page-card:hover .cert-page-title { color: var(--red); }
+
+.cert-page-arrow {
+    font-family: var(--mono); font-size: 0.75rem;
+    color: var(--red); align-self: flex-end;
+    transition: transform 0.3s var(--ease);
+    margin-top: 1rem;
+}
+.cert-page-card:hover .cert-page-arrow { transform: translate(5px, -5px); }

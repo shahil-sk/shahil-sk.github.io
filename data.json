@@ -4,7 +4,7 @@
     "firstName": "SHAHIL",
     "lastName": "AHMED",
     "subtitle": "OFFENSIVE SECURITY / PENETRATION TESTER / RED TEAM",
-    "location": "Mangaluru, Karnataka \u2022 Available for Projects",
+    "location": "Mangaluru, Karnataka • Available for Projects",
     "videoUrl": "vid.mp4",
     "stats": [
       {
@@ -33,16 +33,31 @@
       }
     ],
     "certifications": [
-      "PortSwigger Web Security Academy",
-      "50+ HackTheBox Machines",
-      "Burp Suite Academy"
+      {
+        "name": "PortSwigger Web Security Academy",
+        "issuer": "PortSwigger",
+        "date": "2024",
+        "file": "#"
+      },
+      {
+        "name": "50+ HackTheBox Machines",
+        "issuer": "HackTheBox",
+        "date": "2023",
+        "file": "#"
+      },
+      {
+        "name": "Burp Suite Academy",
+        "issuer": "PortSwigger",
+        "date": "2024",
+        "file": "#"
+      }
     ]
   },
   "experience": [
     {
       "company": "Freelance ",
       "role": "Network Technician",
-      "date": "AUG 2025 \u2014 PRESENT",
+      "date": "AUG 2025 — PRESENT",
       "highlights": [
         "Maintained 99.9% network uptime for SMB clients through proactive infrastructure monitoring",
         "Reduced hardware failure incidents by 15% through systematic preventive maintenance schedules",
@@ -52,7 +67,7 @@
     {
       "company": "EyeQ Dot Net Pvt. Ltd",
       "role": "Security Analyst",
-      "date": "JUN 2024 \u2014 AUG 2025",
+      "date": "JUN 2024 — AUG 2025",
       "highlights": [
         "Executed comprehensive Web Application Penetration Testing identifying high-severity vulnerabilities across 10+ production applications",
         "Conducted in-depth API Security Assessments targeting RESTful and GraphQL endpoints",
@@ -65,7 +80,7 @@
     {
       "company": "Connectia Technology & STPI",
       "role": "Frontend Web Developer",
-      "date": "AUG 2023 \u2014 SEP 2023",
+      "date": "AUG 2023 — SEP 2023",
       "highlights": [
         "Enhanced user engagement metrics by 20% through comprehensive UI/UX redesign",
         "Accelerated development velocity by implementing reusable component architecture"
@@ -211,7 +226,7 @@
     }
   ],
   "footer": {
-    "copyright": "\u00a9 2026 SHAHIL AHMED",
+    "copyright": "© 2026 SHAHIL AHMED",
     "quote": "\"I don't know why i like 1's and 0's\""
   }
 }
