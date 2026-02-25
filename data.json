@@ -46,7 +46,7 @@
         "file": "#"
       },
       {
-        "name": "Burp Suite Academy",
+        "name": "BurpSuite Academy",
         "issuer": "PortSwigger",
         "date": "2024",
         "file": "#"
@@ -222,7 +222,12 @@
     {
       "label": "X",
       "value": "@shahil_s_k",
-      "link": "https://twitter.com/shahil_s_k"
+      "link": "https://x.com/shahil_s_k"
+    },
+    {
+      "label": "INSTAGRAM",
+      "value": "@shahil_s_k",
+      "link": "https://instagram.com/shahil_s_k"
     }
   ],
   "footer": {
