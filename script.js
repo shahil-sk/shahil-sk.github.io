@@ -14,6 +14,7 @@ if (document.getElementById('experience-list') || document.getElementById('proje
       populateContact(data.contact);
       populateFooter(data.footer);
       initTypewriter(data.hero.subtitle);
+      setTimeout(initSpotlight, 100);
     })
     .catch(() => {
       initTypewriter('OFFENSIVE SECURITY / PENETRATION TESTER / RED TEAM');
@@ -318,3 +319,24 @@ new MutationObserver(() => {
     document.body.style.overflow = '';
   }));
 })();
+
+// ========================
+// Spotlight Effect
+// ========================
+function initSpotlight() {
+  const cards = document.querySelectorAll('.project-card, .skill-category, .blog-card, .info-card, .contact-card');
+  cards.forEach(card => {
+    if (!card.querySelector('.spotlight-overlay')) {
+      const overlay = document.createElement('div');
+      overlay.className = 'spotlight-overlay';
+      card.appendChild(overlay);
+    }
+    card.addEventListener('mousemove', e => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      card.style.setProperty('--mouse-x', `${x}px`);
+      card.style.setProperty('--mouse-y', `${y}px`);
+    });
+  });
+}
