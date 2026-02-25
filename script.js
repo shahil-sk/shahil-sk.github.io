@@ -46,9 +46,17 @@ function populateAbout(about) {
   }
   const certs = document.getElementById('certifications-content');
   if (certs && about.certifications) {
-    certs.innerHTML = about.certifications.map(c =>
+    const certsHTML = about.certifications.map(c =>
       `<div class="cert-item">${c}</div>`
     ).join('');
+    certs.innerHTML = `
+      <div class="cert-carousel-wrapper">
+        <div class="cert-carousel-track">
+          ${certsHTML}
+          ${certsHTML}
+        </div>
+      </div>
+    `;
   }
 }
 
