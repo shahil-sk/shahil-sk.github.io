@@ -459,15 +459,43 @@ body {
     margin-bottom: 0.35rem;
 }
 .info-card .small { font-size: 0.8rem; color: var(--text-muted); display: block; }
+
+/* ===== CERTIFICATION CAROUSEL ===== */
+.cert-carousel-wrapper {
+    position: relative;
+    height: 135px;
+    overflow: hidden;
+    margin-top: 0.5rem;
+    mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
+    -webkit-mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
+}
+.cert-carousel-track {
+    display: flex;
+    flex-direction: column;
+    animation: scroll-vertical 12s linear infinite;
+}
+.cert-carousel-wrapper:hover .cert-carousel-track {
+    animation-play-state: paused;
+}
+@keyframes scroll-vertical {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-50%); }
+}
 .cert-item {
     font-family: var(--mono);
     font-size: 0.8rem;
     color: var(--text);
-    padding: 0.5rem 0;
+    padding: 0.65rem 0;
     border-bottom: 1px solid var(--border);
     display: flex; align-items: center; gap: 0.5rem;
+    flex-shrink: 0;
+    transition: color 0.3s var(--ease), transform 0.3s var(--ease);
 }
-.cert-item:last-child { border-bottom: none; }
+.cert-item:hover {
+    color: var(--white);
+    transform: translateX(3px);
+}
+.cert-item:last-child { border-bottom: 1px solid var(--border); }
 .cert-item::before { content: '>'; color: var(--red); font-size: 0.7rem; }
 
 /* ===== TIMELINE ===== */
