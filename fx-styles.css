@@ -1,0 +1,174 @@
+/* fx-styles.css
+   Styles for the extra FX layer: orb container z-index cleanup,
+   section-inner perspective context, cursor magnetic state
+*/
+
+/* ============================================================
+   Z-INDEX STACK (top to bottom)
+   99999  cursor dot
+   99998  cursor ring
+   9999   scroll progress
+   1000   header
+   20     content sections
+   10     hero
+   3      warp grid canvas  (set inline by fx.js)
+   2      orb container     (set inline by fx.js)
+   1      scanlines
+   0      threejs canvas    (set inline by three-scene.js)
+   ============================================================ */
+
+.section {
+  position: relative;
+  z-index: 20;
+}
+
+.hero {
+  position: relative;
+  z-index: 10;
+}
+
+.scanlines {
+  z-index: 1;
+}
+
+/* ============================================================
+   SECTION INNER — perspective host for 3D flip reveal
+   (fx.js sets inline styles; this ensures no overflow cut)
+   ============================================================ */
+.section-inner {
+  overflow: visible;
+  transform-style: preserve-3d;
+}
+
+/* ============================================================
+   NAV LINK — 3D lift on hover
+   ============================================================ */
+.nav-link {
+  transition: color 0.3s, transform 0.3s cubic-bezier(0.16,1,0.3,1), text-shadow 0.3s;
+}
+.nav-link:hover {
+  transform: translateY(-2px);
+  text-shadow: 0 0 12px rgba(255,0,0,0.5);
+}
+
+/* ============================================================
+   LOGO — 3D depth pulse
+   ============================================================ */
+.logo {
+  display: inline-block;
+  transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), text-shadow 0.3s;
+}
+.logo:hover {
+  transform: perspective(400px) rotateY(-8deg) scale(1.04);
+  text-shadow: 4px 0 14px rgba(255,0,0,0.4);
+}
+
+/* ============================================================
+   EXPERIENCE TIMELINE — 3D flip-in reveal
+   ============================================================ */
+.exp-item {
+  transform-origin: 0% 50%;
+  transition:
+    opacity   0.7s cubic-bezier(0.16,1,0.3,1),
+    transform 0.7s cubic-bezier(0.16,1,0.3,1);
+}
+
+/* before visible: angled in from left in 3D */
+.exp-item:not(.visible) {
+  opacity: 0;
+  transform: perspective(800px) rotateY(-12deg) translateX(-24px);
+}
+.exp-item.visible {
+  opacity: 1;
+  transform: perspective(800px) rotateY(0deg) translateX(0);
+}
+
+/* ============================================================
+   BUTTON 3D DEPTH
+   ============================================================ */
+.btn-primary {
+  transition:
+    box-shadow 0.3s,
+    transform  0.3s cubic-bezier(0.16,1,0.3,1);
+}
+.btn-primary:hover {
+  transform: perspective(400px) translateZ(8px) translateY(-2px);
+  box-shadow:
+    0 0 28px rgba(255,0,0,0.5),
+    0 8px 24px rgba(255,0,0,0.2);
+}
+
+.btn-secondary {
+  transition: color 0.3s, border-color 0.3s, transform 0.3s cubic-bezier(0.16,1,0.3,1);
+}
+.btn-secondary:hover {
+  transform: translateY(-2px) translateX(2px);
+}
+
+/* ============================================================
+   STAT ITEMS — depth pop on hover
+   ============================================================ */
+.stat-item {
+  transition: transform 0.3s cubic-bezier(0.16,1,0.3,1);
+}
+.stat-item:hover {
+  transform: perspective(300px) translateZ(14px) scale(1.06);
+}
+
+/* ============================================================
+   TECH TAGS — tiny 3D lift
+   ============================================================ */
+.tech-tag {
+  display: inline-block;
+  transition: transform 0.25s cubic-bezier(0.16,1,0.3,1), color 0.3s, border-color 0.3s, background 0.3s;
+}
+.tech-tag:hover {
+  transform: translateY(-3px) scale(1.06);
+}
+
+/* ============================================================
+   CONTACT HEADING — 3D depth wave
+   ============================================================ */
+.contact-heading {
+  transition: transform 0.5s cubic-bezier(0.16,1,0.3,1), text-shadow 0.5s;
+}
+.contact-heading:hover {
+  transform: perspective(600px) rotateX(-4deg);
+  text-shadow: 0 8px 40px rgba(255,0,0,0.25);
+}
+
+/* ============================================================
+   SECTION LABEL NUMBER — 3D float
+   ============================================================ */
+.section-label .label-num {
+  display: inline-block;
+  transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), text-shadow 0.4s;
+}
+.section-label:hover .label-num {
+  transform: perspective(200px) translateZ(18px) scale(1.08);
+  text-shadow: 0 0 24px rgba(255,0,0,0.7);
+}
+
+/* ============================================================
+   MOBILE — strip parallax and 3d transforms
+   ============================================================ */
+@media (max-width: 768px) {
+  .section,
+  #about, #work, #projects, #skills, #blog, #contact {
+    transform: none !important;
+  }
+  .exp-item:not(.visible) {
+    transform: translateX(-24px);
+  }
+  .exp-item.visible {
+    transform: none;
+  }
+  .btn-primary:hover,
+  .btn-secondary:hover,
+  .stat-item:hover,
+  .nav-link:hover,
+  .logo:hover,
+  .contact-heading:hover {
+    transform: none;
+  }
+}
