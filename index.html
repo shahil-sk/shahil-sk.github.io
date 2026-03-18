@@ -9,12 +9,15 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- base theme -->
     <link rel="stylesheet" href="styles.css">
-    <!-- 3D depth: card tilt, hero float, depth shadows -->
+    <!-- card tilt, hero float, overflow fix -->
     <link rel="stylesheet" href="3d-styles.css">
-    <!-- extra FX: section flip, orbs, parallax, magnetic cursor, warp grid -->
+    <!-- section flip, stat depth, nav lift, exp timeline 3d -->
     <link rel="stylesheet" href="fx-styles.css">
-    <!-- Three.js loaded before body scripts so window.THREE is ready -->
+    <!-- full 3d redesign: glass cards, depth tokens, spatial separators -->
+    <link rel="stylesheet" href="design3d.css">
+    <!-- Three.js must be synchronous so window.THREE is ready for scene scripts -->
     <script id="three-cdn" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
@@ -24,7 +27,6 @@
     <canvas id="matrix-canvas"></canvas>
     <div class="scanlines"></div>
 
-    <!-- Header -->
     <header class="header" id="header">
         <div class="header-inner">
             <a href="/" class="logo" id="logo-link">
@@ -46,7 +48,6 @@
         </div>
     </header>
 
-    <!-- Mobile Menu -->
     <div class="mobile-menu" id="mobile-menu">
         <nav class="mobile-nav">
             <a href="#about" class="mobile-nav-link">ABOUT</a>
@@ -58,7 +59,6 @@
         </nav>
     </div>
 
-    <!-- Hero -->
     <section class="hero" id="hero">
         <div class="hero-inner">
             <div class="hero-eyebrow">
@@ -101,7 +101,6 @@
         </div>
     </section>
 
-    <!-- About -->
     <section id="about" class="section">
         <div class="section-inner">
             <div class="section-label reveal">
@@ -134,7 +133,6 @@
         </div>
     </section>
 
-    <!-- Experience -->
     <section id="work" class="section">
         <div class="section-inner">
             <div class="section-label reveal">
@@ -146,7 +144,6 @@
         </div>
     </section>
 
-    <!-- Projects -->
     <section id="projects" class="section">
         <div class="section-inner">
             <div class="section-label reveal">
@@ -158,7 +155,6 @@
         </div>
     </section>
 
-    <!-- Skills -->
     <section id="skills" class="section">
         <div class="section-inner">
             <div class="section-label reveal">
@@ -170,7 +166,6 @@
         </div>
     </section>
 
-    <!-- Blog -->
     <section id="blog" class="section">
         <div class="section-inner">
             <div class="section-label reveal">
@@ -187,7 +182,6 @@
         </div>
     </section>
 
-    <!-- Contact -->
     <section id="contact" class="section">
         <div class="section-inner">
             <div class="section-label reveal">
@@ -203,7 +197,6 @@
         </div>
     </section>
 
-    <!-- Footer -->
     <footer class="footer">
         <div class="footer-inner">
             <p id="footer-copyright">© 2026 SHAHIL AHMED</p>
@@ -212,11 +205,8 @@
     </footer>
 
     <script src="script.js"></script>
-    <!-- 3D particle background -->
     <script src="three-scene.js"></script>
-    <!-- card tilt + hero name parallax -->
     <script src="tilt3d.js"></script>
-    <!-- magnetic cursor, section flips, depth orbs, parallax, warp grid -->
     <script src="fx.js"></script>
 </body>
 </html>
