@@ -1,0 +1,451 @@
+/* design3d.css
+   Full 3D redesign layer.
+   Sits on top of styles.css, 3d-styles.css and fx-styles.css.
+   Covers: glass card surfaces, 3D depth hierarchy, spatial section
+   separators, hero depth stack, inner glow system, typography depth.
+*/
+
+/* ============================================================
+   DESIGN TOKENS (overrides / additions)
+   ============================================================ */
+:root {
+  --glass-bg:        rgba(255, 255, 255, 0.028);
+  --glass-border:    rgba(255, 255, 255, 0.08);
+  --glass-hover-bg:  rgba(255, 255, 255, 0.05);
+  --red-inner-glow:  rgba(255, 0, 0, 0.12);
+  --red-edge:        rgba(255, 0, 0, 0.55);
+  --depth-shadow:    0 24px 80px rgba(0,0,0,0.7), 0 4px 20px rgba(0,0,0,0.5);
+  --card-radius:     2px;
+}
+
+/* ============================================================
+   BODY  — subtle noise texture for depth
+   ============================================================ */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.018;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+
+/* ============================================================
+   SECTION SEPARATORS  — angled 3D cuts between sections
+   instead of a straight 1px border
+   ============================================================ */
+.section {
+  border-top: none;
+  margin-top: 0;
+  position: relative;
+}
+.section::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255,0,0,0.15) 20%,
+    rgba(255,255,255,0.06) 50%,
+    rgba(255,0,0,0.15) 80%,
+    transparent 100%
+  );
+}
+/* angled clip on alternating sections for depth illusion */
+.section:nth-child(even) {
+  clip-path: polygon(0 12px, 100% 0, 100% 100%, 0 100%);
+  margin-top: -12px;
+}
+.section:nth-child(odd):not(:first-child) {
+  clip-path: polygon(0 0, 100% 12px, 100% 100%, 0 100%);
+  margin-top: -12px;
+}
+
+/* ============================================================
+   GLASS CARDS  — project, skill, blog, contact, info, cert
+   ============================================================ */
+.project-card,
+.skill-category,
+.blog-card,
+.contact-card,
+.info-card,
+.cert-page-card {
+  background: var(--glass-bg) !important;
+  border: 1px solid var(--glass-border) !important;
+  border-radius: var(--card-radius);
+  backdrop-filter: blur(12px) saturate(120%);
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
+  box-shadow: var(--depth-shadow);
+  position: relative;
+}
+
+/* top edge accent glow line */
+.project-card::after,
+.skill-category::after,
+.blog-card::after,
+.contact-card::after,
+.info-card::after,
+.cert-page-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 10%; right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,0,0,0.5), transparent);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.project-card:hover::after,
+.skill-category:hover::after,
+.blog-card:hover::after,
+.contact-card:hover::after,
+.info-card:hover::after,
+.cert-page-card:hover::after {
+  opacity: 1;
+}
+
+/* grids: remove the 1px gap border trick — use spacing instead */
+.projects-grid,
+.skills-grid,
+.blog-grid,
+.blog-posts-grid,
+.contact-links,
+.certificates-grid {
+  background: transparent;
+  border: none;
+  gap: 1.5rem;
+}
+
+/* ============================================================
+   HERO  — deep 3D name stack
+   ============================================================ */
+.hero {
+  padding-top: 12rem;
+  padding-bottom: 8rem;
+}
+
+/* layered glow halo behind the name */
+.hero-name {
+  position: relative;
+  overflow: visible;
+}
+.hero-name::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 0;
+  transform: translateY(-50%);
+  width: 100%; height: 160%;
+  background: radial-gradient(ellipse 60% 50% at 50% 50%,
+    rgba(255,0,0,0.07) 0%,
+    transparent 70%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* SHAHIL sits further back, AHMED punches forward */
+.hero-name-line:nth-child(1) {
+  color: rgba(255,255,255,0.75);
+  letter-spacing: -0.02em;
+  filter: blur(0.3px);
+  text-shadow: none;
+}
+.hero-name-line:nth-child(2) {
+  color: var(--red);
+  letter-spacing: -0.06em;
+  filter: none;
+  text-shadow:
+    0 0 80px rgba(255,0,0,0.55),
+    0 0 160px rgba(255,0,0,0.22),
+    0 2px 0 rgba(0,0,0,0.8);
+  margin-left: 0.06em;
+}
+
+/* eyebrow — lifted forward */
+.hero-eyebrow {
+  font-size: 0.8rem;
+  letter-spacing: 0.22em;
+  color: rgba(255,0,0,0.9);
+  text-shadow: 0 0 12px rgba(255,0,0,0.4);
+  margin-bottom: 1.5rem;
+}
+
+/* stats row: floating panels */
+.hero-cta {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 3px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 1.5rem 2.5rem;
+  gap: 2.5rem;
+  display: inline-flex;
+  align-items: center;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+  margin-top: 3rem;
+}
+.stat-val {
+  font-size: 2.8rem;
+  text-shadow:
+    0 0 30px rgba(255,0,0,0.6),
+    0 0 60px rgba(255,0,0,0.25);
+}
+
+/* ============================================================
+   SECTION LABELS  — depth badge
+   ============================================================ */
+.section-label {
+  margin-bottom: 5rem;
+  gap: 1.25rem;
+}
+.label-num {
+  font-size: 0.85rem;
+  color: var(--red);
+  text-shadow: 0 0 20px rgba(255,0,0,0.55);
+  letter-spacing: 0.12em;
+}
+.label-text {
+  font-size: 1.25rem;
+  letter-spacing: 0.28em;
+  color: rgba(255,255,255,0.7);
+}
+.label-line {
+  background: linear-gradient(90deg, rgba(255,0,0,0.35), transparent);
+  max-width: 120px;
+}
+
+/* ============================================================
+   ABOUT  — intro type depth
+   ============================================================ */
+.about-intro {
+  font-size: clamp(1.25rem, 2.4vw, 1.7rem);
+  line-height: 1.5;
+  color: var(--white);
+  text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+}
+
+/* ============================================================
+   INFO CARDS  — glass lift + inner top light
+   ============================================================ */
+.info-card {
+  box-shadow:
+    var(--depth-shadow),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+  transition:
+    transform 0.4s cubic-bezier(0.16,1,0.3,1),
+    box-shadow 0.4s,
+    border-color 0.4s;
+}
+.info-card:hover {
+  transform: translateY(-4px) translateX(0) !important;
+  border-color: rgba(255,0,0,0.3) !important;
+  box-shadow:
+    0 32px 80px rgba(0,0,0,0.8),
+    0 0 40px rgba(255,0,0,0.08),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
+/* ============================================================
+   TIMELINE  — 3D marker + glass node
+   ============================================================ */
+.timeline::before {
+  background: linear-gradient(to bottom,
+    var(--red) 0%,
+    rgba(255,0,0,0.3) 60%,
+    transparent 100%);
+  width: 1px;
+  left: 0;
+  box-shadow: 0 0 8px rgba(255,0,0,0.2);
+}
+.exp-item {
+  padding: 2.5rem 0 2.5rem 3.5rem;
+  background: rgba(255,255,255,0.012);
+  border: 1px solid rgba(255,255,255,0.04);
+  border-left: none;
+  margin-bottom: 1px;
+  transition:
+    opacity 0.7s cubic-bezier(0.16,1,0.3,1),
+    transform 0.7s cubic-bezier(0.16,1,0.3,1),
+    background 0.3s,
+    border-color 0.3s;
+}
+.exp-item:hover {
+  background: rgba(255,0,0,0.025);
+  border-color: rgba(255,0,0,0.12);
+}
+.exp-item::before {
+  left: -5px;
+  width: 10px; height: 10px;
+  box-shadow: 0 0 0 3px rgba(255,0,0,0.15), 0 0 16px rgba(255,0,0,0.5);
+}
+.exp-company {
+  font-size: 1.6rem;
+  letter-spacing: -0.02em;
+  text-shadow: 0 2px 16px rgba(0,0,0,0.6);
+}
+
+/* ============================================================
+   PROJECT CARDS  — 3D floating panels
+   ============================================================ */
+.project-card {
+  padding: 2.5rem;
+  box-shadow:
+    var(--depth-shadow),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+  transition:
+    background 0.3s,
+    border-color 0.4s,
+    box-shadow 0.4s;
+}
+.project-card:hover {
+  background: var(--glass-hover-bg) !important;
+  border-color: rgba(255,0,0,0.28) !important;
+  box-shadow:
+    0 32px 80px rgba(0,0,0,0.8),
+    0 0 50px rgba(255,0,0,0.1),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+}
+.project-num {
+  font-size: 0.58rem;
+  color: rgba(255,0,0,0.6);
+  letter-spacing: 0.2em;
+  margin-bottom: 1.5rem;
+}
+.project-name {
+  font-size: 1.3rem;
+  letter-spacing: -0.01em;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+}
+
+/* ============================================================
+   SKILL CARDS
+   ============================================================ */
+.skill-category {
+  padding: 2.25rem;
+  box-shadow: var(--depth-shadow), inset 0 1px 0 rgba(255,255,255,0.04);
+}
+.skill-category:hover {
+  background: var(--glass-hover-bg) !important;
+  border-color: rgba(255,0,0,0.22) !important;
+}
+.skill-cat-title {
+  font-size: 0.85rem;
+  letter-spacing: 0.2em;
+  text-shadow: 0 0 16px rgba(255,0,0,0.35);
+}
+
+/* ============================================================
+   BLOG CARDS
+   ============================================================ */
+.blog-card {
+  padding: 2rem 2.25rem;
+  box-shadow: var(--depth-shadow), inset 0 1px 0 rgba(255,255,255,0.04);
+  gap: 0.875rem;
+}
+.blog-card:hover {
+  background: var(--glass-hover-bg) !important;
+  border-color: rgba(255,0,0,0.22) !important;
+}
+.blog-card-title {
+  font-size: 1.15rem;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+}
+
+/* ============================================================
+   CONTACT  — heading depth
+   ============================================================ */
+.contact-heading {
+  font-size: clamp(3rem, 8vw, 7rem);
+  line-height: 0.92;
+  letter-spacing: -0.05em;
+  margin-bottom: 1.75rem;
+}
+.contact-heading em {
+  text-shadow:
+    0 0 80px rgba(255,0,0,0.45),
+    0 0 160px rgba(255,0,0,0.18);
+}
+.contact-card {
+  padding: 2.25rem;
+  box-shadow: var(--depth-shadow), inset 0 1px 0 rgba(255,255,255,0.04);
+}
+.contact-card:hover {
+  background: var(--glass-hover-bg) !important;
+  border-color: rgba(255,0,0,0.28) !important;
+  transform: translateY(-5px) !important;
+}
+
+/* ============================================================
+   FOOTER  — glass bar
+   ============================================================ */
+.footer {
+  background: rgba(255,255,255,0.012);
+  border-top: 1px solid rgba(255,255,255,0.06);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 -8px 40px rgba(0,0,0,0.4);
+}
+
+/* ============================================================
+   HEADER  — deeper glass
+   ============================================================ */
+.header.scrolled {
+  background: rgba(3,3,3,0.75);
+  backdrop-filter: blur(32px) saturate(160%);
+  -webkit-backdrop-filter: blur(32px) saturate(160%);
+  border-color: rgba(255,255,255,0.06);
+  box-shadow: 0 1px 0 rgba(255,0,0,0.08), 0 4px 30px rgba(0,0,0,0.5);
+}
+
+/* ============================================================
+   TECH TAGS  — glass pill
+   ============================================================ */
+.tech-tag {
+  background: rgba(255,255,255,0.03);
+  border-radius: 1px;
+  border-color: rgba(255,255,255,0.08) !important;
+  padding: 0.3rem 0.7rem;
+}
+.project-card:hover .tech-tag {
+  background: rgba(255,0,0,0.06);
+  border-color: rgba(255,0,0,0.28) !important;
+}
+
+/* ============================================================
+   SCROLL PROGRESS  — thicker glowing bar
+   ============================================================ */
+#scroll-progress {
+  height: 3px;
+  background: linear-gradient(90deg, #ff0000, #ff4444, #ff0000);
+  box-shadow:
+    0 0 16px rgba(255,0,0,0.8),
+    0 0 40px rgba(255,0,0,0.3);
+}
+
+/* ============================================================
+   MOBILE: strip angled clips and keep layout clean
+   ============================================================ */
+@media (max-width: 768px) {
+  .section:nth-child(even),
+  .section:nth-child(odd):not(:first-child) {
+    clip-path: none;
+    margin-top: 0;
+  }
+  .section::before { display: none; }
+  .projects-grid,
+  .skills-grid,
+  .blog-grid,
+  .blog-posts-grid,
+  .contact-links,
+  .certificates-grid {
+    gap: 0.75rem;
+  }
+  .hero-cta {
+    padding: 1rem 1.5rem;
+    gap: 1.5rem;
+  }
+}
