@@ -10,8 +10,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <!-- 3D depth: card tilt, hero float, depth shadows -->
     <link rel="stylesheet" href="3d-styles.css">
-    <!-- Three.js loaded synchronously so window.THREE is available to three-scene.js -->
+    <!-- extra FX: section flip, orbs, parallax, magnetic cursor, warp grid -->
+    <link rel="stylesheet" href="fx-styles.css">
+    <!-- Three.js loaded before body scripts so window.THREE is ready -->
     <script id="three-cdn" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
@@ -209,7 +212,11 @@
     </footer>
 
     <script src="script.js"></script>
+    <!-- 3D particle background -->
     <script src="three-scene.js"></script>
+    <!-- card tilt + hero name parallax -->
     <script src="tilt3d.js"></script>
+    <!-- magnetic cursor, section flips, depth orbs, parallax, warp grid -->
+    <script src="fx.js"></script>
 </body>
 </html>
