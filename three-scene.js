@@ -1,170 +1,143 @@
 // three-scene.js
-// Full 3D background: Three.js particle field with mouse-reactive camera
-// Replaces the flat 2D matrix canvas completely
+// Boots a Three.js WebGL particle field as the site background.
+// Three.js is loaded via CDN script tag injected synchronously into <head>
+// so it is guaranteed ready before this runs.
 
 (function () {
-  // only run on pages that have the old matrix canvas placeholder
-  const placeholder = document.getElementById('matrix-canvas');
-  if (!placeholder) return;
+  // hide the old 2d placeholder
+  var old = document.getElementById('matrix-canvas');
+  if (old) old.style.display = 'none';
 
-  // hide the old 2d canvas — three.js takes over visually
-  placeholder.style.display = 'none';
+  var THREE = window.THREE;
+  if (!THREE) {
+    // THREE not loaded yet — wait for the CDN script tag we injected in index.html
+    document.querySelector('#three-cdn').addEventListener('load', init);
+    return;
+  }
+  init();
 
-  // load three.js from CDN then boot the scene
-  const script = document.createElement('script');
-  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
-  script.onload = bootScene;
-  document.head.appendChild(script);
+  function init() {
+    var THREE = window.THREE;
 
-  function bootScene() {
-    const W = window.innerWidth;
-    const H = window.innerHeight;
-
-    // --- renderer ---
-    const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true });
+    var renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setSize(W, H);
+    renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setClearColor(0x000000, 0);
-    renderer.domElement.style.cssText = [
-      'position:fixed', 'top:0', 'left:0',
-      'width:100%', 'height:100%',
-      'z-index:0', 'pointer-events:none'
-    ].join(';');
-    document.body.insertBefore(renderer.domElement, document.body.firstChild);
 
-    // --- scene + camera ---
-    const scene  = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(70, W / H, 0.1, 2000);
-    camera.position.set(0, 0, 120);
+    // sit directly behind everything else but above nothing
+    var canvas = renderer.domElement;
+    canvas.id = 'threejs-canvas';
+    canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;';
+    document.body.insertBefore(canvas, document.body.firstChild);
 
-    // subtle depth fog matching site bg
-    scene.fog = new THREE.FogExp2(0x030303, 0.006);
+    var scene  = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 2000);
+    camera.position.z = 120;
 
-    // --- particle geometry ---
-    const PARTICLE_COUNT = 3200;
-    const positions = new Float32Array(PARTICLE_COUNT * 3);
-    const colors    = new Float32Array(PARTICLE_COUNT * 3);
-    const sizes     = new Float32Array(PARTICLE_COUNT);
+    scene.fog = new THREE.FogExp2(0x030303, 0.005);
 
-    const redColor  = new THREE.Color(0xff0000);
-    const dimColor  = new THREE.Color(0x330000);
-    const faintWhite = new THREE.Color(0x1a0000);
+    // --- main particle cloud ---
+    var N = 3000;
+    var pos = new Float32Array(N * 3);
+    var col = new Float32Array(N * 3);
+    var sz  = new Float32Array(N);
 
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
-      // distribute across a wide 3d volume
-      positions[i * 3]     = (Math.random() - 0.5) * 400;
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 400;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 300;
+    for (var i = 0; i < N; i++) {
+      pos[i*3]   = (Math.random() - 0.5) * 500;
+      pos[i*3+1] = (Math.random() - 0.5) * 500;
+      pos[i*3+2] = (Math.random() - 0.5) * 350;
 
-      // mix of red accent and near-black to feel like the site palette
-      const t = Math.random();
-      const c = t < 0.12 ? redColor : (t < 0.35 ? dimColor : faintWhite);
-      colors[i * 3]     = c.r;
-      colors[i * 3 + 1] = c.g;
-      colors[i * 3 + 2] = c.b;
-
-      sizes[i] = Math.random() * 1.8 + 0.4;
+      var t = Math.random();
+      if (t < 0.10) {          // bright red
+        col[i*3] = 1; col[i*3+1] = 0; col[i*3+2] = 0;
+      } else if (t < 0.30) {   // dim red
+        col[i*3] = 0.25; col[i*3+1] = 0; col[i*3+2] = 0;
+      } else {                  // near-black
+        col[i*3] = 0.06; col[i*3+1] = 0; col[i*3+2] = 0;
+      }
+      sz[i] = Math.random() * 2.0 + 0.5;
     }
 
-    const geo = new THREE.BufferGeometry();
-    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    geo.setAttribute('color',    new THREE.BufferAttribute(colors, 3));
-    geo.setAttribute('size',     new THREE.BufferAttribute(sizes, 1));
+    var geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    geo.setAttribute('color',    new THREE.BufferAttribute(col, 3));
+    geo.setAttribute('size',     new THREE.BufferAttribute(sz,  1));
 
-    // custom shader material so we get round, glowing points
-    const mat = new THREE.ShaderMaterial({
-      uniforms: { time: { value: 0 } },
-      vertexShader: `
-        attribute float size;
-        attribute vec3 color;
-        varying vec3 vColor;
-        void main() {
-          vColor = color;
-          vec4 mvPos = modelViewMatrix * vec4(position, 1.0);
-          gl_PointSize = size * (200.0 / -mvPos.z);
-          gl_Position = projectionMatrix * mvPos;
-        }
-      `,
-      fragmentShader: `
-        varying vec3 vColor;
-        void main() {
-          // round soft dot
-          vec2 uv = gl_PointCoord - 0.5;
-          float d = length(uv);
-          if (d > 0.5) discard;
-          float alpha = smoothstep(0.5, 0.0, d) * 0.75;
-          gl_FragColor = vec4(vColor, alpha);
-        }
-      `,
+    var mat = new THREE.ShaderMaterial({
+      uniforms: {},
+      vertexShader: [
+        'attribute float size;',
+        'attribute vec3 color;',
+        'varying vec3 vColor;',
+        'void main(){',
+        '  vColor = color;',
+        '  vec4 mv = modelViewMatrix * vec4(position,1.0);',
+        '  gl_PointSize = size * (180.0 / -mv.z);',
+        '  gl_Position  = projectionMatrix * mv;',
+        '}'
+      ].join('\n'),
+      fragmentShader: [
+        'varying vec3 vColor;',
+        'void main(){',
+        '  vec2 uv = gl_PointCoord - 0.5;',
+        '  float d = length(uv);',
+        '  if(d > 0.5) discard;',
+        '  float a = smoothstep(0.5, 0.0, d) * 0.85;',
+        '  gl_FragColor = vec4(vColor, a);',
+        '}'
+      ].join('\n'),
       transparent: true,
       depthWrite: false,
       blending: THREE.AdditiveBlending,
-      vertexColors: true,
+      vertexColors: true
     });
 
-    const particles = new THREE.Points(geo, mat);
-    scene.add(particles);
+    var cloud = new THREE.Points(geo, mat);
+    scene.add(cloud);
 
-    // secondary sparse bright-red layer — like site accent glows
-    const ACCENT_COUNT = 180;
-    const aPos = new Float32Array(ACCENT_COUNT * 3);
-    for (let i = 0; i < ACCENT_COUNT; i++) {
-      aPos[i * 3]     = (Math.random() - 0.5) * 350;
-      aPos[i * 3 + 1] = (Math.random() - 0.5) * 350;
-      aPos[i * 3 + 2] = (Math.random() - 0.5) * 200;
+    // --- accent pulse dots ---
+    var AN = 200;
+    var ap = new Float32Array(AN * 3);
+    for (var j = 0; j < AN; j++) {
+      ap[j*3]   = (Math.random()-0.5)*400;
+      ap[j*3+1] = (Math.random()-0.5)*400;
+      ap[j*3+2] = (Math.random()-0.5)*250;
     }
-    const aGeo = new THREE.BufferGeometry();
-    aGeo.setAttribute('position', new THREE.BufferAttribute(aPos, 3));
-    const aMat = new THREE.PointsMaterial({
-      color: 0xff0000,
-      size: 1.4,
-      transparent: true,
-      opacity: 0.55,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false,
+    var ag = new THREE.BufferGeometry();
+    ag.setAttribute('position', new THREE.BufferAttribute(ap, 3));
+    var am = new THREE.PointsMaterial({
+      color: 0xff0000, size: 1.6,
+      transparent: true, opacity: 0.6,
+      blending: THREE.AdditiveBlending, depthWrite: false
     });
-    scene.add(new THREE.Points(aGeo, aMat));
+    scene.add(new THREE.Points(ag, am));
 
-    // --- mouse tracking for parallax camera ---
-    let targetX = 0, targetY = 0;
-    let mouseX  = 0, mouseY  = 0;
-
-    window.addEventListener('mousemove', e => {
-      mouseX = (e.clientX / window.innerWidth  - 0.5) * 2;
-      mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+    // --- mouse parallax ---
+    var mx = 0, my = 0, cx = 0, cy = 0;
+    window.addEventListener('mousemove', function(e){
+      mx = (e.clientX / window.innerWidth  - 0.5) * 2;
+      my = (e.clientY / window.innerHeight - 0.5) * 2;
     }, { passive: true });
 
-    // --- resize ---
-    window.addEventListener('resize', () => {
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-      camera.aspect = w / h;
+    window.addEventListener('resize', function(){
+      camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
-      renderer.setSize(w, h);
+      renderer.setSize(window.innerWidth, window.innerHeight);
     });
 
-    // --- animation loop ---
-    let clock = 0;
-    function animate() {
-      requestAnimationFrame(animate);
-      clock += 0.004;
-
-      // slow drift rotation of the whole particle field
-      particles.rotation.y  = clock * 0.06;
-      particles.rotation.x  = clock * 0.025;
-
-      // smooth camera follow mouse — subtle parallax depth
-      targetX += (mouseX * 18 - targetX) * 0.04;
-      targetY += (-mouseY * 10 - targetY) * 0.04;
-      camera.position.x = targetX;
-      camera.position.y = targetY;
+    var t = 0;
+    (function tick() {
+      requestAnimationFrame(tick);
+      t += 0.003;
+      cloud.rotation.y = t * 0.05;
+      cloud.rotation.x = t * 0.02;
+      cx += (mx * 20 - cx) * 0.035;
+      cy += (-my * 12 - cy) * 0.035;
+      camera.position.x = cx;
+      camera.position.y = cy;
       camera.lookAt(scene.position);
-
-      // pulse the red accent layer brightness
-      aMat.opacity = 0.45 + Math.sin(clock * 2.2) * 0.15;
-
+      am.opacity = 0.45 + Math.sin(t * 2.5) * 0.18;
       renderer.render(scene, camera);
-    }
-    animate();
+    })();
   }
 })();
