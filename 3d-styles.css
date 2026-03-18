@@ -1,0 +1,211 @@
+/* 3d-styles.css
+   Layered on top of styles.css to add 3D depth without breaking the base theme.
+   Uses CSS perspective + transform-style: preserve-3d for cards,
+   hero floating, and depth-layered sections.
+*/
+
+/* ============================================
+   GLOBAL 3D PERSPECTIVE STAGE
+   ============================================ */
+
+/* Every section gets perspective so 3D children work */
+.section,
+.hero {
+  perspective: 1400px;
+  perspective-origin: 50% 40%;
+}
+
+/* ============================================
+   HERO — 3D floating name effect
+   ============================================ */
+
+.hero-name {
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: transform 0.08s linear;
+}
+
+.hero-name-line:nth-child(1) {
+  transform: translateZ(0px);
+  transition: transform 0.08s linear, opacity 0.9s var(--ease), clip-path 0.9s var(--ease);
+}
+
+.hero-name-line:nth-child(2) {
+  transform: translateZ(30px);
+  text-shadow: 0 0 60px rgba(255,0,0,0.35), 0 8px 40px rgba(255,0,0,0.2);
+  transition: transform 0.08s linear, opacity 0.9s var(--ease), clip-path 0.9s var(--ease);
+}
+
+/* Depth shadow on the eyebrow row */
+.hero-eyebrow {
+  transform: translateZ(10px) translateY(0);
+  transform-style: preserve-3d;
+}
+
+/* ============================================
+   CARD 3D TILT  (project, skill, blog, contact, info)
+   Actual rotation is driven by JS via CSS vars
+   ============================================ */
+
+.project-card,
+.skill-category,
+.blog-card,
+.contact-card,
+.info-card,
+.cert-page-card {
+  transform-style: preserve-3d;
+  will-change: transform;
+  /* base state — JS writes rotateX/Y via inline style */
+  transform:
+    perspective(800px)
+    rotateX(var(--rx, 0deg))
+    rotateY(var(--ry, 0deg))
+    scale3d(1, 1, 1);
+  transition:
+    transform 0.18s cubic-bezier(0.03, 0.98, 0.52, 0.99),
+    background 0.3s,
+    border-color 0.3s,
+    box-shadow 0.3s;
+}
+
+/* On hover, cards lift forward and drop a 3D shadow */
+.project-card:hover,
+.skill-category:hover,
+.blog-card:hover,
+.contact-card:hover,
+.info-card:hover,
+.cert-page-card:hover {
+  box-shadow:
+    0 24px 80px rgba(255, 0, 0, 0.12),
+    0 8px 32px rgba(255, 0, 0, 0.08),
+    0 2px 8px rgba(0, 0, 0, 0.6);
+  z-index: 2;
+}
+
+/* inner content pops toward viewer */
+.project-card > *:not(.spotlight-overlay),
+.skill-category > *:not(.spotlight-overlay),
+.blog-card > *:not(.spotlight-overlay),
+.contact-card > *:not(.spotlight-overlay),
+.info-card > *:not(.spotlight-overlay),
+.cert-page-card > *:not(.spotlight-overlay) {
+  transform: translateZ(8px);
+  transition: transform 0.18s cubic-bezier(0.03, 0.98, 0.52, 0.99);
+}
+
+/* card headings punch further forward */
+.project-name,
+.skill-cat-title,
+.blog-card-title,
+.contact-value,
+.exp-company {
+  transform: translateZ(16px);
+  display: block;
+  will-change: transform;
+}
+
+/* ============================================
+   TIMELINE ITEMS — subtle slide-in depth
+   ============================================ */
+
+.exp-item {
+  transform-origin: left center;
+  /* 3d rotate in from left on reveal */
+}
+.exp-item.visible {
+  transform: translateX(0) rotateY(0deg);
+}
+
+/* ============================================
+   SECTION LABELS — floating number badge
+   ============================================ */
+
+.section-label {
+  transform-style: preserve-3d;
+}
+.label-num {
+  transform: translateZ(12px);
+  display: inline-block;
+  text-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
+}
+
+/* ============================================
+   HERO STATS — 3d depth row
+   ============================================ */
+
+.stat-val {
+  transform: translateZ(10px);
+  display: block;
+}
+
+/* ============================================
+   SCROLL PROGRESS — glowing depth bar
+   ============================================ */
+
+#scroll-progress {
+  box-shadow:
+    0 0 12px var(--red-glow),
+    0 0 30px rgba(255,0,0,0.15),
+    0 2px 0 rgba(255,0,0,0.08);
+}
+
+/* ============================================
+   HERO BACKGROUND RADIAL — deeper glow
+   ============================================ */
+
+.hero::before {
+  background:
+    radial-gradient(ellipse 50vw 50vw at 50% 55%,
+      rgba(255,0,0,0.09) 0%,
+      rgba(255,0,0,0.04) 40%,
+      transparent 70%);
+  animation: hero-glow-pulse 6s ease-in-out infinite alternate;
+}
+
+@keyframes hero-glow-pulse {
+  from { opacity: 0.7; transform: translate(-50%, -50%) scale(1); }
+  to   { opacity: 1;   transform: translate(-50%, -50%) scale(1.12); }
+}
+
+/* ============================================
+   FOOTER — subtle 3D border glow
+   ============================================ */
+
+.footer {
+  box-shadow: 0 -1px 0 rgba(255,0,0,0.08), inset 0 1px 0 rgba(255,0,0,0.04);
+}
+
+/* ============================================
+   MOBILE — disable heavy 3D transforms on small
+   screens to keep perf tight
+   ============================================ */
+
+@media (max-width: 768px) {
+  .project-card,
+  .skill-category,
+  .blog-card,
+  .contact-card,
+  .info-card,
+  .cert-page-card {
+    transform: none !important;
+  }
+  .project-card > *,
+  .skill-category > *,
+  .blog-card > *,
+  .contact-card > *,
+  .info-card > * {
+    transform: none !important;
+  }
+  .project-name,
+  .skill-cat-title,
+  .blog-card-title,
+  .contact-value,
+  .exp-company,
+  .stat-val,
+  .label-num {
+    transform: none !important;
+  }
+  .hero::before {
+    animation: none;
+  }
+}
