@@ -1,212 +1,230 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="xD6tT010s3M1LkcTouwcj4H-ekWiP3ShVDJC-OSxXWw" />
     <title>Shahil Ahmed — Offensive Security</title>
-    <meta name="description" content="Offensive security professional specializing in penetration testing and vulnerability research">
+    <meta name="description" content="Offensive security professional specialising in penetration testing and vulnerability research">
+
+    <!-- Preconnect to font origins before stylesheet request -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-    <!-- base theme -->
-    <link rel="stylesheet" href="styles.css">
-    <!-- card tilt, hero float, overflow fix -->
-    <link rel="stylesheet" href="3d-styles.css">
-    <!-- section flip, stat depth, nav lift, exp timeline 3d -->
-    <link rel="stylesheet" href="fx-styles.css">
-    <!-- full 3d redesign: glass cards, depth tokens, spatial separators -->
-    <link rel="stylesheet" href="design3d.css">
-    <!-- Three.js must be synchronous so window.THREE is ready for scene scripts -->
-    <script id="three-cdn" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!--
+      chrome-theme.css  — design tokens, palette, base reset
+      chrome-components.css — reusable component styles
+      styles.css retained for any untouched legacy sections
+    -->
+    <link rel="stylesheet" href="chrome-theme.css">
+    <link rel="stylesheet" href="chrome-components.css">
 </head>
 <body>
+    <!-- Reading progress indicator -->
     <div class="scroll-progress" id="scroll-progress"></div>
-    <div class="cursor" id="cursor"></div>
-    <div class="cursor-follower" id="cursor-follower"></div>
-    <canvas id="matrix-canvas"></canvas>
-    <div class="scanlines"></div>
 
+    <!-- ── HEADER ──────────────────────────────────────────────────────── -->
     <header class="header" id="header">
         <div class="header-inner">
-            <a href="/" class="logo" id="logo-link">
+            <a href="/" class="logo" id="logo-link" aria-label="Shahil Ahmed — home">
                 <span class="logo-bracket">[</span>
                 <span class="logo-text">SK</span>
                 <span class="logo-bracket">]</span>
             </a>
-            <nav class="nav" id="nav">
-                <a href="#about" class="nav-link">ABOUT</a>
-                <a href="#work" class="nav-link">WORK</a>
-                <a href="#projects" class="nav-link">PROJECTS</a>
-                <a href="#skills" class="nav-link">SKILLS</a>
-                <a href="#blog" class="nav-link">BLOG</a>
-                <a href="#contact" class="nav-link">CONTACT</a>
+            <nav class="nav" id="nav" aria-label="Primary navigation">
+                <a href="#about"    class="nav-link">About</a>
+                <a href="#work"     class="nav-link">Work</a>
+                <a href="#projects" class="nav-link">Projects</a>
+                <a href="#skills"   class="nav-link">Skills</a>
+                <a href="#blog"     class="nav-link">Blog</a>
+                <a href="#contact"  class="nav-link">Contact</a>
             </nav>
-            <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">
+            <!-- Theme toggle: aria-label updated by JS -->
+            <button class="theme-toggle" data-theme-toggle aria-label="Switch to light mode">
+                <!-- Moon icon (default dark) -->
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                </svg>
+            </button>
+            <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu" aria-expanded="false">
                 <span></span><span></span><span></span>
             </button>
         </div>
     </header>
 
-    <div class="mobile-menu" id="mobile-menu">
+    <!-- Mobile full-screen nav -->
+    <div class="mobile-menu" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Navigation">
         <nav class="mobile-nav">
-            <a href="#about" class="mobile-nav-link">ABOUT</a>
-            <a href="#work" class="mobile-nav-link">WORK</a>
-            <a href="#projects" class="mobile-nav-link">PROJECTS</a>
-            <a href="#skills" class="mobile-nav-link">SKILLS</a>
-            <a href="#blog" class="mobile-nav-link">BLOG</a>
-            <a href="#contact" class="mobile-nav-link">CONTACT</a>
+            <a href="#about"    class="mobile-nav-link">About</a>
+            <a href="#work"     class="mobile-nav-link">Work</a>
+            <a href="#projects" class="mobile-nav-link">Projects</a>
+            <a href="#skills"   class="mobile-nav-link">Skills</a>
+            <a href="#blog"     class="mobile-nav-link">Blog</a>
+            <a href="#contact"  class="mobile-nav-link">Contact</a>
         </nav>
     </div>
 
-    <section class="hero" id="hero">
-        <div class="hero-inner">
-            <div class="hero-eyebrow">
-                <span class="terminal-prompt">~/portfolio$</span>
-                <span class="terminal-cursor">_</span>
-            </div>
-            <h1 class="hero-name">
-                <span class="hero-name-line" id="hero-name-first">SHAHIL</span>
-                <span class="hero-name-line glitch" id="hero-name-last" data-text="AHMED">AHMED</span>
-            </h1>
-            <div class="hero-tagline">
-                <span class="tagline-prefix">// </span>
-                <span class="tagline-text" id="tagline-text"></span>
-                <span class="tagline-cursor">|</span>
-            </div>
-            <p class="hero-location">
-                <span class="status-dot"></span>
-                <span id="hero-location">Mangaluru, Karnataka — Available for Projects</span>
-            </p>
+    <!-- ── HERO ───────────────────────────────────────────────────────── -->
+    <section class="hero" id="hero" aria-label="Introduction">
+        <div class="hero-eyebrow">
+            <span class="terminal-prompt">~/portfolio$</span>
+            <span class="terminal-cursor" aria-hidden="true">_</span>
         </div>
-        <div class="hero-cta">
-            <div class="stat-item">
+        <h1 class="hero-name">
+            <span class="hero-name-line" id="hero-name-first">SHAHIL</span>
+            <span class="hero-name-line" id="hero-name-last">AHMED</span>
+        </h1>
+        <div class="hero-tagline" aria-live="polite">
+            <span class="tagline-prefix" aria-hidden="true">// </span>
+            <span class="tagline-text" id="tagline-text"></span>
+            <span class="tagline-cursor" aria-hidden="true">|</span>
+        </div>
+        <p class="hero-location">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span id="hero-location">Mangaluru, Karnataka — Available for Projects</span>
+        </p>
+        <div class="hero-cta" role="list" aria-label="Stats">
+            <div class="stat-item" role="listitem">
                 <span class="stat-val" id="stat-1-value">50+</span>
                 <span class="stat-lbl" id="stat-1-label">HTB Machines</span>
             </div>
-            <div class="stat-divider"></div>
-            <div class="stat-item">
+            <div class="stat-divider" aria-hidden="true"></div>
+            <div class="stat-item" role="listitem">
                 <span class="stat-val" id="stat-2-value">10+</span>
                 <span class="stat-lbl" id="stat-2-label">Apps Tested</span>
             </div>
-            <div class="stat-divider"></div>
-            <div class="stat-item">
+            <div class="stat-divider" aria-hidden="true"></div>
+            <div class="stat-item" role="listitem">
                 <span class="stat-val" id="stat-3-value">1+</span>
                 <span class="stat-lbl" id="stat-3-label">Years VAPT</span>
             </div>
         </div>
-        <div class="hero-scroll-hint">
+        <div class="hero-scroll-hint" aria-hidden="true">
             <span>SCROLL</span>
             <div class="scroll-line"></div>
         </div>
     </section>
 
-    <section id="about" class="section">
+    <!-- ── ABOUT ──────────────────────────────────────────────────────── -->
+    <section id="about" class="section" aria-labelledby="about-label">
         <div class="section-inner">
             <div class="section-label reveal">
-                <span class="label-num">001</span>
-                <span class="label-line"></span>
-                <span class="label-text">ABOUT</span>
+                <span class="label-num" aria-hidden="true">001</span>
+                <span class="label-line" aria-hidden="true"></span>
+                <span class="label-text" id="about-label">About</span>
             </div>
             <div class="about-grid">
                 <div class="about-main reveal">
                     <p class="about-intro" id="about-intro"></p>
-                    <p class="about-body" id="about-para-1"></p>
-                    <p class="about-body" id="about-para-2"></p>
+                    <p class="about-body"  id="about-para-1"></p>
+                    <p class="about-body"  id="about-para-2"></p>
                 </div>
                 <div class="about-side">
                     <div class="info-card reveal" style="--d:0.1s">
                         <div class="info-card-header">
-                            <h2 style="color: #FF0000;">EDUCATION</h2>
+                            <h2>Education</h2>
                         </div>
                         <div id="education-content"></div>
                     </div>
                     <div class="info-card reveal" style="--d:0.2s">
                         <div class="info-card-header">
-                            <h2 style="color: #FF0000">CERTIFICATIONS</h2>
+                            <h2>Certifications</h2>
                         </div>
                         <div id="certifications-content"></div>
-                        <a href="certificates.html" class="btn-secondary" style="margin-top: 1.5rem; display: inline-block; font-size: 0.75rem;">VIEW ALL CERTS →</a>
+                        <a href="certificates.html" class="btn-secondary" style="margin-top:var(--space-6);display:inline-flex;">View All →</a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="work" class="section">
+    <!-- ── EXPERIENCE ─────────────────────────────────────────────────── -->
+    <section id="work" class="section" aria-labelledby="work-label">
         <div class="section-inner">
             <div class="section-label reveal">
-                <span class="label-num">002</span>
-                <span class="label-line"></span>
-                <span class="label-text">EXPERIENCE</span>
+                <span class="label-num" aria-hidden="true">002</span>
+                <span class="label-line" aria-hidden="true"></span>
+                <span class="label-text" id="work-label">Experience</span>
             </div>
             <div class="timeline" id="experience-list"></div>
         </div>
     </section>
 
-    <section id="projects" class="section">
+    <!-- ── PROJECTS ───────────────────────────────────────────────────── -->
+    <section id="projects" class="section" aria-labelledby="projects-label">
         <div class="section-inner">
             <div class="section-label reveal">
-                <span class="label-num">003</span>
-                <span class="label-line"></span>
-                <span class="label-text">PROJECTS</span>
+                <span class="label-num" aria-hidden="true">003</span>
+                <span class="label-line" aria-hidden="true"></span>
+                <span class="label-text" id="projects-label">Projects</span>
             </div>
             <div class="projects-grid" id="projects-grid"></div>
         </div>
     </section>
 
-    <section id="skills" class="section">
+    <!-- ── SKILLS ─────────────────────────────────────────────────────── -->
+    <section id="skills" class="section" aria-labelledby="skills-label">
         <div class="section-inner">
             <div class="section-label reveal">
-                <span class="label-num">004</span>
-                <span class="label-line"></span>
-                <span class="label-text">SKILLS</span>
+                <span class="label-num" aria-hidden="true">004</span>
+                <span class="label-line" aria-hidden="true"></span>
+                <span class="label-text" id="skills-label">Skills</span>
             </div>
             <div class="skills-grid" id="skills-grid"></div>
         </div>
     </section>
 
-    <section id="blog" class="section">
+    <!-- ── BLOG ───────────────────────────────────────────────────────── -->
+    <section id="blog" class="section" aria-labelledby="blog-label">
         <div class="section-inner">
             <div class="section-label reveal">
-                <span class="label-num">005</span>
-                <span class="label-line"></span>
-                <span class="label-text">BLOG</span>
+                <span class="label-num" aria-hidden="true">005</span>
+                <span class="label-line" aria-hidden="true"></span>
+                <span class="label-text" id="blog-label">Blog</span>
             </div>
-            <h1 class="blog-page-title">Writeups &amp; Notes</h1>
-            <p class="blog-page-sub">Security research, CTF writeups, tools, and things I find worth writing about.</p>
+            <h2 class="blog-page-title">Writeups &amp; Notes</h2>
+            <p class="blog-page-sub">Security research, CTF writeups, tools, and things worth writing about.</p>
             <div class="blog-header reveal">
-                <a href="blog.html" class="btn-secondary">ALL POSTS →</a>
+                <a href="blog.html" class="btn-secondary">All Posts →</a>
             </div>
             <div class="blog-grid" id="blog-preview-grid"></div>
         </div>
     </section>
 
-    <section id="contact" class="section">
+    <!-- ── CONTACT ────────────────────────────────────────────────────── -->
+    <section id="contact" class="section" aria-labelledby="contact-label">
         <div class="section-inner">
             <div class="section-label reveal">
-                <span class="label-num">006</span>
-                <span class="label-line"></span>
-                <span class="label-text">CONTACT</span>
+                <span class="label-num" aria-hidden="true">006</span>
+                <span class="label-line" aria-hidden="true"></span>
+                <span class="label-text" id="contact-label">Contact</span>
             </div>
             <div class="contact-cta reveal">
-                <h2 class="contact-heading">LET'S WORK<br><em>TOGETHER</em></h2>
+                <h2 class="contact-heading">Let's Work<br><em>Together</em></h2>
                 <p class="contact-sub">Open to penetration testing contracts, red team engagements, and security consulting.</p>
             </div>
             <div class="contact-links" id="contact-grid"></div>
         </div>
     </section>
 
+    <!-- ── FOOTER ─────────────────────────────────────────────────────── -->
     <footer class="footer">
         <div class="footer-inner">
-            <p id="footer-copyright">© 2026 SHAHIL AHMED</p>
+            <p id="footer-copyright">© 2026 Shahil Ahmed</p>
             <p class="footer-quote" id="footer-quote">"I don't know why i like 1's and 0's"</p>
         </div>
     </footer>
 
-    <script src="script.js"></script>
-    <script src="three-scene.js"></script>
-    <script src="tilt3d.js"></script>
-    <script src="fx.js"></script>
+    <!--
+      JS loading strategy:
+        script.js  — data hydration, reveal observer (deferred — non-blocking)
+        blog.js    — blog grid population (deferred)
+        Three.js removed: heavy (~600KB), removed in favour of CSS grain texture
+        tilt3d.js  removed: replaced by CSS transitions
+        fx.js      retained but deferred: handles scroll progress + mobile menu
+    -->
+    <script defer src="script.js"></script>
+    <script defer src="blog.js"></script>
+    <script defer src="chrome-init.js"></script>
 </body>
 </html>

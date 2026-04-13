@@ -1,0 +1,252 @@
+/*
+ * chrome-theme.css
+ * ─────────────────────────────────────────────────────────────────────────────
+ * Art direction: Chrome Hearts luxury gothic → brutal restraint
+ * Palette:       Pure black ground, bone white text, blood-red accent
+ * Typography:    Cormorant Garamond (display, gothic weight) + DM Mono (body/UI)
+ * Density:       Spacious — heavy whitespace, editorial negative space
+ *
+ * TOKEN ARCHITECTURE
+ *   1. Type scale   (fluid clamp)
+ *   2. Spacing      (4px base grid)
+ *   3. Color        (dark-first; light mode overrides via [data-theme="light"])
+ *   4. Radius       (zero-radius philosophy — sharp edges like hammered silver)
+ *   5. Transitions
+ *   6. Base reset
+ * ─────────────────────────────────────────────────────────────────────────────
+ */
+
+/* ── Google Fonts ──────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:ital,wght@0,400;0,500;1,400&display=swap');
+
+/* ═══════════════════════════════════════════════════════════════════
+   1. TYPE SCALE — fluid clamp, 12px floor
+   ═══════════════════════════════════════════════════════════════════ */
+:root {
+  --text-xs:   clamp(0.75rem,  0.7rem  + 0.25vw, 0.875rem);  /* 12→14px */
+  --text-sm:   clamp(0.875rem, 0.8rem  + 0.35vw, 1rem);      /* 14→16px */
+  --text-base: clamp(1rem,     0.95rem + 0.25vw, 1.125rem);  /* 16→18px */
+  --text-lg:   clamp(1.125rem, 1rem    + 0.75vw, 1.5rem);    /* 18→24px */
+  --text-xl:   clamp(1.5rem,   1.2rem  + 1.25vw, 2.25rem);   /* 24→36px */
+  --text-2xl:  clamp(2rem,     1.2rem  + 2.5vw,  3.5rem);    /* 32→56px */
+  --text-3xl:  clamp(2.5rem,   1rem    + 4vw,    5rem);       /* 40→80px */
+  --text-hero: clamp(3rem,     0.5rem  + 7vw,    8rem);       /* 48→128px */
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   2. 4px SPACING GRID
+   ═══════════════════════════════════════════════════════════════════ */
+:root {
+  --space-1:  0.25rem;  /*  4px */
+  --space-2:  0.5rem;   /*  8px */
+  --space-3:  0.75rem;  /* 12px */
+  --space-4:  1rem;     /* 16px */
+  --space-5:  1.25rem;  /* 20px */
+  --space-6:  1.5rem;   /* 24px */
+  --space-8:  2rem;     /* 32px */
+  --space-10: 2.5rem;   /* 40px */
+  --space-12: 3rem;     /* 48px */
+  --space-16: 4rem;     /* 64px */
+  --space-20: 5rem;     /* 80px */
+  --space-24: 6rem;     /* 96px */
+  --space-32: 8rem;     /* 128px */
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   3. COLOR PALETTE — DARK (default)
+   Chrome Hearts reference:
+     Ground:  #0a0a09  (near-black, slight warm cast — aged silver)
+     Surface: #111110  (card ground)
+     Text:    #e8e6e0  (bone, not pure white — parchment)
+     Accent:  #c41c1c  (blood red — CH cross motif)
+   ═══════════════════════════════════════════════════════════════════ */
+:root,
+[data-theme="dark"] {
+  /* Ground layers — aged black, slight warm tint */
+  --color-bg:              #0a0a09;
+  --color-surface:         #111110;
+  --color-surface-2:       #161614;
+  --color-surface-offset:  #1a1a18;
+  --color-surface-dynamic: #222220;
+  --color-divider:         #2a2a27;
+  --color-border:          #333330;
+
+  /* Text — bone white, three levels */
+  --color-text:            #e8e6e0;  /* primary — parchment */
+  --color-text-muted:      #8a8880;  /* secondary — aged silver */
+  --color-text-faint:      #4a4a47;  /* tertiary — shadow */
+  --color-text-inverse:    #0a0a09;
+
+  /* Accent — blood red, Chrome Hearts cross */
+  --color-primary:         #c41c1c;
+  --color-primary-hover:   #e02020;
+  --color-primary-active:  #a01818;
+  --color-primary-highlight: #2a1010;
+
+  /* Borders: use alpha-blended text color */
+  --color-border-subtle: oklch(from var(--color-text) l c h / 0.08);
+  --color-border-strong: oklch(from var(--color-text) l c h / 0.18);
+
+  /* Radius — ZERO. Chrome Hearts is all sharp silver edges */
+  --radius-sm:   0;
+  --radius-md:   0;
+  --radius-lg:   0;
+  --radius-xl:   0;
+  --radius-full: 9999px;  /* pills only for tags/badges */
+
+  /* Transitions */
+  --transition-interactive: 220ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Shadows — subtle dark lift */
+  --shadow-sm: 0 1px 3px oklch(0 0 0 / 0.4);
+  --shadow-md: 0 4px 16px oklch(0 0 0 / 0.5);
+  --shadow-lg: 0 16px 40px oklch(0 0 0 / 0.6);
+
+  /* Content widths */
+  --content-narrow:  640px;
+  --content-default: 960px;
+  --content-wide:    1200px;
+
+  /* Font families */
+  --font-display: 'Cormorant Garamond', 'Georgia', serif;
+  --font-body:    'DM Mono', 'Courier New', monospace;
+}
+
+/* ── Light mode override (minimal — same ink on paper feel) ───────── */
+[data-theme="light"] {
+  --color-bg:              #f5f3ee;
+  --color-surface:         #ece9e3;
+  --color-surface-2:       #e5e2db;
+  --color-surface-offset:  #dedad2;
+  --color-surface-dynamic: #d6d2ca;
+  --color-divider:         #c8c4bb;
+  --color-border:          #b8b4ab;
+
+  --color-text:            #0f0f0d;
+  --color-text-muted:      #5a5752;
+  --color-text-faint:      #9a9892;
+  --color-text-inverse:    #f5f3ee;
+
+  --color-primary:         #a81818;
+  --color-primary-hover:   #c41c1c;
+  --color-primary-active:  #8a1212;
+  --color-primary-highlight: #f0dada;
+
+  --shadow-sm: 0 1px 3px oklch(0.2 0 0 / 0.08);
+  --shadow-md: 0 4px 16px oklch(0.2 0 0 / 0.10);
+  --shadow-lg: 0 16px 40px oklch(0.2 0 0 / 0.14);
+}
+
+/* System dark fallback */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --color-bg:              #0a0a09;
+    --color-surface:         #111110;
+    --color-surface-2:       #161614;
+    --color-surface-offset:  #1a1a18;
+    --color-surface-dynamic: #222220;
+    --color-divider:         #2a2a27;
+    --color-border:          #333330;
+    --color-text:            #e8e6e0;
+    --color-text-muted:      #8a8880;
+    --color-text-faint:      #4a4a47;
+    --color-text-inverse:    #0a0a09;
+    --color-primary:         #c41c1c;
+    --color-primary-hover:   #e02020;
+    --color-primary-active:  #a01818;
+    --color-primary-highlight: #2a1010;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   4. BASE RESET
+   ═══════════════════════════════════════════════════════════════════ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--space-16);
+  font-size: 16px;
+}
+
+body {
+  min-height: 100dvh;
+  line-height: 1.6;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  /* Grain overlay: subtle noise like brushed steel */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+}
+
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+ul[role="list"], ol[role="list"] { list-style: none; }
+input, button, textarea, select { font: inherit; color: inherit; }
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  text-wrap: balance;
+  line-height: 1.08;  /* tight — gothic editorial */
+  letter-spacing: -0.01em;
+}
+
+p, li, figcaption {
+  text-wrap: pretty;
+  max-width: 72ch;
+}
+
+/* Selection — blood red highlight */
+::selection {
+  background: oklch(from var(--color-primary) l c h / 0.3);
+  color: var(--color-text);
+}
+
+/* Focus rings — clean, accessible */
+:focus-visible {
+  outline: 1px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+button { cursor: pointer; background: none; border: none; }
+table  { border-collapse: collapse; width: 100%; }
+
+/* Interactive transitions */
+a, button, [role="button"], input, textarea, select {
+  transition:
+    color var(--transition-interactive),
+    background var(--transition-interactive),
+    border-color var(--transition-interactive),
+    opacity var(--transition-interactive);
+}
+
+/* Screen-reader utility */
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
