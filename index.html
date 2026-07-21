@@ -27,7 +27,7 @@
                         canvas: '#0A0A0A',
                         ink: '#EAEAEA',
                         grid: '#222222',
-                        accent: '#FF2A2A',
+                        accent: '#FFFFFF',
                     },
                     letterSpacing: {
                         macro: '-0.05em',
@@ -103,10 +103,10 @@
     <main id="main" class="w-full mt-16">
         
         <!-- Hero: Exaggerated Whitespace & Macro Type -->
-        <section class="w-full min-h-[100dvh] flex flex-col justify-center bg-gradient-to-b from-canvas to-neutral-900 relative overflow-hidden">
+        <section class="w-full min-h-[100dvh] flex flex-col justify-center bg-gradient-to-b from-canvas to-neutral-900 relative">
             
-            <!-- Tactical SVG Blueprint on Right -->
-            <div class="absolute right-[-10%] top-1/2 -translate-y-1/2 w-[60vw] md:w-[40vw] opacity-10 pointer-events-none mix-blend-screen hidden md:block">
+            <!-- Tactical SVG Blueprint straddling Hero and Arsenal -->
+            <div class="absolute right-[-10%] bottom-0 translate-y-1/2 w-[60vw] md:w-[40vw] opacity-10 pointer-events-none mix-blend-screen hidden md:block z-0">
                 <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="0.2" class="text-ink w-full h-auto">
                     <!-- Concentric circles -->
                     <circle cx="50" cy="50" r="45" />
@@ -128,11 +128,52 @@
                 </svg>
             </div>
 
-            <div class="p-8 md:p-16 flex flex-col items-start py-24 md:py-32 relative z-10">
+            <!-- Tactical SVG: Abstract Prism (Top Right edge) -->
+            <div class="absolute top-[5%] right-[2%] w-[40vw] md:w-[18vw] opacity-[0.07] pointer-events-none mix-blend-screen hidden md:block z-0">
+                <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="0.3" class="text-ink w-full h-auto">
+                    <!-- Central triangle -->
+                    <polygon points="50,10 90,80 10,80" stroke-dasharray="2 2" />
+                    <!-- Inner overlapping triangles -->
+                    <polygon points="50,30 75,75 25,75" />
+                    <polygon points="50,90 85,25 15,25" opacity="0.5" />
+                    <!-- Center core -->
+                    <circle cx="50" cy="55" r="5" />
+                    <circle cx="50" cy="55" r="1" fill="currentColor" />
+                    <!-- Radiating lines -->
+                    <line x1="50" y1="55" x2="50" y2="10" />
+                    <line x1="50" y1="55" x2="90" y2="80" />
+                    <line x1="50" y1="55" x2="10" y2="80" />
+                </svg>
+            </div>
+
+            <!-- Tactical SVG: Grid Tracking (Bottom Left edge) -->
+            <div class="absolute left-[2%] bottom-[5%] w-[30vw] md:w-[15vw] opacity-[0.05] pointer-events-none mix-blend-screen hidden md:block z-0">
+                <svg viewBox="0 0 100 50" fill="none" stroke="currentColor" stroke-width="0.2" class="text-ink w-full h-auto">
+                    <!-- Grid Lines -->
+                    <line x1="0" y1="10" x2="100" y2="10" />
+                    <line x1="0" y1="20" x2="100" y2="20" />
+                    <line x1="0" y1="30" x2="100" y2="30" stroke-dasharray="2 2" />
+                    <line x1="0" y1="40" x2="100" y2="40" />
+                    
+                    <line x1="10" y1="0" x2="10" y2="50" />
+                    <line x1="30" y1="0" x2="30" y2="50" />
+                    <line x1="50" y1="0" x2="50" y2="50" stroke-dasharray="2 2" />
+                    <line x1="70" y1="0" x2="70" y2="50" />
+                    <line x1="90" y1="0" x2="90" y2="50" />
+                    
+                    <!-- Data points -->
+                    <rect x="28" y="18" width="4" height="4" fill="currentColor" />
+                    <rect x="68" y="28" width="4" height="4" fill="currentColor" />
+                    <rect x="8" y="38" width="4" height="4" />
+                    <path d="M 45 45 L 55 45" stroke-width="1" />
+                </svg>
+            </div>
+
+            <div class="px-8 md:px-16 w-full relative z-10">
                 
                 <!-- Massive SK with Hover Dialog -->
                 <div class="relative group inline-block cursor-crosshair">
-                    <h1 class="text-macro text-[clamp(8rem,25vw,30rem)] text-ink leading-[0.75] tracking-tighter group-hover:text-accent transition-colors duration-500">
+                    <h1 class="text-macro text-[clamp(8rem,25vw,30rem)] text-transparent [-webkit-text-stroke:2px_#EAEAEA] leading-[0.75] tracking-tighter group-hover:text-accent transition-colors duration-500 relative z-10">
                         SK
                     </h1>
                     
@@ -151,26 +192,42 @@
                     </div>
                 </div>
                 
-                <div class="mt-16 md:mt-24 grid grid-cols-1 md:grid-cols-2 gap-12 w-full max-w-7xl">
+                <div class="mt-16 md:mt-24 grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24 w-full max-w-7xl relative z-10">
                     <div>
-                        <span class="text-micro text-accent border border-accent px-2 py-1 mb-6 inline-block">DIRECTIVE</span>
+                        <div class="flex items-center gap-4 mb-8">
+                            <span class="w-12 h-px bg-accent"></span>
+                            <span class="text-micro opacity-50">SYS_OVERRIDE</span>
+                        </div>
                         <p class="text-macro text-3xl md:text-5xl font-medium text-ink/90 normal-case tracking-tight leading-tight">
-                            I dismantle systems to understand <br class="hidden md:block"> how they break.
+                            I dismantle architectures<br class="hidden md:block">
+                            <span class="italic text-ink/40 font-serif lowercase">to isolate their breaking points.</span>
                         </p>
                     </div>
-                    <div class="text-micro text-ink/60 leading-relaxed max-w-sm">
-                        [ VULNERABILITY ASSESSMENTS ]<br>
-                        [ PENETRATION TESTING ]<br>
-                        [ RED TEAM OPERATIONS ]<br><br>
-                        ISOLATING CRITICAL FLAWS BEFORE MALICIOUS EXPLOITATION OCCURS WITHIN THE ARCHITECTURE.
+                    <div class="text-micro text-ink/60 flex flex-col gap-3 border-l border-ink/20 pl-6 justify-center">
+                        <span class="hover:text-accent transition-colors cursor-default">01 // VULNERABILITY ASSESSMENTS</span>
+                        <span class="hover:text-accent transition-colors cursor-default">02 // PENETRATION TESTING</span>
+                        <span class="hover:text-accent transition-colors cursor-default">03 // RED TEAM OPERATIONS</span>
+                        <p class="mt-6 opacity-50 max-w-xs leading-relaxed">
+                            IDENTIFYING CRITICAL FLAWS BEFORE EXPLOITATION OCCURS.
+                        </p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Asymmetric Architecture -->
-        <section id="arsenal" class="w-full grid grid-cols-1 md:grid-cols-12 min-h-[100dvh] bg-gradient-to-b from-neutral-900 to-[#151515]">
+        <!-- Arsenal (Projects) -->
+        <section id="arsenal" class="w-full grid grid-cols-1 md:grid-cols-12 min-h-[100dvh] bg-gradient-to-b from-neutral-900 to-[#151515] relative">
             
+            <!-- Tactical SVG A: Target Reticle (Arsenal Center Gap) -->
+            <div class="absolute left-[35%] top-[50%] -translate-y-1/2 w-[25vw] md:w-[15vw] opacity-[0.06] pointer-events-none mix-blend-screen hidden md:block z-0 transition-opacity duration-1000 hover:opacity-[0.15]">
+                <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="0.3" class="text-ink w-full h-auto">
+                    <circle cx="50" cy="50" r="40" stroke-dasharray="2 4" />
+                    <circle cx="50" cy="50" r="20" />
+                    <line x1="10" y1="50" x2="90" y2="50" />
+                    <line x1="50" y1="10" x2="50" y2="90" />
+                </svg>
+            </div>
+
             <!-- Pinned Left Column (GSAP Scrubbing target) -->
             <div class="md:col-span-5 p-8 md:p-16 flex flex-col" id="arsenal-pin">
                 <div class="sticky top-32">
@@ -186,42 +243,41 @@
             <div class="md:col-span-7 flex flex-col border-l border-ink/10">
                 
                 <!-- Arsenal Item 1 -->
-                <a href="https://github.com/shahil-sk/AndroidVaptTools" target="_blank" class="p-8 md:p-16 group hover:bg-ink/5 focus:bg-ink/5 focus:outline-none transition-colors duration-300 flex-1 flex flex-col justify-center border-b border-ink/10">
-                    <div class="flex justify-between items-start mb-6">
-                        <span class="text-micro text-accent group-hover:text-canvas group-focus:text-canvas border border-accent group-hover:border-canvas group-focus:border-canvas px-2 py-1">AUTOMATION</span>
+                <a href="https://github.com/shahil-sk/AndroidVaptTools" target="_blank" class="px-8 py-12 md:px-16 md:py-16 group hover:bg-ink/5 focus:bg-ink/5 focus:outline-none transition-colors duration-300 flex-1 flex flex-col justify-center border-b border-ink/10 relative z-10">
+                    <div class="flex justify-between items-center mb-4 w-full">
+                        <h3 class="text-macro text-4xl md:text-5xl font-bold group-hover:text-accent transition-colors">AndroidVapt<span class="font-serif italic lowercase tracking-normal">Tools</span></h3>
                         <span class="text-macro text-3xl group-hover:translate-x-2 transition-transform">↗</span>
                     </div>
-                    <h3 class="text-macro text-4xl md:text-5xl font-bold mb-2">AndroidVapt<span class="font-serif italic lowercase tracking-normal">Tools</span></h3>
                     <p class="text-micro text-ink/60 group-hover:text-canvas/80 group-focus:text-canvas/80 max-w-md">BASH AUTOMATION SUITE STREAMLINING ANDROID PENETRATION TESTING TOOL DEPLOYMENTS.</p>
                 </a>
 
                 <!-- Arsenal Item 2 -->
-                <a href="https://github.com/shahil-sk/sk00pium" target="_blank" class="p-8 md:p-16 group hover:bg-ink/5 focus:bg-ink/5 focus:outline-none transition-colors duration-300 flex-1 flex flex-col justify-center border-b border-ink/10">
-                    <div class="flex justify-between items-start mb-6">
-                        <span class="text-micro text-accent group-hover:text-canvas group-focus:text-canvas border border-accent group-hover:border-canvas group-focus:border-canvas px-2 py-1">SYSTEMS</span>
+                <a href="https://github.com/shahil-sk/sk00pium" target="_blank" class="px-8 py-12 md:px-16 md:py-16 group hover:bg-ink/5 focus:bg-ink/5 focus:outline-none transition-colors duration-300 flex-1 flex flex-col justify-center border-b border-ink/10 relative z-10">
+                    <div class="flex justify-between items-center mb-4 w-full">
+                        <h3 class="text-macro text-4xl md:text-5xl font-bold group-hover:text-accent transition-colors">sk00pium</h3>
                         <span class="text-macro text-3xl group-hover:translate-x-2 transition-transform">↗</span>
                     </div>
-                    <h3 class="text-macro text-4xl md:text-5xl font-bold mb-2">sk00pium</h3>
                     <p class="text-micro text-ink/60 group-hover:text-canvas/80 group-focus:text-canvas/80 max-w-md">CUSTOM LINUX DISTRIBUTION ENGINEERED FROM SCRATCH. KERNEL-LEVEL INTEGRATION.</p>
                 </a>
 
                 <!-- Arsenal Item 3 -->
-                <a href="https://github.com/shahil-sk/streamline" target="_blank" class="p-8 md:p-16 group hover:bg-ink/5 focus:bg-ink/5 focus:outline-none transition-colors duration-300 flex-1 flex flex-col justify-center border-b border-ink/10">
-                    <div class="flex justify-between items-start mb-6">
-                        <span class="text-micro text-accent group-hover:text-canvas group-focus:text-canvas border border-accent group-hover:border-canvas group-focus:border-canvas px-2 py-1">CLI UTILITY</span>
+                <a href="https://github.com/shahil-sk/streamline" target="_blank" class="px-8 py-12 md:px-16 md:py-16 group hover:bg-ink/5 focus:bg-ink/5 focus:outline-none transition-colors duration-300 flex-1 flex flex-col justify-center border-b border-ink/10 relative z-10">
+                    <div class="flex justify-between items-center mb-4 w-full">
+                        <h3 class="text-macro text-4xl md:text-5xl font-bold group-hover:text-accent transition-colors">stream<span class="font-serif italic lowercase tracking-normal">line</span></h3>
                         <span class="text-macro text-3xl group-hover:translate-x-2 transition-transform">↗</span>
                     </div>
-                    <h3 class="text-macro text-4xl md:text-5xl font-bold mb-2">stream<span class="font-serif italic lowercase tracking-normal">line</span></h3>
                     <p class="text-micro text-ink/60 group-hover:text-canvas/80 group-focus:text-canvas/80 max-w-md">HIGH-PERFORMANCE TERMINAL DOWNLOADER WRITTEN IN GO WITH PARALLEL THREADING.</p>
                 </a>
 
                 <!-- View All Link -->
-                <a href="https://github.com/shahil-sk?tab=repositories" target="_blank" class="p-8 md:p-16 group hover:bg-accent focus:bg-accent hover:text-canvas focus:text-canvas focus:outline-none transition-colors duration-300 flex-1 flex justify-between items-center">
+                <a href="https://github.com/shahil-sk?tab=repositories" target="_blank" class="p-8 md:p-16 group hover:bg-accent focus:bg-accent hover:text-canvas focus:text-canvas focus:outline-none transition-colors duration-300 flex-1 flex justify-between items-center relative z-10">
                     <span class="text-macro text-2xl md:text-3xl font-bold">ACCESS_FULL_ARCHIVE</span>
                     <span class="text-macro text-3xl group-hover:translate-x-2 transition-transform">→</span>
                 </a>
-
             </div>
+
+            <!-- Bottom fade transition out of Arsenal -->
+            <div class="absolute bottom-0 left-0 w-full h-48 bg-gradient-to-b from-transparent to-[#151515] pointer-events-none z-[20]"></div>
         </section>
 
         <!-- Capabilities -->
@@ -232,11 +288,36 @@
                 <span class="text-macro text-[30vw] leading-[0.7] text-ink whitespace-nowrap translate-x-[20%]">API</span>
                 <span class="text-macro text-[30vw] leading-[0.7] text-ink whitespace-nowrap -translate-x-[10%]">MOB</span>
             </div>
+            
+            <!-- Top fade transition from previous section -->
+            <div class="absolute top-0 left-0 w-full h-48 bg-gradient-to-b from-[#151515] to-transparent pointer-events-none z-[1]"></div>
+            
+            <!-- Bottom fade transition into next section -->
+            <div class="absolute bottom-0 left-0 w-full h-48 bg-gradient-to-b from-transparent to-neutral-900 pointer-events-none z-[1]"></div>
+            
+            <!-- Tactical SVG B: Data Nodes (Top Right empty space) -->
+            <div class="absolute right-[2%] top-[5%] w-[20vw] md:w-[8vw] opacity-[0.04] pointer-events-none mix-blend-screen hidden md:block z-0 transition-opacity duration-[2000ms] hover:opacity-10">
+                <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="0.4" class="text-ink w-full h-auto">
+                    <rect x="20" y="20" width="20" height="20" />
+                    <rect x="60" y="20" width="20" height="20" />
+                    <rect x="20" y="60" width="20" height="20" />
+                    <rect x="60" y="60" width="20" height="20" fill="currentColor" />
+                    <line x1="40" y1="30" x2="60" y2="30" />
+                    <line x1="30" y1="40" x2="30" y2="60" />
+                </svg>
+            </div>
 
-            <div class="p-8 md:p-16 w-full max-w-7xl mx-auto z-10">
-                <span class="text-micro text-accent border border-accent px-2 py-1 mb-16 md:mb-32 inline-block">DOMAIN EXPERTISE</span>
-                
-                <div class="flex flex-col gap-16 md:gap-24 w-full">
+            <!-- Tactical SVG C: Hex Map (Bottom Right edge) -->
+            <div class="absolute right-[5%] bottom-[5%] w-[30vw] md:w-[15vw] opacity-[0.05] pointer-events-none mix-blend-screen hidden md:block z-0">
+                <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="0.2" class="text-ink w-full h-auto">
+                    <polygon points="50,10 85,30 85,70 50,90 15,70 15,30" stroke-dasharray="4 2" />
+                    <polygon points="50,25 70,38 70,62 50,75 30,62 30,38" />
+                    <circle cx="50" cy="50" r="5" fill="currentColor" />
+                </svg>
+            </div>
+
+            <div class="px-8 md:px-16 w-full max-w-7xl mx-auto z-10 flex flex-col justify-center h-full">
+                <div class="flex flex-col gap-12 md:gap-20 w-full">
                     
                     <!-- Staircase Item 1 -->
                     <div class="flex flex-col md:flex-row gap-6 md:gap-16 items-start group">
@@ -277,11 +358,36 @@
 
         <!-- Dynamic Transmissions -->
         <section class="w-full min-h-[100dvh] flex flex-col justify-center bg-gradient-to-b from-neutral-900 to-canvas relative py-32">
-            <div class="p-8 md:p-16 w-full max-w-[1600px] mx-auto z-10">
-                <div class="flex flex-col md:flex-row justify-between items-end mb-16 md:mb-24">
+            
+            <!-- Tactical SVG D: Radar Sweep (Top Right corner) -->
+            <div class="absolute right-[2%] top-[5%] w-[40vw] md:w-[20vw] opacity-[0.06] pointer-events-none mix-blend-screen hidden md:block z-0 transition-all duration-[3000ms] hover:opacity-20 hover:scale-105">
+                <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="0.2" class="text-ink w-full h-auto">
+                    <circle cx="50" cy="50" r="45" />
+                    <path d="M 50 50 L 85 15" stroke-dasharray="2 2" />
+                    <path d="M 50 50 L 95 50" stroke-width="0.5" />
+                    <circle cx="70" cy="30" r="2" fill="currentColor" />
+                    <circle cx="80" cy="60" r="1" fill="currentColor" />
+                </svg>
+            </div>
+
+            <!-- Tactical SVG E: Barcode Block (Bottom Left edge) -->
+            <div class="absolute left-[2%] bottom-[5%] w-[20vw] md:w-[8vw] opacity-[0.08] pointer-events-none mix-blend-screen hidden md:block z-0">
+                <svg viewBox="0 0 100 50" fill="none" stroke="currentColor" stroke-width="1" class="text-ink w-full h-auto">
+                    <line x1="10" y1="0" x2="10" y2="50" stroke-width="2" />
+                    <line x1="15" y1="0" x2="15" y2="50" stroke-width="1" />
+                    <line x1="20" y1="0" x2="20" y2="50" stroke-width="4" />
+                    <line x1="28" y1="0" x2="28" y2="50" stroke-width="1" />
+                    <line x1="32" y1="0" x2="32" y2="50" stroke-width="3" />
+                    <line x1="40" y1="0" x2="40" y2="50" stroke-width="2" />
+                    <line x1="45" y1="0" x2="45" y2="50" stroke-width="5" />
+                    <line x1="55" y1="0" x2="55" y2="50" stroke-width="1" />
+                </svg>
+            </div>
+
+            <div class="px-8 md:px-16 w-full max-w-[1600px] mx-auto z-10 flex flex-col justify-center h-full">
+                <div class="flex flex-col md:flex-row justify-between items-end mb-12 md:mb-16">
                     <div class="flex flex-col">
-                        <span class="text-micro text-accent border border-accent px-2 py-1 mb-6 inline-block w-max">TRANSMISSIONS</span>
-                        <h2 class="text-macro text-5xl md:text-7xl font-bold leading-[0.85] tracking-tight mt-6">
+                        <h2 class="text-macro text-5xl md:text-7xl font-bold leading-[0.85] tracking-tight">
                             RAW<br>
                             <span class="text-ink/30 italic font-serif lowercase">logs</span>
                         </h2>
@@ -306,10 +412,20 @@
 
         <!-- Footer -->
         <footer class="w-full bg-canvas pt-32 pb-8 flex flex-col relative overflow-hidden">
+            
+            <!-- Tactical SVG F: Circuit (Footer Top Right edge) -->
+            <div class="absolute right-[5%] top-[20%] w-[30vw] md:w-[15vw] opacity-[0.03] pointer-events-none mix-blend-screen hidden md:block z-0">
+                <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="0.3" class="text-ink w-full h-auto">
+                    <path d="M 10 90 L 30 90 L 50 70 L 90 70" />
+                    <path d="M 20 80 L 40 80 L 60 60 L 80 60" stroke-dasharray="2 2" />
+                    <circle cx="90" cy="70" r="2" fill="currentColor" />
+                    <circle cx="80" cy="60" r="2" />
+                </svg>
+            </div>
+
             <!-- Massive Centered CTA -->
             <div class="w-full flex flex-col items-center justify-center border-b border-ink/20 pb-32 relative z-10">
                 <a href="mailto:shahilforbusiness@gmail.com" class="group flex flex-col items-center text-center">
-                    <span class="text-micro text-accent border border-accent px-2 py-1 mb-8 opacity-50 group-hover:opacity-100 transition-opacity">EXECUTE_MAILTO</span>
                     <span class="text-macro text-[clamp(5rem,20vw,20rem)] leading-[0.75] text-ink group-hover:text-accent transition-colors tracking-tighter">
                         CONTACT
                     </span>
