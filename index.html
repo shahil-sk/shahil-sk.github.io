@@ -3,210 +3,337 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="google-site-verification" content="xD6tT010s3M1LkcTouwcj4H-ekWiP3ShVDJC-OSxXWw" />
-    <title>Shahil Ahmed — Offensive Security</title>
-    <meta name="description" content="Offensive security professional specializing in penetration testing and vulnerability research">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-    <!-- base theme -->
-    <link rel="stylesheet" href="styles.css">
-    <!-- card tilt, hero float, overflow fix -->
-    <link rel="stylesheet" href="3d-styles.css">
-    <!-- section flip, stat depth, nav lift, exp timeline 3d -->
-    <link rel="stylesheet" href="fx-styles.css">
-    <!-- full 3d redesign: glass cards, depth tokens, spatial separators -->
-    <link rel="stylesheet" href="design3d.css">
-    <!-- Three.js must be synchronous so window.THREE is ready for scene scripts -->
-    <script id="three-cdn" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <title>SHAHIL AHMED // OFFENSIVE SECURITY</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Playfair+Display:ital,wght@1,900&display=swap" rel="stylesheet">
+    <link href="https://api.fontshare.com/v2/css?f[]=clash-display@700,600,500,400&display=swap" rel="stylesheet">
+    
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Clash Display"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                        serif: ['"Playfair Display"', 'serif'],
+                    },
+                    colors: {
+                        canvas: '#0A0A0A',
+                        ink: '#EAEAEA',
+                        grid: '#222222',
+                        accent: '#FF2A2A',
+                    },
+                    letterSpacing: {
+                        macro: '-0.05em',
+                        micro: '0.05em'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            background-color: #0A0A0A;
+            color: #EAEAEA;
+            cursor: crosshair;
+        }
+
+        /* Mechanical Noise */
+        .noise-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.05;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Typographic Utilities */
+        .text-micro {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        
+        .text-macro {
+            font-family: 'Clash Display', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: -0.05em;
+            line-height: 0.85;
+        }
+
+        /* Hide Scrollbar */
+        ::-webkit-scrollbar {
+            width: 0;
+            display: none;
+        }
+    </style>
 </head>
-<body>
-    <div class="scroll-progress" id="scroll-progress"></div>
-    <div class="cursor" id="cursor"></div>
-    <div class="cursor-follower" id="cursor-follower"></div>
-    <canvas id="matrix-canvas"></canvas>
-    <div class="scanlines"></div>
+<body class="antialiased overflow-x-hidden selection:bg-accent selection:text-ink">
 
-    <header class="header" id="header">
-        <div class="header-inner">
-            <a href="/" class="logo" id="logo-link">
-                <span class="logo-bracket">[</span>
-                <span class="logo-text">SK</span>
-                <span class="logo-bracket">]</span>
-            </a>
-            <nav class="nav" id="nav">
-                <a href="#about" class="nav-link">ABOUT</a>
-                <a href="#work" class="nav-link">WORK</a>
-                <a href="#projects" class="nav-link">PROJECTS</a>
-                <a href="#skills" class="nav-link">SKILLS</a>
-                <a href="#blog" class="nav-link">BLOG</a>
-                <a href="#contact" class="nav-link">CONTACT</a>
-            </nav>
-            <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">
-                <span></span><span></span><span></span>
-            </button>
-        </div>
-    </header>
+    <div class="noise-overlay"></div>
 
-    <div class="mobile-menu" id="mobile-menu">
-        <nav class="mobile-nav">
-            <a href="#about" class="mobile-nav-link">ABOUT</a>
-            <a href="#work" class="mobile-nav-link">WORK</a>
-            <a href="#projects" class="mobile-nav-link">PROJECTS</a>
-            <a href="#skills" class="mobile-nav-link">SKILLS</a>
-            <a href="#blog" class="mobile-nav-link">BLOG</a>
-            <a href="#contact" class="mobile-nav-link">CONTACT</a>
-        </nav>
-    </div>
+    <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-[9999] bg-accent text-ink px-4 py-2 text-micro font-bold border border-ink">SKIP TO CONTENT</a>
 
-    <section class="hero" id="hero">
-        <div class="hero-inner">
-            <div class="hero-eyebrow">
-                <span class="terminal-prompt">~/portfolio$</span>
-                <span class="terminal-cursor">_</span>
+    <!-- Top Navigation (Rigid) -->
+    <nav class="grid grid-cols-1 md:grid-cols-12 w-full fixed top-0 z-50 bg-canvas/90 backdrop-blur-md">
+        <div class="md:col-span-8 py-4 px-6 md:px-8 flex justify-between items-center">
+            <div class="flex items-center gap-4 md:gap-8">
+                <span class="text-micro text-ink/40 hidden md:inline-block">[ OFFENSIVE SECURITY ]</span>
             </div>
-            <h1 class="hero-name">
-                <span class="hero-name-line" id="hero-name-first">SHAHIL</span>
-                <span class="hero-name-line glitch" id="hero-name-last" data-text="AHMED">AHMED</span>
-            </h1>
-            <div class="hero-tagline">
-                <span class="tagline-prefix">// </span>
-                <span class="tagline-text" id="tagline-text"></span>
-                <span class="tagline-cursor">|</span>
-            </div>
-            <p class="hero-location">
-                <span class="status-dot"></span>
-                <span id="hero-location">Mangaluru, Karnataka — Available for Projects</span>
-            </p>
+            <span class="text-micro text-ink/60 hidden sm:inline-block">SYS.V_26.0.1</span>
         </div>
-        <div class="hero-cta">
-            <div class="stat-item">
-                <span class="stat-val" id="stat-1-value">50+</span>
-                <span class="stat-lbl" id="stat-1-label">HTB Machines</span>
-            </div>
-            <div class="stat-divider"></div>
-            <div class="stat-item">
-                <span class="stat-val" id="stat-2-value">10+</span>
-                <span class="stat-lbl" id="stat-2-label">Apps Tested</span>
-            </div>
-            <div class="stat-divider"></div>
-            <div class="stat-item">
-                <span class="stat-val" id="stat-3-value">1+</span>
-                <span class="stat-lbl" id="stat-3-label">Years VAPT</span>
-            </div>
+        <div class="md:col-span-4 py-4 px-6 md:px-8 flex justify-between items-center bg-accent text-canvas">
+            <span class="text-micro font-bold flex items-center gap-2">
+                <span class="w-1.5 h-1.5 bg-canvas animate-pulse"></span>
+                ACTIVE
+            </span>
+            <span class="text-micro font-bold">12.87&deg;N // 74.84&deg;E</span>
         </div>
-        <div class="hero-scroll-hint">
-            <span>SCROLL</span>
-            <div class="scroll-line"></div>
-        </div>
-    </section>
+    </nav>
 
-    <section id="about" class="section">
-        <div class="section-inner">
-            <div class="section-label reveal">
-                <span class="label-num">001</span>
-                <span class="label-line"></span>
-                <span class="label-text">ABOUT</span>
+    <main id="main" class="w-full mt-16">
+        
+        <!-- Hero: Exaggerated Whitespace & Macro Type -->
+        <section class="w-full min-h-[100dvh] flex flex-col justify-center bg-gradient-to-b from-canvas to-neutral-900 relative overflow-hidden">
+            
+            <!-- Tactical SVG Blueprint on Right -->
+            <div class="absolute right-[-10%] top-1/2 -translate-y-1/2 w-[60vw] md:w-[40vw] opacity-10 pointer-events-none mix-blend-screen hidden md:block">
+                <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="0.2" class="text-ink w-full h-auto">
+                    <!-- Concentric circles -->
+                    <circle cx="50" cy="50" r="45" />
+                    <circle cx="50" cy="50" r="35" stroke-dasharray="1 2" />
+                    <circle cx="50" cy="50" r="25" />
+                    <circle cx="50" cy="50" r="10" stroke-width="0.5" />
+                    <!-- Crosshairs -->
+                    <line x1="0" y1="50" x2="100" y2="50" stroke-width="0.1" />
+                    <line x1="50" y1="0" x2="50" y2="100" stroke-width="0.1" />
+                    <!-- Diagonal tactical lines -->
+                    <line x1="18" y1="18" x2="82" y2="82" stroke-dasharray="2 4" stroke-width="0.3" />
+                    <line x1="18" y1="82" x2="82" y2="18" stroke-dasharray="2 4" stroke-width="0.3" />
+                    <!-- Inner reticle -->
+                    <rect x="42" y="42" width="16" height="16" stroke-dasharray="1 1" />
+                    <circle cx="50" cy="50" r="1.5" fill="currentColor" />
+                    <!-- Orbital tracking paths -->
+                    <path d="M 50 15 A 35 35 0 0 1 85 50" stroke="currentColor" stroke-width="0.5" stroke-dasharray="4 2" />
+                    <path d="M 50 85 A 35 35 0 0 1 15 50" stroke="currentColor" stroke-width="0.5" stroke-dasharray="4 2" />
+                </svg>
             </div>
-            <div class="about-grid">
-                <div class="about-main reveal">
-                    <p class="about-intro" id="about-intro"></p>
-                    <p class="about-body" id="about-para-1"></p>
-                    <p class="about-body" id="about-para-2"></p>
-                </div>
-                <div class="about-side">
-                    <div class="info-card reveal" style="--d:0.1s">
-                        <div class="info-card-header">
-                            <h2 style="color: #FF0000;">EDUCATION</h2>
+
+            <div class="p-8 md:p-16 flex flex-col items-start py-24 md:py-32 relative z-10">
+                
+                <!-- Massive SK with Hover Dialog -->
+                <div class="relative group inline-block cursor-crosshair">
+                    <h1 class="text-macro text-[clamp(8rem,25vw,30rem)] text-ink leading-[0.75] tracking-tighter group-hover:text-accent transition-colors duration-500">
+                        SK
+                    </h1>
+                    
+                    <!-- Hover Dialog Reveal -->
+                    <div class="absolute left-0 top-[80%] md:top-[60%] w-[280px] md:w-[400px] bg-ink text-canvas p-6 opacity-0 translate-y-8 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 z-50 border border-transparent shadow-2xl">
+                        <span class="text-micro font-bold border-b border-canvas/20 pb-2 mb-4 block w-full">IDENTITY RECORDED</span>
+                        <h2 class="text-macro text-3xl md:text-5xl mb-2">SHAHIL AHMED</h2>
+                        <p class="text-micro opacity-80 leading-relaxed mb-6">
+                            OFFENSIVE SECURITY OPERATOR.<br>
+                            SPECIALIST IN SYSTEM DISMANTLING & TACTICAL EXPLOITATION.
+                        </p>
+                        <div class="flex justify-between items-center text-micro pt-4 border-t border-canvas/20">
+                            <span>L: 12.87&deg;N // 74.84&deg;E</span>
+                            <span class="animate-pulse font-bold">STATUS: ACTIVE</span>
                         </div>
-                        <div id="education-content"></div>
                     </div>
-                    <div class="info-card reveal" style="--d:0.2s">
-                        <div class="info-card-header">
-                            <h2 style="color: #FF0000">CERTIFICATIONS</h2>
-                        </div>
-                        <div id="certifications-content"></div>
-                        <a href="certificates.html" class="btn-secondary" style="margin-top: 1.5rem; display: inline-block; font-size: 0.75rem;">VIEW ALL CERTS →</a>
+                </div>
+                
+                <div class="mt-16 md:mt-24 grid grid-cols-1 md:grid-cols-2 gap-12 w-full max-w-7xl">
+                    <div>
+                        <span class="text-micro text-accent border border-accent px-2 py-1 mb-6 inline-block">DIRECTIVE</span>
+                        <p class="text-macro text-3xl md:text-5xl font-medium text-ink/90 normal-case tracking-tight leading-tight">
+                            I dismantle systems to understand <br class="hidden md:block"> how they break.
+                        </p>
+                    </div>
+                    <div class="text-micro text-ink/60 leading-relaxed max-w-sm">
+                        [ VULNERABILITY ASSESSMENTS ]<br>
+                        [ PENETRATION TESTING ]<br>
+                        [ RED TEAM OPERATIONS ]<br><br>
+                        ISOLATING CRITICAL FLAWS BEFORE MALICIOUS EXPLOITATION OCCURS WITHIN THE ARCHITECTURE.
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section id="work" class="section">
-        <div class="section-inner">
-            <div class="section-label reveal">
-                <span class="label-num">002</span>
-                <span class="label-line"></span>
-                <span class="label-text">EXPERIENCE</span>
+        <!-- Asymmetric Architecture -->
+        <section id="arsenal" class="w-full grid grid-cols-1 md:grid-cols-12 min-h-[100dvh] bg-gradient-to-b from-neutral-900 to-[#151515]">
+            
+            <!-- Pinned Left Column (GSAP Scrubbing target) -->
+            <div class="md:col-span-5 p-8 md:p-16 flex flex-col" id="arsenal-pin">
+                <div class="sticky top-32">
+                    <h2 class="text-macro text-[clamp(3rem,8vw,8rem)] text-ink mb-12 gs-scrub-text">ARSENAL</h2>
+                    <p class="text-micro text-ink/60 max-w-xs mb-12 relative z-10">
+                        ENGINEERED SOLUTIONS FOR TACTICAL EXPLOITATION AND AUTOMATED ANALYSIS.
+                    </p>
+                    <svg class="w-12 h-12 text-accent animate-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 2v20M2 12h20M12 7a5 5 0 100 10A5 5 0 1012 7z"/></svg>
+                </div>
             </div>
-            <div class="timeline" id="experience-list"></div>
-        </div>
-    </section>
 
-    <section id="projects" class="section">
-        <div class="section-inner">
-            <div class="section-label reveal">
-                <span class="label-num">003</span>
-                <span class="label-line"></span>
-                <span class="label-text">PROJECTS</span>
-            </div>
-            <div class="projects-grid" id="projects-grid"></div>
-        </div>
-    </section>
+            <!-- Right Column (Scrolling Data) -->
+            <div class="md:col-span-7 flex flex-col border-l border-ink/10">
+                
+                <!-- Arsenal Item 1 -->
+                <a href="https://github.com/shahil-sk/AndroidVaptTools" target="_blank" class="p-8 md:p-16 group hover:bg-ink/5 focus:bg-ink/5 focus:outline-none transition-colors duration-300 flex-1 flex flex-col justify-center border-b border-ink/10">
+                    <div class="flex justify-between items-start mb-6">
+                        <span class="text-micro text-accent group-hover:text-canvas group-focus:text-canvas border border-accent group-hover:border-canvas group-focus:border-canvas px-2 py-1">AUTOMATION</span>
+                        <span class="text-macro text-3xl group-hover:translate-x-2 transition-transform">↗</span>
+                    </div>
+                    <h3 class="text-macro text-4xl md:text-5xl font-bold mb-2">AndroidVapt<span class="font-serif italic lowercase tracking-normal">Tools</span></h3>
+                    <p class="text-micro text-ink/60 group-hover:text-canvas/80 group-focus:text-canvas/80 max-w-md">BASH AUTOMATION SUITE STREAMLINING ANDROID PENETRATION TESTING TOOL DEPLOYMENTS.</p>
+                </a>
 
-    <section id="skills" class="section">
-        <div class="section-inner">
-            <div class="section-label reveal">
-                <span class="label-num">004</span>
-                <span class="label-line"></span>
-                <span class="label-text">SKILLS</span>
-            </div>
-            <div class="skills-grid" id="skills-grid"></div>
-        </div>
-    </section>
+                <!-- Arsenal Item 2 -->
+                <a href="https://github.com/shahil-sk/sk00pium" target="_blank" class="p-8 md:p-16 group hover:bg-ink/5 focus:bg-ink/5 focus:outline-none transition-colors duration-300 flex-1 flex flex-col justify-center border-b border-ink/10">
+                    <div class="flex justify-between items-start mb-6">
+                        <span class="text-micro text-accent group-hover:text-canvas group-focus:text-canvas border border-accent group-hover:border-canvas group-focus:border-canvas px-2 py-1">SYSTEMS</span>
+                        <span class="text-macro text-3xl group-hover:translate-x-2 transition-transform">↗</span>
+                    </div>
+                    <h3 class="text-macro text-4xl md:text-5xl font-bold mb-2">sk00pium</h3>
+                    <p class="text-micro text-ink/60 group-hover:text-canvas/80 group-focus:text-canvas/80 max-w-md">CUSTOM LINUX DISTRIBUTION ENGINEERED FROM SCRATCH. KERNEL-LEVEL INTEGRATION.</p>
+                </a>
 
-    <section id="blog" class="section">
-        <div class="section-inner">
-            <div class="section-label reveal">
-                <span class="label-num">005</span>
-                <span class="label-line"></span>
-                <span class="label-text">BLOG</span>
-            </div>
-            <h1 class="blog-page-title">Writeups &amp; Notes</h1>
-            <p class="blog-page-sub">Security research, CTF writeups, tools, and things I find worth writing about.</p>
-            <div class="blog-header reveal">
-                <a href="blog.html" class="btn-secondary">ALL POSTS →</a>
-            </div>
-            <div class="blog-grid" id="blog-preview-grid"></div>
-        </div>
-    </section>
+                <!-- Arsenal Item 3 -->
+                <a href="https://github.com/shahil-sk/streamline" target="_blank" class="p-8 md:p-16 group hover:bg-ink/5 focus:bg-ink/5 focus:outline-none transition-colors duration-300 flex-1 flex flex-col justify-center border-b border-ink/10">
+                    <div class="flex justify-between items-start mb-6">
+                        <span class="text-micro text-accent group-hover:text-canvas group-focus:text-canvas border border-accent group-hover:border-canvas group-focus:border-canvas px-2 py-1">CLI UTILITY</span>
+                        <span class="text-macro text-3xl group-hover:translate-x-2 transition-transform">↗</span>
+                    </div>
+                    <h3 class="text-macro text-4xl md:text-5xl font-bold mb-2">stream<span class="font-serif italic lowercase tracking-normal">line</span></h3>
+                    <p class="text-micro text-ink/60 group-hover:text-canvas/80 group-focus:text-canvas/80 max-w-md">HIGH-PERFORMANCE TERMINAL DOWNLOADER WRITTEN IN GO WITH PARALLEL THREADING.</p>
+                </a>
 
-    <section id="contact" class="section">
-        <div class="section-inner">
-            <div class="section-label reveal">
-                <span class="label-num">006</span>
-                <span class="label-line"></span>
-                <span class="label-text">CONTACT</span>
-            </div>
-            <div class="contact-cta reveal">
-                <h2 class="contact-heading">LET'S WORK<br><em>TOGETHER</em></h2>
-                <p class="contact-sub">Open to penetration testing contracts, red team engagements, and security consulting.</p>
-            </div>
-            <div class="contact-links" id="contact-grid"></div>
-        </div>
-    </section>
+                <!-- View All Link -->
+                <a href="https://github.com/shahil-sk?tab=repositories" target="_blank" class="p-8 md:p-16 group hover:bg-accent focus:bg-accent hover:text-canvas focus:text-canvas focus:outline-none transition-colors duration-300 flex-1 flex justify-between items-center">
+                    <span class="text-macro text-2xl md:text-3xl font-bold">ACCESS_FULL_ARCHIVE</span>
+                    <span class="text-macro text-3xl group-hover:translate-x-2 transition-transform">→</span>
+                </a>
 
-    <footer class="footer">
-        <div class="footer-inner">
-            <p id="footer-copyright">© 2026 SHAHIL AHMED</p>
-            <p class="footer-quote" id="footer-quote">"I don't know why i like 1's and 0's"</p>
-        </div>
-    </footer>
+            </div>
+        </section>
+
+        <!-- Capabilities -->
+        <section class="w-full min-h-[100dvh] flex flex-col justify-center bg-gradient-to-b from-[#151515] to-neutral-900 relative overflow-hidden">
+            <!-- Brutalist Background Watermark -->
+            <div class="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-[0.03] select-none z-0 overflow-hidden">
+                <span class="text-macro text-[30vw] leading-[0.7] text-ink whitespace-nowrap">WEB</span>
+                <span class="text-macro text-[30vw] leading-[0.7] text-ink whitespace-nowrap translate-x-[20%]">API</span>
+                <span class="text-macro text-[30vw] leading-[0.7] text-ink whitespace-nowrap -translate-x-[10%]">MOB</span>
+            </div>
+
+            <div class="p-8 md:p-16 w-full max-w-7xl mx-auto z-10">
+                <span class="text-micro text-accent border border-accent px-2 py-1 mb-16 md:mb-32 inline-block">DOMAIN EXPERTISE</span>
+                
+                <div class="flex flex-col gap-16 md:gap-24 w-full">
+                    
+                    <!-- Staircase Item 1 -->
+                    <div class="flex flex-col md:flex-row gap-6 md:gap-16 items-start group">
+                        <span class="text-macro text-6xl md:text-8xl text-ink/20 group-hover:text-accent transition-colors duration-500">01</span>
+                        <div class="flex flex-col gap-6 pt-2">
+                            <h3 class="text-macro text-5xl md:text-7xl text-ink leading-[0.85]">WEB SECURITY</h3>
+                            <p class="text-micro text-ink/60 max-w-md leading-relaxed group-hover:text-ink transition-colors duration-300">
+                                Deep analysis of modern web architectures. Exploiting complex logic flaws, chaining vulnerabilities (SQLi, CSRF, XSS), and bypassing enterprise authentication mechanisms.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Staircase Item 2 -->
+                    <div class="flex flex-col md:flex-row gap-6 md:gap-16 items-start md:ml-32 lg:ml-48 group">
+                        <span class="text-macro text-6xl md:text-8xl text-ink/20 group-hover:text-accent transition-colors duration-500">02</span>
+                        <div class="flex flex-col gap-6 pt-2">
+                            <h3 class="text-macro text-5xl md:text-7xl text-ink leading-[0.85]">API EXPLOITATION</h3>
+                            <p class="text-micro text-ink/60 max-w-md leading-relaxed group-hover:text-ink transition-colors duration-300">
+                                Dismantling microservices and backend integrations. Specializing in REST/GraphQL logic, BOLA (IDOR), mass assignment, and aggressive rate limit evasion.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Staircase Item 3 -->
+                    <div class="flex flex-col md:flex-row gap-6 md:gap-16 items-start md:ml-64 lg:ml-[24rem] group">
+                        <span class="text-macro text-6xl md:text-8xl text-ink/20 group-hover:text-accent transition-colors duration-500">03</span>
+                        <div class="flex flex-col gap-6 pt-2">
+                            <h3 class="text-macro text-5xl md:text-7xl text-ink leading-[0.85]">ANDROID SYSTEMS</h3>
+                            <p class="text-micro text-ink/60 max-w-md leading-relaxed group-hover:text-ink transition-colors duration-300">
+                                Reverse engineering mobile executables. Intent manipulation, broadcast receiver exploits, custom SSL pinning bypasses, and live Frida instrumentation.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Dynamic Transmissions -->
+        <section class="w-full min-h-[100dvh] flex flex-col justify-center bg-gradient-to-b from-neutral-900 to-canvas relative py-32">
+            <div class="p-8 md:p-16 w-full max-w-[1600px] mx-auto z-10">
+                <div class="flex flex-col md:flex-row justify-between items-end mb-16 md:mb-24">
+                    <div class="flex flex-col">
+                        <span class="text-micro text-accent border border-accent px-2 py-1 mb-6 inline-block w-max">TRANSMISSIONS</span>
+                        <h2 class="text-macro text-5xl md:text-7xl font-bold leading-[0.85] tracking-tight mt-6">
+                            RAW<br>
+                            <span class="text-ink/30 italic font-serif lowercase">logs</span>
+                        </h2>
+                    </div>
+                </div>
+
+                <!-- Data Table Header -->
+                <div class="hidden md:grid grid-cols-12 gap-4 text-micro text-ink/40 border-b border-ink/20 pb-4 mb-2 w-full">
+                    <div class="col-span-2">TIMESTAMP</div>
+                    <div class="col-span-1">ID</div>
+                    <div class="col-span-7">ENTRY_TITLE</div>
+                    <div class="col-span-2 text-right">ACTION</div>
+                </div>
+
+                <div id="blog-preview-grid" class="flex flex-col w-full">
+                    <!-- Injected via JS -->
+                </div>
+                
+                <a href="https://shahil-sk.github.io/blog/" class="text-micro text-ink/60 hover:text-accent transition-colors block mt-16 text-center w-full">VIEW FULL ARCHIVE [↗]</a>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="w-full bg-canvas pt-32 pb-8 flex flex-col relative overflow-hidden">
+            <!-- Massive Centered CTA -->
+            <div class="w-full flex flex-col items-center justify-center border-b border-ink/20 pb-32 relative z-10">
+                <a href="mailto:shahilforbusiness@gmail.com" class="group flex flex-col items-center text-center">
+                    <span class="text-micro text-accent border border-accent px-2 py-1 mb-8 opacity-50 group-hover:opacity-100 transition-opacity">EXECUTE_MAILTO</span>
+                    <span class="text-macro text-[clamp(5rem,20vw,20rem)] leading-[0.75] text-ink group-hover:text-accent transition-colors tracking-tighter">
+                        CONTACT
+                    </span>
+                    <span class="text-macro text-[clamp(3rem,12vw,12rem)] italic font-serif lowercase text-ink/30 group-hover:text-ink transition-colors leading-[0.8]">
+                        protocol
+                    </span>
+                </a>
+            </div>
+            
+            <!-- Terminal Exit Status & Links -->
+            <div class="w-full flex flex-col md:flex-row justify-between items-center p-8 md:px-16 pt-8">
+                <div class="flex gap-8 text-micro text-ink/60 mb-8 md:mb-0">
+                    <a href="https://github.com/shahil-sk" target="_blank" class="hover:text-accent transition-colors">[ GITHUB ]</a>
+                    <a href="https://linkedin.com/in/shahil-ahmed-533266310" target="_blank" class="hover:text-accent transition-colors">[ LINKEDIN ]</a>
+                </div>
+                <div class="text-micro text-ink/40 flex items-center gap-4">
+                    <span class="w-1.5 h-1.5 bg-accent animate-pulse"></span>
+                    END_OF_TRANSMISSION // &copy; 2026 SHAHIL AHMED
+                </div>
+            </div>
+        </footer>
+
+    </main>
 
     <script src="script.js"></script>
-    <script src="three-scene.js"></script>
-    <script src="tilt3d.js"></script>
-    <script src="fx.js"></script>
 </body>
 </html>
