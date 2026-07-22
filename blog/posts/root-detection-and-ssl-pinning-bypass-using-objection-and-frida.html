@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Root detection and SSL-pinning bypass using Objection And Frida — Shahil Ahmed</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Playfair+Display:ital,wght@1,900&display=swap" rel="stylesheet">
+    <link href="https://api.fontshare.com/v2/css?f[]=clash-display@700,600,500,400&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- highlight.js for code syntax -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/highlight.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Clash Display"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                        serif: ['"Playfair Display"', 'serif'],
+                    },
+                    colors: {
+                        canvas: '#0A0A0A',
+                        ink: '#EAEAEA',
+                        grid: '#222222',
+                        accent: '#FFFFFF',
+                    },
+                    letterSpacing: {
+                        macro: '-0.05em',
+                        micro: '0.05em'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            background-color: #0A0A0A;
+            color: #EAEAEA;
+            cursor: crosshair;
+        }
+
+        .noise-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.05;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .text-micro {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        
+        .text-macro {
+            font-family: 'Clash Display', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: -0.05em;
+            line-height: 0.85;
+        }
+
+        /* Post Body Typography */
+        .post-body h1, .post-body h2, .post-body h3 {
+            font-family: 'Clash Display', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: -0.02em;
+            margin-top: 2em;
+            margin-bottom: 0.5em;
+            color: #EAEAEA;
+        }
+        .post-body h2 { font-size: 2rem; border-bottom: 1px solid #222; padding-bottom: 0.5rem; }
+        .post-body h3 { font-size: 1.5rem; color: #aaa; }
+        .post-body p {
+            margin-bottom: 1.5em;
+            line-height: 1.8;
+            color: #aaa;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+        }
+        .post-body a {
+            color: #fff;
+            text-decoration: underline;
+            text-decoration-style: dotted;
+            text-underline-offset: 4px;
+        }
+        .post-body img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #222;
+            margin: 2em 0;
+            filter: grayscale(100%) contrast(1.2);
+            transition: filter 0.3s;
+        }
+        .post-body img:hover {
+            filter: grayscale(0%) contrast(1);
+        }
+        .post-body pre {
+            background: #050505 !important;
+            border: 1px solid #222;
+            padding: 1.5em;
+            overflow-x: auto;
+            margin: 2em 0;
+        }
+        .post-body code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+        }
+        .post-body ul, .post-body ol {
+            margin-bottom: 1.5em;
+            padding-left: 2em;
+            color: #aaa;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+        .post-body li { margin-bottom: 0.5em; }
+        .post-body blockquote {
+            border-left: 2px solid #fff;
+            padding-left: 1em;
+            color: #888;
+            margin: 1.5em 0;
+            font-style: italic;
+        }
+
+        ::-webkit-scrollbar {
+            width: 0;
+            display: none;
+        }
+    </style>
+
+    <meta name="description" content="# Objection  > [!IMPORTANT] > 1) Make sure adb is installed. > 2) Use a quality USB cable. > 3) Install frida ### The Application that I'm using today">
+    <meta property="og:title" content="Root detection and SSL-pinning bypass using Objection And Frida">
+    <meta property="og:description" content="# Objection  > [!IMPORTANT] > 1) Make sure adb is installed. > 2) Use a quality USB cable. > 3) Install frida ### The Application that I'm using today">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://shahil-sk.github.io/blog/posts/root-detection-and-ssl-pinning-bypass-using-objection-and-frida.html">
+            
+</head>
+<body class="antialiased overflow-x-hidden selection:bg-accent selection:text-ink">
+
+    <div class="noise-overlay"></div>
+
+    <!-- Global Nav Overlay -->
+    <nav class="fixed top-0 w-full p-8 md:px-16 md:py-12 flex justify-end items-start z-[100] pointer-events-none">
+        <div class="relative pointer-events-auto">
+            <button id="terminal-toggle" class="text-ink/50 hover:text-ink transition-colors focus:outline-none flex items-center gap-2 group">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
+                    <polyline points="4 17 10 11 4 5"></polyline>
+                    <line x1="12" y1="19" x2="20" y2="19"></line>
+                </svg>
+            </button>
+            
+            <div id="nav-terminal" class="absolute top-full right-0 mt-6 w-[350px] md:w-[500px] lg:w-[600px] bg-[#111111] border border-ink/10 flex flex-col font-mono text-micro text-ink p-6 hidden opacity-0 -translate-y-4 transition-all duration-300 ease-out shadow-2xl">
+                <div id="terminal-output" class="flex flex-col gap-1 mb-2 whitespace-pre-wrap leading-relaxed max-h-48 overflow-y-auto scrollbar-hide">
+                    <div class="text-ink/50 mb-2">// SECURE SHELL INITIALIZED</div>
+                    <div class="mb-4">System ready. Type <span class="text-accent">help</span> for commands.</div>
+                </div>
+                <div class="flex items-center gap-3 shrink-0 relative mt-4 pt-4 border-t border-ink/10">
+                    <span class="text-accent shrink-0">root@sk:~#</span>
+                    <div class="relative flex-1 flex items-center overflow-hidden">
+                        <input type="text" id="terminal-input" class="absolute inset-0 w-full h-full bg-transparent border-none outline-none text-transparent caret-transparent focus:ring-0 p-0 shadow-none font-mono z-10" autocomplete="off" spellcheck="false">
+                        <div class="pointer-events-none flex items-center whitespace-pre text-ink">
+                            <span id="fake-input-text"></span>
+                            <span class="inline-block w-2 h-4 bg-accent animate-[pulse_1s_ease-in-out_infinite]"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Go Back Link -->
+    <a href="../index.html" class="fixed top-8 md:top-12 left-8 md:left-16 text-micro text-ink/50 hover:text-ink transition-colors z-50 mix-blend-difference uppercase flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        BACK
+    </a>
+
+    <main class="w-full pt-32 pb-32 px-8 md:px-16 min-h-[100dvh] flex flex-col items-center relative">
+        <div class="w-full max-w-[800px] flex flex-col gap-12 relative z-10">
+            <!-- Header -->
+            <div class="flex flex-col gap-6 border-b border-ink/10 pb-12">
+                <div class="flex flex-wrap gap-4 items-center justify-between text-micro text-ink/40">
+                    <div class="flex gap-4 items-center">
+                        <div class="post-meta" id="post-meta">2024-12-05</div>
+                        <span>//</span>
+                        <div class="post-reading-time" id="post-reading-time">2 min read</div>
+                    </div>
+                    <div class="post-tags flex gap-2 flex-wrap" id="post-tags"><span class="text-micro px-2 py-1 bg-ink/5 text-ink/60 border border-ink/10">Android</span><span class="text-micro px-2 py-1 bg-ink/5 text-ink/60 border border-ink/10">Frida</span><span class="text-micro px-2 py-1 bg-ink/5 text-ink/60 border border-ink/10">Pentesting</span></div>
+                </div>
+                <h1 class="post-title text-macro text-5xl md:text-7xl leading-[0.9]" id="post-title">Loading...</h1>
+            </div>
+
+            <!-- Article body -->
+            <article class="post-body" id="post-body"><h1>Objection</h1>
+<blockquote>
+<p>[!IMPORTANT]
+1) Make sure adb is installed.
+2) Use a quality USB cable.
+3) Install frida</p>
+</blockquote>
+<h3>The Application that I'm using today is <a href="https://github.com/satishpatnayak/MyTest/tree/master">AndroGoat</a></h3>
+<p>which is purposely made vulnerable for testing and learning</p>
+<p>Objection run's upon frida, So make sure the frida server is installed and running</p>
+<p>1)  Use <code>frida-ps -Uai</code> to list all the applications installed on the devices.
+2)  Attach the application using objection has shown below and A console should appear.
+    1) <code>objection -g com.example.app explore</code>
+        - <code>-g</code> : to specify application Package name.
+        -  <code>explore</code> : this flag provides interactive console for the application</p>
+<h2>Root detection</h2>
+<p>Go to "Root detection" section of the app and check for the status. if should show toast telling "Device is rooted"
+- Use <code>android root disable</code> to disable root detection.
+- Use <code>android root stimulate</code> to enable root detection</p>
+<h2>SSL pinning Bypass</h2>
+<blockquote>
+<p>[!NOTE]
+Make sure the device is connected to Burpsuite Proxy</p>
+</blockquote>
+<p>Go to "Network intercepting" section of the app.
+    You can find 3 buttons indicating HTTP, HTTPS, CERTIFICATE PINNING.</p>
+<p>Try sending HTTP AND HTTPS request, you should be able to capture those request via burpsuite
+but the CERTIFICATE PINNING request may not appear on the proxy history, it is because of the SSL pinning is a security technique to bypass it we can Use
+-  Use <code>android sslpinning disable</code></p>
+<h1>Frida</h1>
+<blockquote>
+<p>[!IMPORTANT]
+Make Sure The Frida-server is Up and  Running</p>
+</blockquote>
+<h2>Frida Script Injection Process.</h2>
+<p>Step 1:
+    **Find the package name of the app.
+- use <code>frida-ps -Uia</code> to list installed application</p>
+<p>Step 2:
+    **Injecting the frida script and starting the application.
+- use <code>frida -l &lt;script-Path&gt; -f &lt;package-name&gt; -U</code> to list installed application</p>
+<blockquote>
+<p>[!important]
+You  have to save your cacert.crt certificate file your emulator <code>/data/local/tmp</code>  folder as "cert-der.crt" for SSL-pinning bypass </p>
+</blockquote>
+<p>some basic script:
+1) <a href="https://codeshare.frida.re/@dzonerzy/fridantiroot/">RootBypass</a>
+2) <a href="https://codeshare.frida.re/@pcipolloni/universal-android-ssl-pinning-bypass-with-frida/">SSL-pinning</a></p>
+<p>make sure save the script locally in your computer</p>
+<blockquote>
+<p>[!note]
+You can use multiple script inside a single file by copy pasting both or multiple script in side a single txt file</p>
+</blockquote></article>
+        </div>
+    </main>
+
+    <script src="../../script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof hljs !== 'undefined') hljs.highlightAll();
+        });
+    </script>
+</body>
+</html>

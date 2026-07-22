@@ -6,16 +6,16 @@ import re
 import shutil
 
 # Directories
-BASE_DIR = os.getcwd()
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 POSTS_OUTPUT_DIR = os.path.join(BASE_DIR, 'posts')      # Where HTML files go
-CONTENT_DIR = os.path.join(BASE_DIR, 'content', 'posts') # Where MD files live
+CONTENT_DIR = os.path.join(BASE_DIR, 'content') # Where MD files live
 IMAGES_SRC_DIR = os.path.join(BASE_DIR, 'content', 'images')
 IMAGES_DST_DIR = os.path.join(POSTS_OUTPUT_DIR, 'images')
 
 INDEX_FILE = os.path.join(POSTS_OUTPUT_DIR, 'index.json')
 TEMPLATE_FILE = os.path.join(BASE_DIR, 'blog-post.html')
 SITEMAP_FILE = os.path.join(BASE_DIR, 'sitemap.xml')
-BASE_URL = 'https://shahil-sk.github.io'
+BASE_URL = 'https://shahil-sk.github.io/blog'
 
 try:
     import markdown
@@ -164,12 +164,12 @@ def build_blog():
             # Paths
             page_html = page_html.replace('href="styles.css"', 'href="../styles.css"')
             page_html = page_html.replace('href="post.css"', 'href="../post.css"')
-            page_html = page_html.replace('src="script.js"', 'src="../script.js"')
+            page_html = page_html.replace('src="../script.js"', 'src="../../script.js"')
             page_html = page_html.replace('href="index.html"', 'href="../index.html"')
-            page_html = page_html.replace('href="blog.html"', 'href="../blog.html"')
+            page_html = page_html.replace('href="blog.html"', 'href="../index.html"')
             page_html = page_html.replace('href="blog-post.html"', 'href="../blog-post.html"')
-            page_html = page_html.replace('href="/"', 'href="../index.html"')
-            page_html = page_html.replace('href="/#', 'href="../index.html#')
+            page_html = page_html.replace('href="/"', 'href="../../index.html"')
+            page_html = page_html.replace('href="/#', 'href="../../index.html#')
 
             # Content Injection
             title = fm.get('title', 'Untitled')
@@ -177,8 +177,9 @@ def build_blog():
             page_html = page_html.replace('<h1 class="post-title" id="post-title">Loading...</h1>', f'<h1 class="post-title" id="post-title">{title}</h1>')
             date = fm.get('date', '')
             page_html = page_html.replace('<div class="post-meta" id="post-meta"></div>', f'<div class="post-meta" id="post-meta">{date}</div>')
-            tags_html = "".join([f'<span class="blog-tag">{t}</span>' for t in fm.get('tags', [])])
-            page_html = page_html.replace('<div class="post-tags" id="post-tags"></div>', f'<div class="post-tags" id="post-tags">{tags_html}</div>')
+            tags_html = "".join([f'<span class="text-micro px-2 py-1 bg-ink/5 text-ink/60 border border-ink/10">{t}</span>' for t in fm.get('tags', [])])
+            page_html = page_html.replace('<div class="post-tags flex gap-2 flex-wrap" id="post-tags"></div>', f'<div class="post-tags flex gap-2 flex-wrap" id="post-tags">{tags_html}</div>')
+            page_html = page_html.replace('<div class="post-tags" id="post-tags"></div>', f'<div class="post-tags flex gap-2 flex-wrap" id="post-tags">{tags_html}</div>')
             page_html = page_html.replace('<div class="post-reading-time" id="post-reading-time"></div>', f'<div class="post-reading-time" id="post-reading-time">{read_time_str}</div>')
             page_html = page_html.replace('<article class="post-body" id="post-body"></article>', f'<article class="post-body" id="post-body">{html_content}</article>')
             
@@ -218,7 +219,7 @@ def build_blog():
 def generate_sitemap(posts):
     xml = ['<?xml version="1.0" encoding="UTF-8"?>']
     xml.append('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
-    for page in ['', 'index.html', 'blog.html']:
+    for page in ['', 'index.html']:
         xml.append(f'  <url><loc>{BASE_URL}/{page}</loc><changefreq>weekly</changefreq></url>')
     for p in posts:
         xml.append(f'  <url><loc>{BASE_URL}/posts/{p["slug"]}.html</loc><lastmod>{p["date"]}</lastmod></url>')

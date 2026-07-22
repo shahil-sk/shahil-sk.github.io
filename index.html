@@ -84,26 +84,41 @@
     <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-[9999] bg-accent text-ink px-4 py-2 text-micro font-bold border border-ink">SKIP TO CONTENT</a>
 
     <!-- Top Navigation (Rigid) -->
-    <nav class="grid grid-cols-1 md:grid-cols-12 w-full fixed top-0 z-50 bg-canvas/90 backdrop-blur-md">
-        <div class="md:col-span-8 py-4 px-6 md:px-8 flex justify-between items-center">
-            <div class="flex items-center gap-4 md:gap-8">
-                <span class="text-micro text-ink/40 hidden md:inline-block">[ OFFENSIVE SECURITY ]</span>
+    <!-- Global Nav Overlay -->
+    <nav class="fixed top-0 w-full p-8 md:px-16 md:py-12 flex justify-end items-start z-[100] pointer-events-none">
+        <div class="relative pointer-events-auto">
+            <!-- Terminal Icon Button -->
+            <button id="terminal-toggle" class="text-ink/50 hover:text-ink transition-colors focus:outline-none flex items-center gap-2 group">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6">
+                    <polyline points="4 17 10 11 4 5"></polyline>
+                    <line x1="12" y1="19" x2="20" y2="19"></line>
+                </svg>
+            </button>
+            
+            <!-- Terminal Dropdown -->
+            <div id="nav-terminal" class="absolute top-full right-0 mt-6 w-[350px] md:w-[500px] lg:w-[600px] bg-[#111111] border border-ink/10 flex flex-col font-mono text-micro text-ink p-6 hidden opacity-0 -translate-y-4 transition-all duration-300 ease-out shadow-2xl">
+                <div id="terminal-output" class="flex flex-col gap-1 mb-2 whitespace-pre-wrap leading-relaxed max-h-48 overflow-y-auto scrollbar-hide">
+                    <div class="text-ink/50 mb-2">// SECURE SHELL INITIALIZED</div>
+                    <div class="mb-4">System ready. Type <span class="text-accent">help</span> for commands.</div>
+                </div>
+                <div class="flex items-center gap-3 shrink-0 relative mt-4 pt-4 border-t border-ink/10">
+                    <span class="text-accent shrink-0">root@sk:~#</span>
+                    <div class="relative flex-1 flex items-center overflow-hidden">
+                        <input type="text" id="terminal-input" class="absolute inset-0 w-full h-full bg-transparent border-none outline-none text-transparent caret-transparent focus:ring-0 p-0 shadow-none font-mono z-10" autocomplete="off" spellcheck="false">
+                        <div class="pointer-events-none flex items-center whitespace-pre text-ink">
+                            <span id="fake-input-text"></span>
+                            <span class="inline-block w-2 h-4 bg-accent animate-[pulse_1s_ease-in-out_infinite]"></span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <span class="text-micro text-ink/60 hidden sm:inline-block">SYS.V_26.0.1</span>
-        </div>
-        <div class="md:col-span-4 py-4 px-6 md:px-8 flex justify-between items-center bg-accent text-canvas">
-            <span class="text-micro font-bold flex items-center gap-2">
-                <span class="w-1.5 h-1.5 bg-canvas animate-pulse"></span>
-                ACTIVE
-            </span>
-            <span class="text-micro font-bold">12.87&deg;N // 74.84&deg;E</span>
         </div>
     </nav>
 
     <main id="main" class="w-full mt-16">
         
-        <!-- Hero: Exaggerated Whitespace & Macro Type -->
-        <section class="w-full min-h-[100dvh] flex flex-col justify-center bg-gradient-to-b from-canvas to-neutral-900 relative">
+        <!-- Hero Section -->
+        <section id="hero" class="w-full min-h-[100dvh] flex flex-col justify-center bg-gradient-to-b from-canvas to-neutral-900 relative">
             
             <!-- Tactical SVG Blueprint straddling Hero and Arsenal -->
             <div class="absolute right-[-10%] bottom-0 translate-y-1/2 w-[60vw] md:w-[40vw] opacity-10 pointer-events-none mix-blend-screen hidden md:block z-0">
@@ -171,6 +186,8 @@
 
             <div class="px-8 md:px-16 w-full relative z-10">
                 
+
+
                 <!-- Massive SK with Hover Dialog -->
                 <div class="relative group inline-block cursor-crosshair">
                     <h1 class="text-macro text-[clamp(8rem,25vw,30rem)] text-transparent [-webkit-text-stroke:2px_#EAEAEA] leading-[0.75] tracking-tighter group-hover:text-accent transition-colors duration-500 relative z-10">
@@ -270,7 +287,7 @@
                 </a>
 
                 <!-- View All Link -->
-                <a href="https://github.com/shahil-sk?tab=repositories" target="_blank" class="p-8 md:p-16 group hover:bg-accent focus:bg-accent hover:text-canvas focus:text-canvas focus:outline-none transition-colors duration-300 flex-1 flex justify-between items-center relative z-10">
+                <a href="blog/" class="p-8 md:p-16 group hover:bg-accent focus:bg-accent hover:text-canvas focus:text-canvas focus:outline-none transition-colors duration-300 flex-1 flex justify-between items-center relative z-10">
                     <span class="text-macro text-2xl md:text-3xl font-bold">ACCESS_FULL_ARCHIVE</span>
                     <span class="text-macro text-3xl group-hover:translate-x-2 transition-transform">→</span>
                 </a>
@@ -281,7 +298,7 @@
         </section>
 
         <!-- Capabilities -->
-        <section class="w-full min-h-[100dvh] flex flex-col justify-center bg-gradient-to-b from-[#151515] to-neutral-900 relative overflow-hidden">
+        <section id="expertise" class="w-full min-h-[100dvh] flex flex-col justify-center bg-gradient-to-b from-[#151515] to-neutral-900 relative overflow-hidden">
             <!-- Brutalist Background Watermark -->
             <div class="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-[0.03] select-none z-0 overflow-hidden">
                 <span class="text-macro text-[30vw] leading-[0.7] text-ink whitespace-nowrap">WEB</span>
@@ -357,7 +374,7 @@
         </section>
 
         <!-- Dynamic Transmissions -->
-        <section class="w-full min-h-[100dvh] flex flex-col justify-center bg-gradient-to-b from-neutral-900 to-canvas relative py-32">
+        <section id="logs" class="w-full min-h-[100dvh] flex flex-col justify-center bg-gradient-to-b from-neutral-900 to-canvas relative py-32">
             
             <!-- Tactical SVG D: Radar Sweep (Top Right corner) -->
             <div class="absolute right-[2%] top-[5%] w-[40vw] md:w-[20vw] opacity-[0.06] pointer-events-none mix-blend-screen hidden md:block z-0 transition-all duration-[3000ms] hover:opacity-20 hover:scale-105">
@@ -387,6 +404,7 @@
             <div class="px-8 md:px-16 w-full max-w-[1600px] mx-auto z-10 flex flex-col justify-center h-full">
                 <div class="flex flex-col md:flex-row justify-between items-end mb-12 md:mb-16">
                     <div class="flex flex-col">
+                        <h2 class="text-macro text-3xl md:text-4xl font-bold uppercase">[ SEC.03_RAW_LOGS ]</h2>
                         <h2 class="text-macro text-5xl md:text-7xl font-bold leading-[0.85] tracking-tight">
                             RAW<br>
                             <span class="text-ink/30 italic font-serif lowercase">logs</span>
@@ -406,7 +424,7 @@
                     <!-- Injected via JS -->
                 </div>
                 
-                <a href="https://shahil-sk.github.io/blog/" class="text-micro text-ink/60 hover:text-accent transition-colors block mt-16 text-center w-full">VIEW FULL ARCHIVE [↗]</a>
+                <a href="blog/" class="text-micro text-ink/60 hover:text-accent transition-colors block mt-16 text-center w-full">VIEW FULL ARCHIVE [↗]</a>
             </div>
         </section>
 
@@ -449,6 +467,8 @@
         </footer>
 
     </main>
+
+
 
     <script src="script.js"></script>
 </body>

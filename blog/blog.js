@@ -6,7 +6,7 @@
   const REPO   = 'shahil-sk.github.io';
   const BRANCH = 'main';
   const INDEX_URL = 'posts/index.json';
-  const API_URL   = `https://api.github.com/repos/${OWNER}/${REPO}/contents/posts?ref=${BRANCH}`;
+  const API_URL   = `https://api.github.com/repos/${OWNER}/${REPO}/contents/blog/content?ref=${BRANCH}`;
 
   const grid      = document.getElementById('blog-posts-grid');
   const filtersEl = document.getElementById('blog-filters');
@@ -45,7 +45,7 @@
       // Fetch each .md and parse frontmatter in parallel
       const results = await Promise.allSettled(
         mdFiles.map(async (file) => {
-          const rawUrl = `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/posts/${file.name}`;
+          const rawUrl = `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/blog/content/${file.name}`;
           const r      = await fetch(rawUrl);
           if (!r.ok) throw new Error('Could not fetch ' + file.name);
           const text   = await r.text();
@@ -75,10 +75,36 @@
     }
   }
 
+  // --- Terminal Integration Helper ---
+  function simulateTerminalCommand(command, callback) {
+      const input = document.getElementById('terminal-input');
+      const fakeText = document.getElementById('fake-input-text');
+      if (!input || !fakeText) { callback(); return; }
+      
+      input.value = '';
+      fakeText.textContent = '';
+      let i = 0;
+      
+      const typeInterval = setInterval(() => {
+          if (i < command.length) {
+              input.value += command[i];
+              fakeText.textContent += command[i];
+              i++;
+          } else {
+              clearInterval(typeInterval);
+              setTimeout(() => {
+                  const e = new KeyboardEvent('keydown', { key: 'Enter' });
+                  input.dispatchEvent(e);
+                  setTimeout(callback, 600);
+              }, 200);
+          }
+      }, 40);
+  }
+
   // ── 3. Build UI ─────────────────────────────────────────────────────────────
   function buildUI() {
     if (!allPosts.length) {
-      grid.innerHTML = '<div class=\"blog-empty\">No posts found.</div>';
+      grid.innerHTML = '<div class=\"text-micro text-ink/50\">No posts found.</div>';
       return;
     }
 
@@ -88,10 +114,10 @@
     
     // Clear existing filters first
     if (filtersEl) {
-      filtersEl.innerHTML = '<button class=\"filter-btn active\" data-tag=\"all\">ALL</button>';
+      filtersEl.innerHTML = '<button class=\"filter-btn active text-micro border border-ink/20 px-4 py-2 hover:bg-ink hover:text-canvas bg-ink text-canvas transition-colors\" data-tag=\"all\">ALL</button>';
       allTags.forEach(tag => {
         const btn       = document.createElement('button');
-        btn.className   = 'filter-btn';
+        btn.className   = 'filter-btn text-micro border border-ink/20 px-4 py-2 hover:bg-ink hover:text-canvas transition-colors';
         btn.dataset.tag = tag;
         btn.textContent = tag.toUpperCase();
         filtersEl.appendChild(btn);
@@ -99,11 +125,32 @@
 
       filtersEl.addEventListener('click', e => {
         const btn = e.target.closest('.filter-btn');
-        if (!btn) return;
-        activeTag = btn.dataset.tag;
-        filtersEl.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        renderPosts();
+        if (!btn || btn.classList.contains('active')) return;
+        
+        const tag = btn.dataset.tag;
+        const cmd = tag === 'all' ? 'ls -la ./transmissions/' : `grep -R "${tag}" ./transmissions/`;
+        
+        const toggle = document.getElementById('terminal-toggle');
+        const navTerminal = document.getElementById('nav-terminal');
+        
+        if (navTerminal && navTerminal.classList.contains('hidden')) {
+            toggle.click();
+        }
+        
+        simulateTerminalCommand(cmd, () => {
+            activeTag = tag;
+            filtersEl.querySelectorAll('.filter-btn').forEach(b => {
+                b.classList.remove('active', 'bg-ink', 'text-canvas');
+            });
+            btn.classList.add('active', 'bg-ink', 'text-canvas');
+            renderPosts();
+            
+            setTimeout(() => {
+                if (navTerminal && !navTerminal.classList.contains('hidden')) {
+                    toggle.click(); // close terminal
+                }
+            }, 800);
+        });
       });
     }
 
@@ -116,26 +163,51 @@
       : allPosts.filter(p => (p.tags || []).includes(activeTag));
 
     if (!filtered.length) {
-      grid.innerHTML = '<div class=\"blog-empty\">No posts in this category.</div>';
+      grid.innerHTML = '<div class=\"text-micro text-ink/50\">No posts in this category.</div>';
       return;
     }
 
     grid.innerHTML = filtered.map((post, i) => {
-        // PREFER STATIC HTML: If post.url is set (from index.json), use it.
-        // If not (API fallback), construct standard static path.
-        // We avoid blog-post.html?post=slug entirely now.
         const postUrl = post.url || `posts/${post.slug}.html`;
+        const num = (i + 1).toString().padStart(2, '0');
         
         return `
-      <a href=\"${postUrl}\" class=\"blog-card\" style=\"transition-delay:${(i % 3) * 0.08}s\">
-        <span class=\"blog-card-date\">${post.date}</span>
-        <span class=\"blog-card-title\">${htmlEsc(post.title)}</span>
-        <span class=\"blog-card-excerpt\">${htmlEsc(post.excerpt)}</span>
-        <div class=\"blog-card-tags\">${(post.tags || []).map(t => `<span class=\"blog-tag\">${htmlEsc(t)}</span>`).join('')}</div>
-        <span class=\"blog-card-arrow\">READ →</span>
+      <a href=\"${postUrl}\" data-command="cat ${post.slug}.log" class=\"blog-card group flex flex-col md:flex-row gap-6 md:gap-16 items-start opacity-0 translate-y-4 w-full border-b border-ink/10 pb-12 mb-12 last:border-0\" style=\"transition-delay:${(i % 3) * 0.08}s\">
+        <span class=\"text-macro text-6xl md:text-8xl text-ink/20 group-hover:text-accent transition-colors duration-500 pointer-events-none\">${num}</span>
+        <div class="flex flex-col gap-6 pt-2 w-full pointer-events-none">
+            <h3 class=\"text-macro text-4xl md:text-6xl text-ink leading-[0.85] uppercase group-hover:text-accent transition-colors\">${htmlEsc(post.title)}</h3>
+            <p class="text-micro text-ink/60 max-w-2xl leading-relaxed group-hover:text-ink transition-colors duration-300 opacity-80">${htmlEsc(post.excerpt)}</p>
+            <div class=\"flex gap-4 items-center pt-4 w-full\">
+                <span class=\"text-micro text-ink/40 shrink-0\">${post.date}</span>
+                <span class=\"text-micro text-ink/20\">//</span>
+                <div class=\"flex gap-2 flex-wrap\">
+                    ${(post.tags || []).map(t => `<span class=\"text-micro text-ink/60 uppercase\">${htmlEsc(t)}</span>`).join('<span class="text-ink/20">/</span>')}
+                </div>
+            </div>
+        </div>
       </a>
     `}).join('');
     
+    // Intercept clicks on posts
+    grid.querySelectorAll('.blog-card').forEach(card => {
+        card.addEventListener('click', (e) => {
+            e.preventDefault();
+            const url = card.getAttribute('href');
+            const cmd = card.getAttribute('data-command');
+            
+            const toggle = document.getElementById('terminal-toggle');
+            const navTerminal = document.getElementById('nav-terminal');
+            
+            if (navTerminal && navTerminal.classList.contains('hidden')) {
+                toggle.click();
+            }
+            
+            simulateTerminalCommand(cmd, () => {
+                window.location.href = url;
+            });
+        });
+    });
+
     // Trigger animations
     setTimeout(() => {
       const observer = new IntersectionObserver(

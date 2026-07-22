@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://shahil-sk.github.io/blog/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://shahil-sk.github.io/blog/index.html</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://shahil-sk.github.io/blog/posts/bypassing-ssl-pinning-on-android-apps-with-frida.html</loc><lastmod>2026-02-15</lastmod></url>
+  <url><loc>https://shahil-sk.github.io/blog/posts/setup-pf-sense-in-vm-configure.html</loc><lastmod>2025-12-11</lastmod></url>
+  <url><loc>https://shahil-sk.github.io/blog/posts/how-to-root-genymotion-emulator-and-set-up-burpsuite-for-https-interception.html</loc><lastmod>2025-06-19</lastmod></url>
+  <url><loc>https://shahil-sk.github.io/blog/posts/android-emulator-detection-bypass.html</loc><lastmod>2025-06-04</lastmod></url>
+  <url><loc>https://shahil-sk.github.io/blog/posts/android-tools-installation.html</loc><lastmod>2024-12-09</lastmod></url>
+  <url><loc>https://shahil-sk.github.io/blog/posts/root-detection-and-ssl-pinning-bypass-using-objection-and-frida.html</loc><lastmod>2024-12-05</lastmod></url>
+  <url><loc>https://shahil-sk.github.io/blog/posts/setup-android-emulator-for-burpsuite-frida.html</loc><lastmod>2024-11-27</lastmod></url>
+</urlset>
