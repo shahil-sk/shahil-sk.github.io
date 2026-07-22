@@ -109,16 +109,16 @@
         ROOT
     </a>
 
-    <main class="w-full pt-24 min-h-[100dvh] bg-canvas relative flex flex-col">
+    <main class="w-full pt-14 min-h-[100dvh] bg-canvas relative flex flex-col">
         <!-- Rigid Grid Structure -->
-        <div class="w-full flex flex-col gap-[1px] bg-grid flex-1 border-t border-b border-grid">
+        <div class="w-full flex flex-col gap-[1px] bg-grid flex-1">
             <!-- Header Section -->
-            <div class="w-full bg-canvas p-8 md:px-16 lg:px-24 md:py-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-12">
+            <div class="w-full bg-canvas p-4 md:px-8 lg:px-12 md:py-6 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
                 <div class="flex flex-col gap-2">
-                    <span class="text-micro text-ink/40 uppercase">// SYS.LOG_ARCHIVE</span>
                     <h1 class="text-macro text-6xl md:text-8xl lg:text-[10rem] font-bold leading-[0.85] tracking-tight text-ink mt-4 md:mt-8">
-                        RAW<br>
+                        RAW
                         <span class="text-ink/30 italic font-serif lowercase">logs</span>
+                        <!-- do not add '<br>' between RAW and logs, it will break the layout. The line break is handled by CSS for responsiveness. -->
                     </h1>
                 </div>
                 
