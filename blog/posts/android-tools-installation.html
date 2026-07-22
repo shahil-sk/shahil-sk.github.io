@@ -213,8 +213,238 @@
 
             <!-- Main Content Column -->
             <div class="col-span-1 md:col-span-9 bg-canvas p-8 md:p-16 lg:p-24 flex flex-col items-start justify-start relative">
-                <h1 class="post-title text-macro text-5xl md:text-7xl lg:text-8xl leading-[0.85] uppercase max-w-4xl mb-16" id="post-title">Loading...</h1>
-                <article class="post-body max-w-3xl w-full" id="post-body"></article>
+                <h1 class="post-title text-macro text-5xl md:text-7xl lg:text-8xl leading-[0.85] uppercase max-w-4xl mb-16" id="post-title">Android tools & Installation</h1>
+                <article class="post-body max-w-3xl w-full" id="post-body">
+<h2>MobSF (Mobile Security Framework)</h2>
+<hr />
+<p>MobSF is an open-source tool for automated security testing of mobile apps (Android, iOS, Windows). It supports <strong>static</strong>, <strong>dynamic</strong>, and <strong>malware analysis</strong>, identifies vulnerabilities, reverse-engineers apps, checks API security, and ensures compliance with standards like OWASP Mobile Top 10. Widely used in penetration testing, it integrates with CI/CD pipelines and provides detailed reports for faster remediation.</p>
+<blockquote>
+<p>[!IMPORTANT]
+You Need to  Install <a href="https://docs.docker.com/get-started/get-docker/" target="_blank">Docker</a> to Run MobSF</p>
+</blockquote>
+<p>1) Start Docker Engine
+2) Run this command</p>
+<ul>
+<li>This command Pulls MobSF Docker Image From Repo</li>
+</ul>
+<pre><code>docker pull opensecurity/mobile-security-framework-mobsf:latest
+</code></pre>
+<ul>
+<li>Run MobSF in localhost:8000</li>
+</ul>
+<pre><code>docker run -it --rm -p 8000:8000 opensecurity/mobile-security-framework-mobsf:latest
+</code></pre>
+<ul>
+<li>Default<ul>
+<li>Username: mobsf </li>
+<li>Password : mobsf</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>[!NOTE]
+You can enable Wi-Fi debugging or use Genymotion for dynamic analysis with MobSF in Docker. <code>-e MOBSF_ANALYZER_IDENTIFIER=&lt;remote_device_IP&gt;:&lt;adb_port&gt;</code></p>
+<p><strong>Example:</strong>
+<code>docker
+docker run -it --rm --name mobsf -p 8000:8000 -e MOBSF_ANALYZER_IDENTIFIER=192.168.255.101:5555 opensecurity/mobile-security-framework-mobsf</code></p>
+<p>[!TIP]
+You can bypass or disable the MobSF login feature in Docker by using: <code>-e MOBSF_DISABLE_AUTHENTICATION=1</code></p>
+</blockquote>
+<hr />
+<h2>Yaazhini</h2>
+<hr />
+<p>Yaazhini is an open-source <strong>mobile application security testing tool</strong> for Android apps. It automates static, dynamic, and malware analysis to identify vulnerabilities like insecure storage, improper permissions, and weak encryption. Lightweight and user-friendly, Yaazhini is designed for security professionals and developers to ensure app robustness and compliance with security standards.</p>
+<blockquote>
+<p>[!NOTE]
+You Can Download Yaazhini from <a href="https://www.vegabird.com/yaazhini/#download">Here</a></p>
+</blockquote>
+<p>1) Download The Setup From Official Website
+2) Install The Application As Normal User
+3) DONE!</p>
+<blockquote>
+<p>[!CAUTION]
+Recommended RAM size is 16GB. You may experience slow performance with Yaazhini due to the low available RAM.</p>
+</blockquote>
+<hr />
+<h2>Drozer (on desktop)</h2>
+<hr />
+<p>Dozer is a tool that helps you create real-time <strong>APIs</strong> (ways for applications to talk to each other) from your data. It takes data from places like databases, message queues (like Kafka), or other sources and lets you access it instantly in your application, without delays.</p>
+<h3>Pipx Method</h3>
+<pre><code>pipx install drozer
+</code></pre>
+<h3>Run and Connect (Pipx)</h3>
+<ol>
+<li>First, forward port 31415 to the phone via ADB: <code>adb forward tcp:31415 tcp:31415</code></li>
+<li>Ensure that the <a href="https://github.com/WithSecureLabs/drozer-agent/releases/">drozer agent⁠</a> is running on the target device, and that the embedded server has been started.</li>
+<li>Then run the drozer command to connect to the phone: 
+        <code>drozer console connect</code></li>
+</ol>
+<h3>Docker Method</h3>
+<blockquote>
+<p>[!IMPORTANT]
+You Need to  Install <a href="https://docs.docker.com/get-started/get-docker/" target="_blank">Docker</a> to Run Dozer</p>
+</blockquote>
+<p><strong>Install Drozer:</strong></p>
+<pre><code>docker pull withsecurelabs/drozer
+</code></pre>
+<pre><code>docker build -t withsecurelabs/drozer https://github.com/WithSecureLabs/drozer.git#develop:docker
+</code></pre>
+<blockquote>
+<p>[!NOTE]
+You need to install Drozer Agent Apk <a href="https://github.com/WithSecureLabs/drozer-agent/releases">agent-debug.apk</a></p>
+</blockquote>
+<h3>Run and Connect (Docker)</h3>
+<h4>Option 1: connect to the phone via network</h4>
+<p>If the target phone and PC are on the same network, this tends to be the easiest approach.</p>
+<ol>
+<li>Ensure that the <a href="https://github.com/WithSecureLabs/drozer-agent/releases/">drozer agent⁠</a> is running on the target device, and that the embedded server has been started.</li>
+<li>Then, to run drozer and connect to the phone, run: 
+        <code>docker run --net host -it withsecurelabs/drozer console connect --server &lt;phone IP address&gt;</code></li>
+</ol>
+<p>If a system shell is required (for example, to inspect and retrieve any files downloaded by drozer), you can:</p>
+<ol>
+<li>Ensure that the <a href="https://github.com/WithSecureLabs/drozer-agent/releases/">drozer agent⁠</a> is running on the target device, and that the embedded server has been started.</li>
+<li>Obtain a shell into the container: 
+        <code>docker run --net host -it --entrypoint sh withsecurelabs/drozer</code></li>
+<li>Then run the drozer command to connect to the phone: 
+        <code>drozer console connect --server &lt;phone IP address&gt;</code></li>
+</ol>
+<h4>Option 2: connect to the phone via USB</h4>
+<p>If network communications is restricted, <code>adb</code> port forwarding can be used to forward TCP traffic via USB.</p>
+<ol>
+<li>First, forward port 31415 to the phone via ADB: <code>adb forward tcp:31415 tcp:31415</code></li>
+<li>Ensure that the <a href="https://github.com/WithSecureLabs/drozer-agent/releases/">drozer agent⁠</a> is running on the target device, and that the embedded server has been started.</li>
+<li>Then, to run drozer and connect to the phone, run: 
+        <code>docker run --net host -it withsecurelabs/drozer console connect --server localhost</code></li>
+</ol>
+<p>If a system shell is required (for example, to inspect and retrieve any files downloaded by drozer), you can:</p>
+<ol>
+<li>First, forward port 31415 to the phone via ADB: <code>adb forward tcp:31415 tcp:31415</code></li>
+<li>Ensure that the <a href="https://github.com/WithSecureLabs/drozer-agent/releases/">drozer agent⁠</a> is running on the target device, and that the embedded server has been started.</li>
+<li>Obtain a shell into the container: 
+        <code>docker run --net host -it --entrypoint sh withsecurelabs/drozer</code></li>
+<li>Then run the drozer command to connect to the phone: 
+        <code>drozer console connect --server localhost</code></li>
+</ol>
+<hr />
+<h2>Frida</h2>
+<hr />
+<blockquote>
+<p>[!NOTE]
+<em>Prerequisites</em>:
+- python
+- Rooted Android device (for advanced functionality; non-rooted devices have limited capabilities).
+- USB debugging enabled on your Android device.
+- Android Debug Bridge (ADB) installed on your computer.
+</p>
+</blockquote>
+<p>**Installation
+- <code>pip install frida-tools</code>
+- <code>frida --version</code></p>
+<blockquote>
+<p>[!IMPORTANT]
+Download the appropriate frida-server binary from <a href="https://github.com/frida/frida/releases">here</a> According to your Device CPU Architecture</p>
+</blockquote>
+<ul>
+<li>
+<p>**Push the Frida Server to the Device:
+    <code>adb push frida-server-&lt;version&gt;-android-&lt;arch&gt; /data/local/tmp/frida-server</code></p>
+</li>
+<li>
+<p><strong>Set Permissions:</strong></p>
+<ul>
+<li>make frida-server executable
+<code>adb shell "chmod +x /data/local/tmp/frida-server"</code></li>
+</ul>
+</li>
+<li>
+<p>**Start the Frida server:
+    <code>adb shell "/data/local/tmp/frida-server &amp;"</code></p>
+</li>
+</ul>
+<blockquote>
+<p>[!tip]
+- Use <code>frida-ls-devices</code> to verify that the device is listed, If the device appears in the list, the setup is complete.</p>
+</blockquote>
+<hr />
+<h2>Objection</h2>
+<hr />
+<p><strong>Objection</strong> is a powerful, open-source tool designed for <strong>mobile application penetration testing</strong>. Built on top of <strong>Frida</strong>, it simplifies the process of runtime app manipulation, security testing, and debugging for Android and iOS applications. It allows security testers to bypass restrictions like SSL pinning, explore app internals, and identify vulnerabilities without needing root or jailbreak access in most cases.</p>
+<p>**Installation 
+    <code>pip3 install objection</code>. </p>
+<p>Upgrade existing Objection tool
+    <code>pip3 install --upgrade objection</code>.</p>
+<p>**Run:
+    <code>objection &lt;command&gt;</code></p>
+<hr />
+<h2>JADX</h2>
+<hr />
+<h3><strong>JADX</strong> - Dex to Java decompiler</h3>
+<p>Command line and GUI tools for producing Java source code from Android Dex and Apk files</p>
+<blockquote>
+<p>[!note]
+You can download the latest version of **JADX from <a href="https://github.com/skylot/jadx/releases">here</a> and run the setup directly</p>
+</blockquote>
+<hr />
+<h2>APKTool</h2>
+<hr />
+<p>A tool for reverse engineering Android apk files. Click Here to <a href="https://bitbucket.org/iBotPeaches/apktool/downloads/apktool_2.10.0.jar">Download</a> </p>
+<blockquote>
+<p>[!IMPORTANT]
+<em>Prerequisites</em>:
+- Minimun JAVA 8 is required <a href="https://www.java.com/en/download/">link</a>
+- Rename downloaded jar to <code>apktool.jar</code>.</p>
+</blockquote>
+<p>Run Command:
+    <code>java -jar apktool.jar &lt;command&gt;</code></p>
+<blockquote>
+<p>[!NOTE]
+Make sure you run the command in terminal where the apktool.jar file is stored</p>
+</blockquote>
+<hr />
+<h2>APKLeaks</h2>
+<hr />
+<p>**Installation 
+    <code>pip3 install apkleaks</code>. </p>
+<p>**Usage 
+    <code>apkleaks &lt;command&gt;</code>. </p>
+<hr />
+<h2>RMS</h2>
+<hr />
+<p><strong>Runtime Mobile Security (RMS)</strong>, powered by <a href="https://github.com/frida/frida">FRIDA</a>, is a powerful web interface that helps you to manipulate <strong>Android and iOS Apps</strong> at Runtime. With RMS you can easily dump all loaded classes and relative methods, hook everything on the fly, trace methods args and return value, load custom scripts and many other useful stuff.</p>
+<blockquote>
+<p>[!IMPORTANT]
+Prerequisites
+1. <a href="https://nodejs.org/en/download/prebuilt-installer">NodeJS</a> installed on your computer
+2. <a href="https://frida.re/docs/installation/">FRIDA's CLI tools</a> installed on your computer
+3. <strong>FRIDA server up and running</strong> on the target device
+  - <a href="https://frida.re/docs/android/">Android - Official Tutorial</a>
+  - <a href="https://frida.re/docs/ios/">iOS - Official Tutorial</a></p>
+</blockquote>
+<h3>Installation</h3>
+<ol>
+<li>Open the terminal and run the following command to install the npm package<ul>
+<li><code>npm install -g rms-runtime-mobile-security</code></li>
+</ul>
+</li>
+<li>Make sure frida-server is up and running on the target device.</li>
+<li>Launch RMS via the following command<ul>
+<li><code>rms</code> (or <code>RMS-Runtime-Mobile-Security</code>)</li>
+</ul>
+</li>
+<li>Open your browser at <code>http://127.0.0.1:5491/</code></li>
+</ol>
+<hr />
+<h2>reFlutter</h2>
+<hr />
+<h3>Install</h3>
+<pre><code>pipx install reflutter
+</code></pre>
+<h3>Usage</h3>
+<pre><code>reflutter &lt;apkfile.path&gt;
+</code></pre>
+<hr />
+</article>
             </div>
         </div>
     </main>

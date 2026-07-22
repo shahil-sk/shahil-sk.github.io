@@ -213,8 +213,47 @@
 
             <!-- Main Content Column -->
             <div class="col-span-1 md:col-span-9 bg-canvas p-8 md:p-16 lg:p-24 flex flex-col items-start justify-start relative">
-                <h1 class="post-title text-macro text-5xl md:text-7xl lg:text-8xl leading-[0.85] uppercase max-w-4xl mb-16" id="post-title">Loading...</h1>
-                <article class="post-body max-w-3xl w-full" id="post-body"></article>
+                <h1 class="post-title text-macro text-5xl md:text-7xl lg:text-8xl leading-[0.85] uppercase max-w-4xl mb-16" id="post-title">Android emulator detection bypass</h1>
+                <article class="post-body max-w-3xl w-full" id="post-body">
+<h1>Emulator Bypass</h1>
+<h2>The Application that I'm using is <a href="https://github.com/satishpatnayak/MyTest/tree/master">AndroGoat</a></h2>
+<p>One of the best techniques to Bypass emulator detection is to modify the RETRUN_VALUE of the function that check for Emulator Activities. In AndroGoat Application There is Function (isEmulator) Responsible for emulator detection inside EmulatorDetectionActivity Activity.</p>
+<blockquote>
+<p>[!note]
+You can View the Source code Using <a href="https://github.com/skylot/jadx/releases">JADX-gui</a></p>
+</blockquote>
+<p>I will be Using Objection Tool to Modify the RETURN_VALUE of the isEmulator Function by hooking the Objection tool to the function call.</p>
+<p>1) First I'll start the application using Objection tool.
+    -  <code>objection -g owasp.sat.agoat explore</code>
+2) Modifying the RETURN_VALUE
+    -  <code>android hooking set return_valuowasp.sat.agoat.EmulatorDetectionActivity.isEmulator true</code>
+    (single line command)
+3) Check for emulation Detection in AndroGoat AppEmulator Bypass</p>
+<hr />
+<h1>Access Control Bypass</h1>
+<p>AndroGoat App Contains a section called "Unprotected Android Components" which a has PIN Security feature hiding some secret file maybe who knows?... to bypass this security check we scan the app with drozer to scan for any insecure Android Activities</p>
+<blockquote>
+<p>Make sure you set a pin first and verify the functioning</p>
+</blockquote>
+<p>1) Make sure the <a href="https://github.com/WithSecureLabs/drozer-agent/releases/tag/3.1.0">Drozer Agent</a> is running on your base device.
+2) forward the port to '31415'
+    -  via <code>adb forward tcp:31415 tcp:31415</code>
+3) Start the Drozer Console
+    - run <code>drozer console connect</code>
+4) Find the package name of your application
+    - run <code>run app.package.list -f agoat</code>
+5) scan for any insecure activites
+    - run <code>run app.activity.info -a owasp.sat.agoat</code></p>
+<p>6) Once the scanning is done, in order to know more about the vulnerability we need to reverse engineer the workings of the Application via JADX or any other decompiler
+    1) let do a quick search for the activity in JADX</p>
+<p>As we can see that the Activity "AccessControl1ViewActivity" is mentioned in some sort of verifyPIN function double click on that go to the code.</p>
+<p>Here if statement is used to verify the inserted PIN and start the activity if the PIN matches. NOTICE that the AccessControl1ViewActivity intent is started directly without any security measures
+which makes it vulnerable and it is Access Control Bypass bug</p>
+<p>7) we'll use drozer to bypass PIN verification and start the AccessControl1ViewActivity intent without any checks.
+    - run <code>run app.activity.start --component owasp.sat.agoat owasp.sat.agoat.AccessControl1ViewActivity</code>
+        (single line command)
+8) Now it should load the activity directly without any checks</p>
+</article>
             </div>
         </div>
     </main>

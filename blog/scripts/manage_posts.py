@@ -174,14 +174,19 @@ def build_blog():
             # Content Injection
             title = fm.get('title', 'Untitled')
             page_html = page_html.replace('<title>Post — Shahil Ahmed</title>', f'<title>{title} — Shahil Ahmed</title>')
-            page_html = page_html.replace('<h1 class="post-title" id="post-title">Loading...</h1>', f'<h1 class="post-title" id="post-title">{title}</h1>')
+            
+            import re
+            page_html = re.sub(r'<h1([^>]*)id="post-title"([^>]*)>Loading...</h1>', lambda m: f'<h1{m.group(1)}id="post-title"{m.group(2)}>{title}</h1>', page_html)
+            
             date = fm.get('date', '')
-            page_html = page_html.replace('<div class="post-meta" id="post-meta"></div>', f'<div class="post-meta" id="post-meta">[ {date} ]</div>')
+            page_html = re.sub(r'<div([^>]*)id="post-meta"([^>]*)></div>', lambda m: f'<div{m.group(1)}id="post-meta"{m.group(2)}>[ {date} ]</div>', page_html)
+            
             tags_html = ' '.join([f'<span class="text-micro text-ink/60 uppercase">[ {t.upper()} ]</span>' for t in fm.get('tags', [])])
-            page_html = page_html.replace('<div class="post-tags flex gap-2 flex-wrap" id="post-tags"></div>', f'<div class="post-tags flex gap-2 flex-wrap" id="post-tags">{tags_html}</div>')
-            page_html = page_html.replace('<div class="post-tags" id="post-tags"></div>', f'<div class="post-tags flex gap-2 flex-wrap" id="post-tags">{tags_html}</div>')
-            page_html = page_html.replace('<div class="post-reading-time" id="post-reading-time"></div>', f'<div class="post-reading-time" id="post-reading-time">{read_time_str}</div>')
-            page_html = page_html.replace('<article class="post-body" id="post-body"></article>', f'<article class="post-body" id="post-body">{html_content}</article>')
+            page_html = re.sub(r'<div([^>]*)id="post-tags"([^>]*)></div>', lambda m: f'<div{m.group(1)}id="post-tags"{m.group(2)}>{tags_html}</div>', page_html)
+            
+            page_html = re.sub(r'<div([^>]*)id="post-reading-time"([^>]*)></div>', lambda m: f'<div{m.group(1)}id="post-reading-time"{m.group(2)}>{read_time_str}</div>', page_html)
+            
+            page_html = re.sub(r'<article([^>]*)id="post-body"([^>]*)></article>', lambda m: f'<article{m.group(1)}id="post-body"{m.group(2)}>\n{html_content}\n</article>', page_html)
             
             # SEO Meta
             meta_desc = fm.get('excerpt', body[:150].replace('\n', ' '))

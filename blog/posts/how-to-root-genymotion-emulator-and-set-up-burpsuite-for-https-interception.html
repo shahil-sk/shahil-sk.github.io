@@ -213,8 +213,81 @@
 
             <!-- Main Content Column -->
             <div class="col-span-1 md:col-span-9 bg-canvas p-8 md:p-16 lg:p-24 flex flex-col items-start justify-start relative">
-                <h1 class="post-title text-macro text-5xl md:text-7xl lg:text-8xl leading-[0.85] uppercase max-w-4xl mb-16" id="post-title">Loading...</h1>
-                <article class="post-body max-w-3xl w-full" id="post-body"></article>
+                <h1 class="post-title text-macro text-5xl md:text-7xl lg:text-8xl leading-[0.85] uppercase max-w-4xl mb-16" id="post-title">How to Root Genymotion Emulator and Set Up BurpSuite for HTTPS Interception</h1>
+                <article class="post-body max-w-3xl w-full" id="post-body">
+<h2><strong>Step 1: Create a Virtual Device</strong></h2>
+<ol>
+<li>Open <strong>Genymotion</strong> and create a new virtual device.</li>
+<li>Select <strong>Android</strong> Version.
+     <em>( In this blog i'm going to use Android 12 has a base )</em></li>
+<li>Start the newly created virtual device.</li>
+</ol>
+<h2><strong>Step 2: Enable Root Access</strong></h2>
+<p>Make sure <strong>ADB</strong> is installed and configured. Once the emulator starts, run the following command to enable root access:</p>
+<pre><code class="language-sh">adb shell setprop persist.sys.root_access 3
+</code></pre>
+<p><em>(This command needs to be executed every time you start the emulator. in order to maintain the root access inside the emulator)</em></p>
+<h2><strong>Step 3: Install Magisk</strong></h2>
+<ol>
+<li><strong>Drag and drop</strong> the <a href="https://github.com/topjohnwu/magisk/releases">Magisk.apk</a> onto the emulator.</li>
+<li>Open the Magisk app and <strong>grant root access</strong> when prompted.</li>
+<li>Restart the Magisk app.</li>
+<li>Inside the Magisk app, install Magisk using the <strong>Direct Install</strong> method.</li>
+<li>Drag and drop the <a href="https://drive.google.com/file/d/1OF8zx6p46t8BcKuO5A6Ncq46zLpFfps-/view">Magisk_rebuilt_1c8ebfac_x86_64.zip</a> file into the emulator.</li>
+<li>Reboot the emulator.</li>
+<li>
+<p>Once the emulator restarts, <strong>run the root access command again</strong>:</p>
+<p><code>sh
+adb shell setprop persist.sys.root_access 3</code></p>
+<p><em>(This command needs to be executed every time you start the emulator. in order to maintain the root access inside the emulator)</em></p>
+</li>
+</ol>
+<h2><strong>Step 4: Setting Up BurpSuite</strong></h2>
+<ol>
+<li><strong>Ensure BurpSuite is running.</strong></li>
+<li>Open BurpSuite and navigate to <strong>Proxy &gt; Options</strong> to find the <strong>CA certificate</strong>.</li>
+<li>
+<p>Download the BurpSuite certificate from:</p>
+<p><code>http://localhost:8080</code></p>
+</li>
+</ol>
+<h2><strong>Step 5: Install the BurpSuite Certificate</strong></h2>
+<ol>
+<li>Drag and drop the <strong>cacert.der</strong> file into the emulator.</li>
+<li>Install the certificate manually:<ul>
+<li><strong>Settings</strong> &gt; <strong>Security</strong> &gt; <strong>Encryption &amp; Credentials</strong> &gt; <strong>Install a certificate</strong> &gt; <strong>CA certificate</strong>.</li>
+</ul>
+</li>
+</ol>
+<h2><strong>Step 6: Install AlwaysTrustUserCerts Module</strong></h2>
+<ol>
+<li>Drag and drop the <a href="https://github.com/NVISOsecurity/MagiskTrustUserCerts/releases/tag/v0.4.1">AlwaysTrustUserCerts.zip</a> file into the emulator.</li>
+<li>Open the <strong>Magisk app</strong> and install the <strong>AlwaysTrustUserCerts</strong> module.</li>
+<li>Restart the emulator.</li>
+<li>Verify the certificate installation:<ul>
+<li><strong>Settings</strong> &gt; <strong>Security</strong> &gt; <strong>Encryption &amp; Credentials</strong> &gt; <strong>Trusted Credentials</strong>.</li>
+<li>Check if <strong>PortSwigger</strong> is listed.</li>
+</ul>
+</li>
+</ol>
+<h2><strong>Step 7: Forward Emulator Traffic to BurpSuite</strong></h2>
+<p>To capture network traffic from the emulator, forward its <strong>TCP:3333</strong> port to BurpSuite's <strong>8080</strong> port:</p>
+<pre><code class="language-sh">adb shell settings put global http_proxy localhost:3333
+adb reverse tcp:3333 tcp:8080
+</code></pre>
+<h2><strong>Step 8: Verify HTTPS Traffic Interception</strong></h2>
+<ol>
+<li>Open a browser on the emulator and visit a website.</li>
+<li>Check the <strong>BurpSuite Proxy History</strong> to confirm that requests are being captured.</li>
+</ol>
+<hr />
+<h2><strong>Conclusion</strong></h2>
+<p>By following these steps, you now have a <strong>rooted Genymotion emulator</strong> with <strong>Magisk</strong> installed and <strong>BurpSuite configured for HTTPS traffic interception</strong>. This setup is useful for <strong>security testing, app pentesting, and network analysis</strong>.</p>
+<p>If you restart the emulator, remember to re-run:</p>
+<pre><code class="language-sh">adb shell setprop persist.sys.root_access 3
+</code></pre>
+<p>to regain root access.</p>
+</article>
             </div>
         </div>
     </main>

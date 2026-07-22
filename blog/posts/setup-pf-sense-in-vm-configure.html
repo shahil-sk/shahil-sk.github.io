@@ -213,8 +213,234 @@
 
             <!-- Main Content Column -->
             <div class="col-span-1 md:col-span-9 bg-canvas p-8 md:p-16 lg:p-24 flex flex-col items-start justify-start relative">
-                <h1 class="post-title text-macro text-5xl md:text-7xl lg:text-8xl leading-[0.85] uppercase max-w-4xl mb-16" id="post-title">Loading...</h1>
-                <article class="post-body max-w-3xl w-full" id="post-body"></article>
+                <h1 class="post-title text-macro text-5xl md:text-7xl lg:text-8xl leading-[0.85] uppercase max-w-4xl mb-16" id="post-title">Setup pf-sense in VM & Configure</h1>
+                <article class="post-body max-w-3xl w-full" id="post-body">
+<p>Before creating the pfSense VM, set up a custom internal network bridge for LAN traffic and link it to your main <code>virbr0</code>.​</p>
+<ol>
+<li>
+<p>Create the network definition file:</p>
+<p>bash
+<code>sudo nano /etc/libvirt/qemu/networks/pfsense.xml</code></p>
+</li>
+<li>
+<p>Use a definition similar to:</p>
+<p>bash
+<code>sudo virsh net-define /dev/stdin &lt;&lt;EOF &lt;network&gt;   &lt;name&gt;pfsense-lan&lt;/name&gt;  &lt;forward mode='none'/&gt;  &lt;bridge name='pfsense-lan' stp='on' delay='0'/&gt; &lt;/network&gt; EOF</code></p>
+</li>
+<li>
+<p>Enable and autostart the network:</p>
+<p>bash
+<code>sudo virsh net-start pfsense-lan sudo virsh net-autostart pfsense-lan</code></p>
+</li>
+</ol>
+<hr />
+<h2>2. Create and install the pfSense VM</h2>
+<p>Create the VM with two network interfaces: one for WAN (to the internet) and one for LAN (internal VMs).​</p>
+<ol>
+<li>
+<p>In virt-manager, create a new VM and choose “Generic Linux 2024” as the OS type, then tick “Customize before installation”.​</p>
+</li>
+<li>
+<p>Add two NICs:</p>
+<ul>
+<li>
+<p>WAN: attach to your external network (e.g. <code>default</code> / <code>virbr0</code>).</p>
+</li>
+<li>
+<p>LAN: attach to the <code>pfsense-lan</code> network created earlier via “Add Hardware → Network”.​</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Start the installation and accept the default pfSense installation settings
+<img alt="pfsense-ip-setup.png" src="images/pfsense-ip-setup.png" /></p>
+</li>
+</ol>
+<hr />
+<h2>3. Basic pfSense configuration</h2>
+<p>After installation, perform initial setup and make sure management access and DNS work.​</p>
+<ol>
+<li>
+<p>From the pfSense console menu, select option <code>14</code> to enable SSH if you want remote shell access.​</p>
+</li>
+<li>
+<p>Access the Web UI using the LAN gateway IP shown on the console (for example <code>https://192.168.100.1</code>).​</p>
+</li>
+<li>
+<p>In the setup wizard, configure DNS:</p>
+<ul>
+<li>
+<p>Primary DNS: <code>1.1.1.1</code></p>
+</li>
+<li>
+<p>Secondary DNS: <code>9.9.9.9</code><br />
+    Then click through the wizard and change the admin password if desired.​
+<img alt="pfsense-web.png" src="images/pfsense-web.png" /></p>
+</li>
+</ul>
+</li>
+<li>
+<p>To see connected devices, go to:<br />
+<code>Status → DHCP Leases</code> and verify that your LAN VMs appear with hostname and IP.​</p>
+</li>
+<li>
+<p>If LAN VMs do not have internet access, add a LAN rule allowing HTTP/HTTPS outbound:</p>
+<ul>
+<li>
+<p>Go to <code>Firewall → Rules → LAN</code> and create a rule:</p>
+<ul>
+<li>
+<p>Action: Pass</p>
+</li>
+<li>
+<p>Interface: LAN</p>
+</li>
+<li>
+<p>Address Family: IPv4</p>
+</li>
+<li>
+<p>Protocol: TCP/UDP</p>
+</li>
+<li>
+<p>Source: LAN net or LAN address</p>
+</li>
+<li>
+<p>Destination: Any</p>
+</li>
+<li>
+<p>Destination ports: HTTP (80) and HTTPS (443) (using the port range fields).​</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<p><img alt="Pasted image 20251211084755.png" src="images/Pasted image 20251211084755.png" /></p>
+<hr />
+<h2>4. Blocking domains and countries (pfBlockerNG + DNS)</h2>
+<p>You can block specific domains via DNS overrides and block countries or IP ranges using pfBlockerNG with GeoIP.​</p>
+<ol>
+<li>
+<p><strong>Block a single domain via DNS Resolver</strong> (example: youtube.com):</p>
+<ul>
+<li>
+<p>Go to <code>Services → DNS Resolver</code>.</p>
+</li>
+<li>
+<p>Scroll down to “Domain Overrides” and add:</p>
+<ul>
+<li>
+<p>Domain: <code>youtube.com</code></p>
+</li>
+<li>
+<p>IP Address: <code>0.0.0.0</code></p>
+</li>
+<li>
+<p>Description: e.g. “block youtube”.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Save and apply settings. This causes lookups for that domain to resolve to <code>0.0.0.0</code>.​</p>
+</li>
+<li><img alt="Screenshot_20251127_181726.png" src="images/Screenshot_20251127_181726.png" /></li>
+</ul>
+</li>
+<li>
+<p><strong>Install pfBlockerNG-devel</strong>:</p>
+<ul>
+<li>
+<p>Go to <code>System → Package Manager → Available Packages</code> and install <code>pfBlockerNG-devel</code>.​</p>
+</li>
+<li>
+<p>After installation, go to <code>Firewall → pfBlockerNG-devel</code>.​</p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Configure GeoIP (MaxMind)</strong>:</p>
+<ul>
+<li>
+<p>Navigate to <code>Firewall → pfBlockerNG-devel → IP</code>, then scroll to the MaxMind configuration section.​</p>
+</li>
+<li>
+<p>Obtain a free MaxMind account ID and license key from the MaxMind website and enter them in the pfBlockerNG GeoIP settings.​</p>
+<p><img alt="Screenshot_20251211_092535.png" src="images/Screenshot_20251211_092535.png" /></p>
+</li>
+<li>
+<p>Save changes and reboot the pfSense VM  so the GeoIP databases download.​</p>
+<p><img alt="Screenshot_20251211_082531.png" src="images/Screenshot_20251211_082531.png" /></p>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Block traffic from/to specific countries (example: Russia)</strong>:</p>
+<ul>
+<li>
+<p>Open <code>Firewall → pfBlockerNG-devel → IP → GeoIP</code>.​
+    now open <a href="www.yandex.ru">www.yandex.ru</a> in new tab, which is russian website we'll try to block russian websites</p>
+<p><img alt="Pasted image 20251211085836.png" src="images/Pasted image 20251211085836.png" /></p>
+</li>
+<li>
+<p>In the country list (IPv4), hold <code>Ctrl</code> and select the countries you want to block, e.g. “Russia [RU]” and “Russia [RU_rep]”.​</p>
+</li>
+<li>
+<p>Set “List Action” to <strong>Deny Outbound</strong> so outbound connections to those countries are blocked.​</p>
+</li>
+<li>
+<p>Enable logging if desired and click <strong>Save</strong>.​</p>
+<p><img alt="Screenshot_20251211_085305.png" src="images/Screenshot_20251211_085305.png" /></p>
+<p><img alt="Screenshot_20251211_085526.png" src="images/Screenshot_20251211_085526.png" /></p>
+</li>
+<li>
+<p>Go to <code>Firewall → pfBlockerNG-devel → Update</code> and click <strong>Run</strong> to apply and build the rules.​</p>
+</li>
+<li>
+<p>After this, connections to sites hosted in those countries (e.g. <code>www.yandex.ru</code>) should fail.​</p>
+</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h2>5. Blocking YouTube with a firewall rule</h2>
+<p>In addition to DNS-based blocking, you can block specific IPs or networks with a firewall rule on the LAN interface.​</p>
+<ol>
+<li>
+<p>Go to <code>Firewall → Rules → LAN</code> and click <strong>Add</strong> (typically at the bottom).​</p>
+</li>
+<li>
+<p>Create a rule similar to:</p>
+<ul>
+<li>
+<p>Action: Block</p>
+</li>
+<li>
+<p>Interface: LAN</p>
+</li>
+<li>
+<p>Address Family: IPv4</p>
+</li>
+<li>
+<p>Protocol: TCP/UDP</p>
+</li>
+<li>
+<p>Source: LAN net or LAN address</p>
+</li>
+<li>
+<p>Destination: Single host or alias (for example, a specific YouTube IP like <code>74.125.130.91</code>, or better an alias containing YouTube IP ranges).</p>
+</li>
+<li>
+<p>Destination port range: From HTTP (80) to HTTPS (443).​</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Save and apply changes; traffic from LAN to that IP on ports 80/443 will now be blocked.​</p>
+<p><img alt="Screenshot_20251211_091333.png" src="images/Screenshot_20251211_091333.png" /></p>
+</li>
+</ol>
+<p>next i'll be looking into vlans static ips.</p>
+</article>
             </div>
         </div>
     </main>
