@@ -184,12 +184,12 @@
         return `
       <a href=\"${postUrl}\" data-command="cat ${post.slug}.log" class=\"blog-card group flex flex-col md:flex-row items-stretch bg-canvas hover:bg-[#0c0c0c] transition-colors duration-700 w-full relative overflow-hidden opacity-0 translate-y-4\">
         <!-- Number block -->
-        <div class="p-8 md:p-16 border-r border-grid flex items-center justify-center shrink-0 w-32 md:w-48 hidden md:flex">
+        <div class="p-8 md:px-16 lg:px-24 border-r border-grid flex items-center justify-center shrink-0 w-32 md:w-48 lg:w-64 hidden md:flex">
             <span class=\"text-macro text-5xl md:text-7xl text-ink/10 group-hover:text-ink/30 transition-colors pointer-events-none\">${num}</span>
         </div>
         
         <!-- Content block -->
-        <div class="p-8 md:p-16 flex flex-col gap-6 w-full justify-center">
+        <div class="p-8 md:px-16 lg:px-24 flex flex-col gap-6 w-full justify-center">
             <h3 class=\"text-macro text-4xl md:text-5xl text-ink leading-[0.85] uppercase group-hover:text-accent transition-colors\">${htmlEsc(post.title)}</h3>
             <p class="text-micro text-ink/60 max-w-2xl leading-relaxed group-hover:text-ink transition-colors duration-300 opacity-80">${htmlEsc(post.excerpt)}</p>
             <div class=\"flex gap-4 items-center pt-8 mt-auto w-full\">

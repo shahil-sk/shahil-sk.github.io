@@ -111,32 +111,29 @@
 
     <main class="w-full pt-32 pb-0 min-h-[100dvh] bg-canvas relative flex flex-col">
         <!-- Rigid Grid Structure -->
-        <div class="w-full grid grid-cols-1 md:grid-cols-12 gap-[1px] bg-grid flex-1 border-t border-b border-grid mt-8">
-            <!-- Header Section (Left Column) -->
-            <div class="col-span-1 md:col-span-4 bg-canvas p-8 md:p-16 flex flex-col justify-between h-full">
+        <div class="w-full flex flex-col gap-[1px] bg-grid flex-1 border-t border-b border-grid mt-8">
+            <!-- Header Section -->
+            <div class="w-full bg-canvas p-8 md:p-16 lg:px-24 flex flex-col md:flex-row justify-between items-start md:items-end gap-12">
                 <div class="flex flex-col gap-2">
                     <span class="text-micro text-ink/40 uppercase">// SYS.LOG_ARCHIVE</span>
-                    <h1 class="text-macro text-6xl md:text-8xl font-bold leading-[0.85] tracking-tight text-ink mt-8">
+                    <h1 class="text-macro text-6xl md:text-8xl lg:text-[10rem] font-bold leading-[0.85] tracking-tight text-ink mt-8">
                         RAW<br>
                         <span class="text-ink/30 italic font-serif lowercase">logs</span>
                     </h1>
                 </div>
                 
-                <p class="text-micro text-ink/60 max-w-xs mt-32 md:mt-0 uppercase">SECURITY RESEARCH, TACTICAL EXPLOITS, AND SYSTEM ARCHITECTURE ANALYSIS.</p>
+                <p class="text-micro text-ink/60 max-w-xs uppercase md:text-right md:pb-4">SECURITY RESEARCH, TACTICAL EXPLOITS, AND SYSTEM ARCHITECTURE ANALYSIS.</p>
             </div>
 
-            <!-- Content Section (Right Column) -->
-            <div class="col-span-1 md:col-span-8 bg-canvas flex flex-col">
-                <!-- Filters row -->
-                <div class="p-8 md:px-16 border-b border-grid flex flex-wrap gap-4 items-center bg-canvas" id="blog-filters">
-                    <!-- Filters injected via JS -->
-                </div>
-                
-                <!-- Posts Grid container -->
-                <div class="flex flex-col w-full bg-grid gap-[1px]" id="blog-posts-grid">
-                    <!-- Loading State -->
-                    <div class="p-8 md:p-16 bg-canvas text-micro animate-pulse text-ink/50">WAITING FOR TRANSMISSIONS...</div>
-                </div>
+            <!-- Filters row -->
+            <div class="p-8 md:px-16 lg:px-24 flex flex-wrap gap-4 items-center bg-canvas w-full" id="blog-filters">
+                <!-- Filters injected via JS -->
+            </div>
+            
+            <!-- Posts Grid container -->
+            <div class="flex flex-col w-full bg-grid gap-[1px]" id="blog-posts-grid">
+                <!-- Loading State -->
+                <div class="p-8 md:px-16 lg:px-24 bg-canvas text-micro animate-pulse text-ink/50">WAITING FOR TRANSMISSIONS...</div>
             </div>
         </div>
     </main>
