@@ -177,7 +177,7 @@ def build_blog():
             page_html = page_html.replace('<h1 class="post-title" id="post-title">Loading...</h1>', f'<h1 class="post-title" id="post-title">{title}</h1>')
             date = fm.get('date', '')
             page_html = page_html.replace('<div class="post-meta" id="post-meta"></div>', f'<div class="post-meta" id="post-meta">{date}</div>')
-            tags_html = "".join([f'<span class="text-micro px-2 py-1 bg-ink/5 text-ink/60 border border-ink/10">{t}</span>' for t in fm.get('tags', [])])
+            tags_html = ' <span class="text-ink/20">/</span> '.join([f'<span class="text-micro text-ink/60 uppercase">{t}</span>' for t in fm.get('tags', [])])
             page_html = page_html.replace('<div class="post-tags flex gap-2 flex-wrap" id="post-tags"></div>', f'<div class="post-tags flex gap-2 flex-wrap" id="post-tags">{tags_html}</div>')
             page_html = page_html.replace('<div class="post-tags" id="post-tags"></div>', f'<div class="post-tags flex gap-2 flex-wrap" id="post-tags">{tags_html}</div>')
             page_html = page_html.replace('<div class="post-reading-time" id="post-reading-time"></div>', f'<div class="post-reading-time" id="post-reading-time">{read_time_str}</div>')

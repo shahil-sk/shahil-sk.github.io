@@ -114,12 +114,12 @@
     
     // Clear existing filters first
     if (filtersEl) {
-      filtersEl.innerHTML = '<button class=\"filter-btn active text-micro border border-ink/20 px-4 py-2 hover:bg-ink hover:text-canvas bg-ink text-canvas transition-colors\" data-tag=\"all\">ALL</button>';
+      filtersEl.innerHTML = '<button class=\"filter-btn active text-micro text-accent transition-colors\" data-tag=\"all\">[ ALL ]</button>';
       allTags.forEach(tag => {
         const btn       = document.createElement('button');
-        btn.className   = 'filter-btn text-micro border border-ink/20 px-4 py-2 hover:bg-ink hover:text-canvas transition-colors';
+        btn.className   = 'filter-btn text-micro text-ink/50 hover:text-accent transition-colors';
         btn.dataset.tag = tag;
-        btn.textContent = tag.toUpperCase();
+        btn.textContent = `[ ${tag.toUpperCase()} ]`;
         filtersEl.appendChild(btn);
       });
 
@@ -140,9 +140,11 @@
         simulateTerminalCommand(cmd, () => {
             activeTag = tag;
             filtersEl.querySelectorAll('.filter-btn').forEach(b => {
-                b.classList.remove('active', 'bg-ink', 'text-canvas');
+                b.classList.remove('active', 'text-accent');
+                b.classList.add('text-ink/50', 'hover:text-accent');
             });
-            btn.classList.add('active', 'bg-ink', 'text-canvas');
+            btn.classList.add('active', 'text-accent');
+            btn.classList.remove('text-ink/50', 'hover:text-accent');
             renderPosts();
             
             setTimeout(() => {
