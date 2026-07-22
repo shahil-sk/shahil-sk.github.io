@@ -132,11 +132,70 @@ function initAnimations() {
   });
 }
 
+// Load GitHub Projects dynamically
+async function populateGithubProjects() {
+    const container = document.getElementById('github-projects-container');
+    if (!container) return;
+    
+    try {
+        const res = await fetch('https://api.github.com/users/shahil-sk/repos?sort=updated&per_page=15');
+        if (!res.ok) throw new Error();
+        let repos = await res.json();
+        
+        // Filter out the portfolio itself or forks
+        repos = repos.filter(r => !r.fork && r.name !== 'shahil-sk.github.io');
+        // Take top 3
+        repos = repos.slice(0, 3);
+        
+        container.innerHTML = '';
+        
+        repos.forEach(repo => {
+            const el = document.createElement('a');
+            el.href = repo.html_url;
+            el.target = '_blank';
+            el.className = 'px-8 py-12 md:px-16 md:py-16 group hover:bg-ink/5 focus:bg-ink/5 focus:outline-none transition-colors duration-300 flex-1 flex flex-col justify-center border-b border-ink/10 relative z-10';
+            
+            const desc = (repo.description || 'CLASSIFIED SYSTEM ARCHITECTURE. NO DESCRIPTION PROVIDED.').toUpperCase();
+            const lang = repo.language ? `[ ${repo.language.toUpperCase()} ]` : '[ UNKNOWN ]';
+            
+            el.innerHTML = `
+                <div class="flex justify-between items-center mb-4 w-full">
+                    <h3 class="text-macro text-4xl md:text-5xl font-bold group-hover:text-accent transition-colors">${repo.name}</h3>
+                    <span class="text-macro text-3xl group-hover:translate-x-2 transition-transform">↗</span>
+                </div>
+                <p class="text-micro text-ink/60 group-hover:text-canvas/80 group-focus:text-canvas/80 max-w-md mb-6">${desc}</p>
+                <div class="flex gap-6 items-center">
+                    <span class="text-micro text-accent">${lang}</span>
+                    <span class="text-micro text-ink/40">★ ${repo.stargazers_count}</span>
+                </div>
+            `;
+            container.appendChild(el);
+        });
+        
+        // Add View All Link at the bottom
+        const viewAll = document.createElement('a');
+        viewAll.href = 'https://github.com/shahil-sk';
+        viewAll.target = '_blank';
+        viewAll.className = 'p-8 md:p-16 group hover:bg-accent focus:bg-accent hover:text-canvas focus:text-canvas focus:outline-none transition-colors duration-300 flex-1 flex justify-between items-center relative z-10';
+        viewAll.innerHTML = `
+            <span class="text-macro text-2xl md:text-3xl font-bold">ACCESS_FULL_GITHUB_ARCHIVE</span>
+            <span class="text-macro text-3xl group-hover:translate-x-2 transition-transform">→</span>
+        `;
+        container.appendChild(viewAll);
+        
+        if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
+    } catch(e) {
+        console.warn('Failed to fetch github repos:', e);
+        container.innerHTML = '<div class="px-8 py-12 text-accent font-bold text-micro border border-accent p-4 inline-block m-8 md:m-16">ERROR: FAILED TO SYNC REPOSITORIES</div>';
+    }
+}
+
 // Initialize
 document.addEventListener("DOMContentLoaded", () => {
   populateBlogPreview().then(() => {
     initAnimations();
   });
+  populateGithubProjects();
 });
 
 // --- Nav Terminal Logic ---
