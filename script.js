@@ -1,5 +1,7 @@
 // Initialize GSAP and ScrollTrigger
-gsap.registerPlugin(ScrollTrigger);
+if (typeof gsap !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 // Custom easing for cinematic hardware motion
 const easeHeavy = "expo.out";
@@ -47,6 +49,7 @@ async function populateBlogPreview() {
 
 // GSAP Animations
 function initAnimations() {
+  if (typeof gsap === 'undefined') return;
   let mm = gsap.matchMedia();
 
   mm.add("(prefers-reduced-motion: no-preference)", () => {

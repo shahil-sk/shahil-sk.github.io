@@ -174,7 +174,7 @@
         const num = (i + 1).toString().padStart(2, '0');
         
         return `
-      <a href=\"${postUrl}\" data-command="cat ${post.slug}.log" class=\"blog-card group flex flex-col md:flex-row gap-6 md:gap-16 items-start opacity-0 translate-y-4 w-full border-b border-ink/10 pb-12 mb-12 last:border-0\" style=\"transition-delay:${(i % 3) * 0.08}s\">
+      <a href=\"${postUrl}\" data-command="cat ${post.slug}.log" class=\"blog-card group flex flex-col md:flex-row gap-6 md:gap-16 items-start opacity-0 translate-y-4 transition-all duration-700 ease-out w-full border-b border-ink/10 pb-12 mb-12 last:border-0\" style=\"transition-delay:${(i % 3) * 0.08}s\">
         <span class=\"text-macro text-6xl md:text-8xl text-ink/20 group-hover:text-accent transition-colors duration-500 pointer-events-none\">${num}</span>
         <div class="flex flex-col gap-6 pt-2 w-full pointer-events-none">
             <h3 class=\"text-macro text-4xl md:text-6xl text-ink leading-[0.85] uppercase group-hover:text-accent transition-colors\">${htmlEsc(post.title)}</h3>
@@ -213,7 +213,12 @@
     // Trigger animations
     setTimeout(() => {
       const observer = new IntersectionObserver(
-        entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+        entries => entries.forEach(e => { 
+          if (e.isIntersecting) {
+            e.target.classList.remove('opacity-0', 'translate-y-4');
+            e.target.classList.add('opacity-100', 'translate-y-0');
+          } 
+        }),
         { threshold: 0.05 }
       );
       grid.querySelectorAll('.blog-card').forEach(el => observer.observe(el));
