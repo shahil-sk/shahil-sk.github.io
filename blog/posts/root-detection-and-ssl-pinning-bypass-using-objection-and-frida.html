@@ -134,6 +134,15 @@
             width: 0;
             display: none;
         }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-up {
+            animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+        }
     </style>
 
     <meta name="description" content="# Objection  > [!IMPORTANT] > 1) Make sure adb is installed. > 2) Use a quality USB cable. > 3) Install frida ### The Application that I'm using today">
@@ -157,7 +166,7 @@
                 </svg>
             </button>
             
-            <div id="nav-terminal" class="absolute top-full right-0 mt-6 w-[350px] md:w-[500px] lg:w-[600px] bg-[#111111] border border-ink/10 flex flex-col font-mono text-micro text-ink p-6 hidden opacity-0 -translate-y-4 transition-all duration-300 ease-out shadow-2xl">
+            <div id="nav-terminal" class="absolute top-full right-0 mt-6 w-[350px] md:w-[500px] lg:w-[600px] bg-[#111111] border border-ink/10 flex flex-col font-mono text-micro text-ink p-6 hidden opacity-0 -translate-y-4 transition-all duration-[260ms] ease-out shadow-2xl">
                 <div id="terminal-output" class="flex flex-col gap-1 mb-2 whitespace-pre-wrap leading-relaxed max-h-48 overflow-y-auto scrollbar-hide">
                     <div class="text-ink/50 mb-2">// SECURE SHELL INITIALIZED</div>
                     <div class="mb-4">System ready. Type <span class="text-accent">help</span> for commands.</div>
@@ -182,17 +191,17 @@
         BACK
     </a>
 
-    <main class="w-full pt-32 pb-32 px-8 md:px-16 min-h-[100dvh] flex flex-col items-center relative">
+    <main class="w-full pt-32 pb-32 px-8 md:px-16 min-h-[100dvh] flex flex-col items-center relative animate-fade-up">
         <div class="w-full max-w-[800px] flex flex-col gap-12 relative z-10">
             <!-- Header -->
             <div class="flex flex-col gap-6 border-b border-ink/10 pb-12">
                 <div class="flex flex-wrap gap-4 items-center justify-between text-micro text-ink/40">
                     <div class="flex gap-4 items-center">
-                        <div class="post-meta" id="post-meta">2024-12-05</div>
+                        <div class="post-meta" id="post-meta">[ 2024-12-05 ]</div>
                         <span>//</span>
-                        <div class="post-reading-time" id="post-reading-time">2 min read</div>
+                        <div class="post-reading-time" id="post-reading-time">[ READ_TIME: 2 MIN ]</div>
                     </div>
-                    <div class="post-tags flex gap-2 flex-wrap" id="post-tags"><span class="text-micro text-ink/60 uppercase">Android</span> <span class="text-ink/20">/</span> <span class="text-micro text-ink/60 uppercase">Frida</span> <span class="text-ink/20">/</span> <span class="text-micro text-ink/60 uppercase">Pentesting</span></div>
+                    <div class="post-tags flex gap-2 flex-wrap" id="post-tags"><span class="text-micro text-ink/60 uppercase">[ ANDROID ]</span> <span class="text-micro text-ink/60 uppercase">[ FRIDA ]</span> <span class="text-micro text-ink/60 uppercase">[ PENTESTING ]</span></div>
                 </div>
                 <h1 class="post-title text-macro text-5xl md:text-7xl leading-[0.9]" id="post-title">Loading...</h1>
             </div>

@@ -95,10 +95,10 @@
               setTimeout(() => {
                   const e = new KeyboardEvent('keydown', { key: 'Enter' });
                   input.dispatchEvent(e);
-                  setTimeout(callback, 600);
-              }, 200);
+                  setTimeout(callback, 400);
+              }, 150);
           }
-      }, 40);
+      }, 20);
   }
 
   // ── 3. Build UI ─────────────────────────────────────────────────────────────
@@ -127,32 +127,38 @@
         const btn = e.target.closest('.filter-btn');
         if (!btn || btn.classList.contains('active')) return;
         
+        e.stopPropagation();
+        
         const tag = btn.dataset.tag;
         const cmd = tag === 'all' ? 'ls -la ./transmissions/' : `grep -R "${tag}" ./transmissions/`;
         
         const toggle = document.getElementById('terminal-toggle');
         const navTerminal = document.getElementById('nav-terminal');
         
+        let delay = 0;
         if (navTerminal && navTerminal.classList.contains('hidden')) {
             toggle.click();
+            delay = 260;
         }
         
-        simulateTerminalCommand(cmd, () => {
-            activeTag = tag;
-            filtersEl.querySelectorAll('.filter-btn').forEach(b => {
-                b.classList.remove('active', 'text-accent');
-                b.classList.add('text-ink/50', 'hover:text-accent');
+        setTimeout(() => {
+            simulateTerminalCommand(cmd, () => {
+                activeTag = tag;
+                filtersEl.querySelectorAll('.filter-btn').forEach(b => {
+                    b.classList.remove('active', 'text-accent');
+                    b.classList.add('text-ink/50', 'hover:text-accent');
+                });
+                btn.classList.add('active', 'text-accent');
+                btn.classList.remove('text-ink/50', 'hover:text-accent');
+                renderPosts();
+                
+                setTimeout(() => {
+                    if (navTerminal && !navTerminal.classList.contains('hidden')) {
+                        toggle.click(); // close terminal
+                    }
+                }, 800);
             });
-            btn.classList.add('active', 'text-accent');
-            btn.classList.remove('text-ink/50', 'hover:text-accent');
-            renderPosts();
-            
-            setTimeout(() => {
-                if (navTerminal && !navTerminal.classList.contains('hidden')) {
-                    toggle.click(); // close terminal
-                }
-            }, 800);
-        });
+        }, delay);
       });
     }
 
@@ -180,10 +186,10 @@
             <h3 class=\"text-macro text-4xl md:text-6xl text-ink leading-[0.85] uppercase group-hover:text-accent transition-colors\">${htmlEsc(post.title)}</h3>
             <p class="text-micro text-ink/60 max-w-2xl leading-relaxed group-hover:text-ink transition-colors duration-300 opacity-80">${htmlEsc(post.excerpt)}</p>
             <div class=\"flex gap-4 items-center pt-4 w-full\">
-                <span class=\"text-micro text-ink/40 shrink-0\">${post.date}</span>
+                <span class=\"text-micro text-ink/40 shrink-0\">[ ${post.date} ]</span>
                 <span class=\"text-micro text-ink/20\">//</span>
                 <div class=\"flex gap-2 flex-wrap\">
-                    ${(post.tags || []).map(t => `<span class=\"text-micro text-ink/60 uppercase\">${htmlEsc(t)}</span>`).join('<span class="text-ink/20">/</span>')}
+                    ${(post.tags || []).map(t => `<span class=\"text-micro text-ink/60 uppercase\">[ ${htmlEsc(t).toUpperCase()} ]</span>`).join('')}
                 </div>
             </div>
         </div>
@@ -194,19 +200,31 @@
     grid.querySelectorAll('.blog-card').forEach(card => {
         card.addEventListener('click', (e) => {
             e.preventDefault();
+            e.stopPropagation();
             const url = card.getAttribute('href');
             const cmd = card.getAttribute('data-command');
             
             const toggle = document.getElementById('terminal-toggle');
             const navTerminal = document.getElementById('nav-terminal');
             
+            let delay = 0;
             if (navTerminal && navTerminal.classList.contains('hidden')) {
                 toggle.click();
+                delay = 260;
             }
             
-            simulateTerminalCommand(cmd, () => {
-                window.location.href = url;
-            });
+            setTimeout(() => {
+                simulateTerminalCommand(cmd, () => {
+                    if (navTerminal && !navTerminal.classList.contains('hidden')) {
+                        toggle.click();
+                        setTimeout(() => {
+                            window.location.href = url;
+                        }, 260);
+                    } else {
+                        window.location.href = url;
+                    }
+                });
+            }, delay);
         });
     });
 

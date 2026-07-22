@@ -10,41 +10,88 @@ const easeHeavy = "expo.out";
 async function populateBlogPreview() {
   const grid = document.getElementById('blog-preview-grid');
   if (!grid) return;
+  
+  const OWNER = 'shahil-sk';
+  const REPO = 'shahil-sk.github.io';
+  const BRANCH = 'main';
+  const API_URL = `https://api.github.com/repos/${OWNER}/${REPO}/contents/blog/content?ref=${BRANCH}`;
+  
+  let allPosts = [];
+  
   try {
     const isBlogPath = window.location.pathname.includes('/blog/') || window.location.pathname.endsWith('/blog.html');
     const indexUrl = isBlogPath ? 'posts/index.json' : 'blog/posts/index.json';
-    const res = await fetch(indexUrl);
+    const res = await fetch(indexUrl + '?' + Date.now());
     if (!res.ok) throw new Error();
-    const posts = await res.json();
-    const latest = posts.slice(0, 4);
-    
-    grid.innerHTML = '';
-    latest.forEach((item, index) => {
-      const article = document.createElement('a');
-      const itemUrl = item.url || `posts/${item.slug}.html`;
-      article.href = isBlogPath ? itemUrl : `blog/${itemUrl}`;
-      article.className = 'grid grid-cols-1 md:grid-cols-12 gap-4 items-center group cursor-pointer border-b border-ink/10 py-6 hover:bg-ink/5 transition-colors duration-300';
-      
-      const date = new Date(item.date || item.pubDate); // Using standard or RSS date
-      const formattedDate = !isNaN(date) ? date.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '.') : 'UNKNOWN.DATE';
-
-      article.innerHTML = `
-        <div class="md:col-span-2 text-micro text-ink/50 group-hover:text-ink transition-colors">${formattedDate}</div>
-        <div class="md:col-span-1 text-micro text-accent/50 group-hover:text-accent transition-colors hidden md:block">0${index + 1}</div>
-        <h3 class="md:col-span-7 text-macro text-2xl md:text-3xl text-ink group-hover:text-accent transition-colors uppercase leading-none mt-2 md:mt-0">${item.title}</h3>
-        <div class="md:col-span-2 text-left md:text-right text-micro text-ink/40 group-hover:text-accent transition-colors mt-4 md:mt-0">
-            [ EXECUTE_READ ]
-        </div>
-      `;
-      
-      grid.appendChild(article);
-    });
-    
-    // Refresh ScrollTrigger after DOM changes
-    ScrollTrigger.refresh();
+    allPosts = await res.json();
   } catch(e) {
-    grid.innerHTML = '<div class="text-accent font-bold text-micro border border-accent p-4 inline-block">ERROR: FAILED TO FETCH TRANSMISSIONS</div>';
+    console.warn('Index load failed, falling back to API:', e);
+    try {
+      const res = await fetch(API_URL);
+      if (!res.ok) throw new Error('API ' + res.status);
+      const dir = await res.json();
+      const mdFiles = dir.filter(f => f.type === 'file' && f.name.endsWith('.md'));
+      
+      const results = await Promise.allSettled(
+        mdFiles.map(async (file) => {
+          const rawUrl = `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/blog/content/${file.name}`;
+          const r = await fetch(rawUrl);
+          if (!r.ok) throw new Error();
+          const text = await r.text();
+          const slug = file.name.replace(/\.md$/, '');
+          
+          let title = slug;
+          let dateStr = '';
+          const titleMatch = text.match(/^title:\s*(.*)$/m);
+          if (titleMatch) title = titleMatch[1].trim();
+          const dateMatch = text.match(/^date:\s*(.*)$/m);
+          if (dateMatch) dateStr = dateMatch[1].trim();
+          
+          return { slug, title, date: dateStr, url: `posts/${slug}.html` };
+        })
+      );
+      
+      allPosts = results.filter(r => r.status === 'fulfilled').map(r => r.value);
+    } catch (err) {
+      grid.innerHTML = '<div class="text-accent font-bold text-micro border border-accent p-4 inline-block">ERROR: FAILED TO FETCH TRANSMISSIONS</div>';
+      return;
+    }
   }
+
+  // Ensure latest blogs show first
+  allPosts.sort((a, b) => {
+      const dateA = new Date(a.date || a.pubDate || 0);
+      const dateB = new Date(b.date || b.pubDate || 0);
+      return dateB - dateA;
+  });
+
+  const latest = allPosts.slice(0, 4);
+  
+  grid.innerHTML = '';
+  const isBlogPath = window.location.pathname.includes('/blog/') || window.location.pathname.endsWith('/blog.html');
+  
+  latest.forEach((item, index) => {
+    const article = document.createElement('a');
+    const itemUrl = item.url || `posts/${item.slug}.html`;
+    article.href = isBlogPath ? itemUrl : `blog/${itemUrl}`;
+    article.className = 'grid grid-cols-1 md:grid-cols-12 gap-4 items-center group cursor-pointer border-b border-ink/10 py-6 hover:bg-ink/5 transition-colors duration-300';
+    
+    const date = new Date(item.date || item.pubDate);
+    const formattedDate = !isNaN(date) ? date.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '.') : 'UNKNOWN.DATE';
+
+    article.innerHTML = `
+      <div class="md:col-span-2 text-micro text-ink/50 group-hover:text-ink transition-colors">${formattedDate}</div>
+      <div class="md:col-span-1 text-micro text-accent/50 group-hover:text-accent transition-colors hidden md:block">0${index + 1}</div>
+      <h3 class="md:col-span-7 text-macro text-2xl md:text-3xl text-ink group-hover:text-accent transition-colors uppercase leading-none mt-2 md:mt-0">${item.title}</h3>
+      <div class="md:col-span-2 text-left md:text-right text-micro text-ink/40 group-hover:text-accent transition-colors mt-4 md:mt-0">
+          [ EXECUTE_READ ]
+      </div>
+    `;
+    
+    grid.appendChild(article);
+  });
+  
+  if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
 }
 
 // GSAP Animations
@@ -122,7 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
         navTerminal.classList.add('opacity-0', '-translate-y-4');
         setTimeout(() => {
             navTerminal.classList.add('hidden');
-        }, 300);
+        }, 260);
         terminalInput.blur();
     }
 

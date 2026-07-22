@@ -148,7 +148,7 @@ def build_blog():
         slug = filename.replace('.md', '')
         word_count = len(body.split())
         read_time = max(1, round(word_count / 200))
-        read_time_str = f"{read_time} min read"
+        read_time_str = f"[ READ_TIME: {read_time} MIN ]"
 
         # Transform Obsidian links before Markdown processing
         body = fix_image_links(body)
@@ -176,8 +176,8 @@ def build_blog():
             page_html = page_html.replace('<title>Post — Shahil Ahmed</title>', f'<title>{title} — Shahil Ahmed</title>')
             page_html = page_html.replace('<h1 class="post-title" id="post-title">Loading...</h1>', f'<h1 class="post-title" id="post-title">{title}</h1>')
             date = fm.get('date', '')
-            page_html = page_html.replace('<div class="post-meta" id="post-meta"></div>', f'<div class="post-meta" id="post-meta">{date}</div>')
-            tags_html = ' <span class="text-ink/20">/</span> '.join([f'<span class="text-micro text-ink/60 uppercase">{t}</span>' for t in fm.get('tags', [])])
+            page_html = page_html.replace('<div class="post-meta" id="post-meta"></div>', f'<div class="post-meta" id="post-meta">[ {date} ]</div>')
+            tags_html = ' '.join([f'<span class="text-micro text-ink/60 uppercase">[ {t.upper()} ]</span>' for t in fm.get('tags', [])])
             page_html = page_html.replace('<div class="post-tags flex gap-2 flex-wrap" id="post-tags"></div>', f'<div class="post-tags flex gap-2 flex-wrap" id="post-tags">{tags_html}</div>')
             page_html = page_html.replace('<div class="post-tags" id="post-tags"></div>', f'<div class="post-tags flex gap-2 flex-wrap" id="post-tags">{tags_html}</div>')
             page_html = page_html.replace('<div class="post-reading-time" id="post-reading-time"></div>', f'<div class="post-reading-time" id="post-reading-time">{read_time_str}</div>')
