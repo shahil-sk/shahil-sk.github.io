@@ -112,12 +112,14 @@
     const allTags = new Set();
     allPosts.forEach(p => (p.tags || []).forEach(t => allTags.add(t)));
     
-    // Clear existing filters first
-    if (filtersEl) {
-      filtersEl.innerHTML = '<button class=\"filter-btn active text-micro text-accent transition-colors\" data-tag=\"all\">[ ALL ]</button>';
+      if (filtersEl) {
+      filtersEl.innerHTML = `
+        <span class="text-micro text-ink/40 mr-4 hidden md:block">FILTER BY TAG:</span>
+        <button class=\"filter-btn active text-micro text-canvas bg-ink px-4 py-2 border border-ink transition-all\" data-tag=\"all\">[ ALL ]</button>
+      `;
       allTags.forEach(tag => {
         const btn       = document.createElement('button');
-        btn.className   = 'filter-btn text-micro text-ink/50 hover:text-accent transition-colors';
+        btn.className   = 'filter-btn text-micro text-ink/50 bg-transparent px-4 py-2 border border-ink/20 hover:border-ink hover:text-ink transition-all';
         btn.dataset.tag = tag;
         btn.textContent = `[ ${tag.toUpperCase()} ]`;
         filtersEl.appendChild(btn);
@@ -145,11 +147,11 @@
             simulateTerminalCommand(cmd, () => {
                 activeTag = tag;
                 filtersEl.querySelectorAll('.filter-btn').forEach(b => {
-                    b.classList.remove('active', 'text-accent');
-                    b.classList.add('text-ink/50', 'hover:text-accent');
+                    b.classList.remove('active', 'text-canvas', 'bg-ink', 'border-ink');
+                    b.classList.add('text-ink/50', 'bg-transparent', 'border-ink/20', 'hover:border-ink', 'hover:text-ink');
                 });
-                btn.classList.add('active', 'text-accent');
-                btn.classList.remove('text-ink/50', 'hover:text-accent');
+                btn.classList.add('active', 'text-canvas', 'bg-ink', 'border-ink');
+                btn.classList.remove('text-ink/50', 'bg-transparent', 'border-ink/20', 'hover:border-ink', 'hover:text-ink');
                 renderPosts();
                 
                 setTimeout(() => {
@@ -180,12 +182,17 @@
         const num = (i + 1).toString().padStart(2, '0');
         
         return `
-      <a href=\"${postUrl}\" data-command="cat ${post.slug}.log" class=\"blog-card group flex flex-col md:flex-row gap-6 md:gap-16 items-start opacity-0 translate-y-4 transition-all duration-700 ease-out w-full border-b border-ink/10 pb-12 mb-12 last:border-0\" style=\"transition-delay:${(i % 3) * 0.08}s\">
-        <span class=\"text-macro text-6xl md:text-8xl text-ink/20 group-hover:text-accent transition-colors duration-500 pointer-events-none\">${num}</span>
-        <div class="flex flex-col gap-6 pt-2 w-full pointer-events-none">
-            <h3 class=\"text-macro text-4xl md:text-6xl text-ink leading-[0.85] uppercase group-hover:text-accent transition-colors\">${htmlEsc(post.title)}</h3>
+      <a href=\"${postUrl}\" data-command="cat ${post.slug}.log" class=\"blog-card group flex flex-col md:flex-row items-stretch bg-canvas hover:bg-[#0c0c0c] transition-colors duration-700 w-full relative overflow-hidden opacity-0 translate-y-4\">
+        <!-- Number block -->
+        <div class="p-8 md:p-16 border-r border-grid flex items-center justify-center shrink-0 w-32 md:w-48 hidden md:flex">
+            <span class=\"text-macro text-5xl md:text-7xl text-ink/10 group-hover:text-ink/30 transition-colors pointer-events-none\">${num}</span>
+        </div>
+        
+        <!-- Content block -->
+        <div class="p-8 md:p-16 flex flex-col gap-6 w-full justify-center">
+            <h3 class=\"text-macro text-4xl md:text-5xl text-ink leading-[0.85] uppercase group-hover:text-accent transition-colors\">${htmlEsc(post.title)}</h3>
             <p class="text-micro text-ink/60 max-w-2xl leading-relaxed group-hover:text-ink transition-colors duration-300 opacity-80">${htmlEsc(post.excerpt)}</p>
-            <div class=\"flex gap-4 items-center pt-4 w-full\">
+            <div class=\"flex gap-4 items-center pt-8 mt-auto w-full\">
                 <span class=\"text-micro text-ink/40 shrink-0\">[ ${post.date} ]</span>
                 <span class=\"text-micro text-ink/20\">//</span>
                 <div class=\"flex gap-2 flex-wrap\">

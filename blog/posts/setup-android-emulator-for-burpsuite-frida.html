@@ -191,126 +191,31 @@
         BACK
     </a>
 
-    <main class="w-full pt-32 pb-32 px-8 md:px-16 min-h-[100dvh] flex flex-col items-center relative animate-fade-up">
-        <div class="w-full max-w-[800px] flex flex-col gap-12 relative z-10">
-            <!-- Header -->
-            <div class="flex flex-col gap-6 border-b border-ink/10 pb-12">
-                <div class="flex flex-wrap gap-4 items-center justify-between text-micro text-ink/40">
-                    <div class="flex gap-4 items-center">
+    <main class="w-full pt-24 pb-0 min-h-[100dvh] bg-canvas relative flex flex-col animate-fade-up">
+        <div class="w-full grid grid-cols-1 md:grid-cols-12 gap-[1px] bg-grid flex-1 border-t border-b border-grid mt-8">
+            <!-- Left Meta Column -->
+            <div class="col-span-1 md:col-span-3 bg-canvas p-8 md:p-16 flex flex-col justify-start border-b md:border-b-0 border-grid relative">
+                <div class="sticky top-32 flex flex-col gap-12">
+                    <div>
+                        <div class="text-micro text-ink/40 mb-2">// DATE</div>
                         <div class="post-meta" id="post-meta">[ 2024-11-27 ]</div>
-                        <span>//</span>
+                    </div>
+                    <div>
+                        <div class="text-micro text-ink/40 mb-2">// READ TIME</div>
                         <div class="post-reading-time" id="post-reading-time">[ READ_TIME: 2 MIN ]</div>
                     </div>
-                    <div class="post-tags flex gap-2 flex-wrap" id="post-tags"><span class="text-micro text-ink/60 uppercase">[ ANDROID ]</span> <span class="text-micro text-ink/60 uppercase">[ FRIDA ]</span> <span class="text-micro text-ink/60 uppercase">[ BURPSUITE ]</span> <span class="text-micro text-ink/60 uppercase">[ SETUP ]</span></div>
+                    <div>
+                        <div class="text-micro text-ink/40 mb-2">// TAGS</div>
+                        <div class="post-tags flex gap-2 flex-wrap" id="post-tags"><span class="text-micro text-ink/60 uppercase">[ ANDROID ]</span> <span class="text-micro text-ink/60 uppercase">[ FRIDA ]</span> <span class="text-micro text-ink/60 uppercase">[ BURPSUITE ]</span> <span class="text-micro text-ink/60 uppercase">[ SETUP ]</span></div>
+                    </div>
                 </div>
-                <h1 class="post-title text-macro text-5xl md:text-7xl leading-[0.9]" id="post-title">Loading...</h1>
             </div>
 
-            <!-- Article body -->
-            <article class="post-body" id="post-body"><h2>Emulator setup</h2>
-<blockquote>
-<p>[!IMPORTANT]
-Download &amp; Install Android Studio from <a href="https://developer.android.com/studio">here</a></p>
-</blockquote>
-<ul>
-<li>Create a Virtual Device in Android Studio.</li>
-</ul>
-<p>**( I have used Android 12 'S' (API 31) for this Setup Process)</p>
-<h3>Rooting The AVD (Android Virtual Device)</h3>
-<ul>
-<li>Start the AVD Via device manager.</li>
-<li>Clone the rootAVD. <a href="https://gitlab.com/newbit/rootAVD">link</a><ul>
-<li>Open the Directory where you have installed rootAVD</li>
-<li>Open CMD in same directory</li>
-<li>run <code>rootAVD.bat ListAllAVDs</code> to list all the Installed Android IMGs Computer
-     (note : <code>run rootAVD.sh ListAllAVDs</code> if your using Linux OS)</li>
-<li>Look for your android emulator ramdisk.img<ul>
-<li>ex: "system-images\android-31\google_apis_playstore\x86_64\ramdisk.img"</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<p><img alt="Pasted image 20241127064755.png" src="images/Pasted image 20241127064755.png" /></p>
-<ul>
-<li>copy the full ramdisk.img path</li>
-<li>run <code>rootAVD.bat &lt;ramdisk.img PATH&gt;</code></li>
-<li>select option '1' to install the stable version of magisk</li>
-<li>Now the AVD will shutdown, you'll have to manually the start the AVD again using via Device Manager</li>
-<li>if the magisk app is installed then DONE</li>
-</ul>
-<h2>Setting Up BurpSuite</h2>
-<ul>
-<li>export BurpSuite Certificate in '.crt' extenstion</li>
-<li>copy the BurpSuite Certificateto AVD<ul>
-<li><code>adb push cacert.crt /sdcard/Download</code></li>
-</ul>
-</li>
-<li>download <a href="https://github.com/NVISOsecurity/MagiskTrustUserCerts/releases/tag/v0.4.1">MagiskTrustUserCerts</a></li>
-<li>copy the 'AlwaysTrustUserCerts.zip' to AVD<ul>
-<li><code>adb push AlwaysTrustUserCerts.zip /sdcard/Download</code></li>
-</ul>
-</li>
-<li>Flash 'AlwaysTrustUserCerts.zip' Via Magisk &amp; Reboot</li>
-<li>install the BurpSuite Certificate in settings<ul>
-<li>Settings &gt; Security &gt; Encryption &amp; Credentials &gt; Install a Certificate.</li>
-</ul>
-</li>
-<li>Reboot AVD</li>
-<li>Got to Emulator settings</li>
-</ul>
-<p><img alt="Pasted image 20241127070605.png" src="images/Pasted image 20241127070605.png" /></p>
-<ul>
-<li>Settings &gt; Proxy </li>
-<li>set Proxy to Manual Proxy<ul>
-<li>host: 127.0.0.1 &amp;&amp; Port: 8080</li>
-</ul>
-</li>
-<li>Apply &amp; Done!</li>
-</ul>
-<h2>Setting Up Frida</h2>
-<blockquote>
-<p>[!NOTE]
-<em>Prerequisites</em>:
-- python
-- Rooted Android device (for advanced functionality; non-rooted devices have limited capabilities).
-- USB debugging enabled on your Android device.
-- Android Debug Bridge (ADB) installed on your computer.
-</p>
-</blockquote>
-<p>**Installation
-- <code>pip install frida-tools</code>
-- <code>frida --version</code></p>
-<blockquote>
-<p>[!IMPORTANT]
-Download the appropriate frida-server binary from <a href="https://github.com/frida/frida/releases">here</a> According to your Device CPU Architecture</p>
-<p>check in AVD Manger for CPU arch
-Or
-Run  <code>adb shell getprop ro.product.cpu.abi</code></p>
-</blockquote>
-<ul>
-<li>Rename the "frida-server-16.5.7-android-x86_64" to "frida-server" for easier navigation</li>
-<li>
-<p>**Push the Frida Server to the Device:
-    <code>adb push frida-server /data/local/tmp/</code></p>
-</li>
-<li>
-<p><strong>Set Permissions:</strong></p>
-<ul>
-<li>make frida-server executable
-<code>adb shell "chmod 755 /data/local/tmp/frida-server"</code></li>
-</ul>
-</li>
-<li>
-<p>**Start the Frida server:
-    <code>adb shell "/data/local/tmp/frida-server &amp;"</code> </p>
-</li>
-</ul>
-<p>'&amp;' ampersand is used to run frida in background, remove '&amp;' to run it foreground</p>
-<blockquote>
-<p>[!tip]
-- Use <code>frida-ls-devices</code> to verify that the device is listed, If the device appears in the list, the setup is complete.</p>
-</blockquote></article>
+            <!-- Main Content Column -->
+            <div class="col-span-1 md:col-span-9 bg-canvas p-8 md:p-16 lg:p-24 flex flex-col items-start justify-start relative">
+                <h1 class="post-title text-macro text-5xl md:text-7xl lg:text-8xl leading-[0.85] uppercase max-w-4xl mb-16" id="post-title">Loading...</h1>
+                <article class="post-body max-w-3xl w-full" id="post-body"></article>
+            </div>
         </div>
     </main>
 

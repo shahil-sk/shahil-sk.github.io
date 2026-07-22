@@ -191,76 +191,31 @@
         BACK
     </a>
 
-    <main class="w-full pt-32 pb-32 px-8 md:px-16 min-h-[100dvh] flex flex-col items-center relative animate-fade-up">
-        <div class="w-full max-w-[800px] flex flex-col gap-12 relative z-10">
-            <!-- Header -->
-            <div class="flex flex-col gap-6 border-b border-ink/10 pb-12">
-                <div class="flex flex-wrap gap-4 items-center justify-between text-micro text-ink/40">
-                    <div class="flex gap-4 items-center">
+    <main class="w-full pt-24 pb-0 min-h-[100dvh] bg-canvas relative flex flex-col animate-fade-up">
+        <div class="w-full grid grid-cols-1 md:grid-cols-12 gap-[1px] bg-grid flex-1 border-t border-b border-grid mt-8">
+            <!-- Left Meta Column -->
+            <div class="col-span-1 md:col-span-3 bg-canvas p-8 md:p-16 flex flex-col justify-start border-b md:border-b-0 border-grid relative">
+                <div class="sticky top-32 flex flex-col gap-12">
+                    <div>
+                        <div class="text-micro text-ink/40 mb-2">// DATE</div>
                         <div class="post-meta" id="post-meta">[ 2026-02-15 ]</div>
-                        <span>//</span>
+                    </div>
+                    <div>
+                        <div class="text-micro text-ink/40 mb-2">// READ TIME</div>
                         <div class="post-reading-time" id="post-reading-time">[ READ_TIME: 2 MIN ]</div>
                     </div>
-                    <div class="post-tags flex gap-2 flex-wrap" id="post-tags"><span class="text-micro text-ink/60 uppercase">[ ANDROID ]</span> <span class="text-micro text-ink/60 uppercase">[ FRIDA ]</span> <span class="text-micro text-ink/60 uppercase">[ PENTESTING ]</span></div>
+                    <div>
+                        <div class="text-micro text-ink/40 mb-2">// TAGS</div>
+                        <div class="post-tags flex gap-2 flex-wrap" id="post-tags"><span class="text-micro text-ink/60 uppercase">[ ANDROID ]</span> <span class="text-micro text-ink/60 uppercase">[ FRIDA ]</span> <span class="text-micro text-ink/60 uppercase">[ PENTESTING ]</span></div>
+                    </div>
                 </div>
-                <h1 class="post-title text-macro text-5xl md:text-7xl leading-[0.9]" id="post-title">Loading...</h1>
             </div>
 
-            <!-- Article body -->
-            <article class="post-body" id="post-body"><h2>Overview</h2>
-<p>SSL pinning is a technique used by mobile apps to prevent MITM attacks by hardcoding the server certificate (or its public key hash) inside the app itself. When the app detects a certificate it doesn't recognise — like your Burp Suite proxy cert — it terminates the connection.</p>
-<p>This writeup covers the most reliable methods to bypass it using <strong>Frida</strong>.</p>
-<h2>Prerequisites</h2>
-<ul>
-<li>Rooted Android device or Genymotion emulator</li>
-<li>Frida server running on the device</li>
-<li><code>frida-tools</code> installed on your machine</li>
-<li>Burp Suite configured as proxy</li>
-</ul>
-<h2>Step 1 — Set Up Frida Server</h2>
-<p>Download the correct architecture binary from the <a href="https://github.com/frida/frida/releases">Frida releases</a> page.</p>
-<pre><code class="language-bash">adb push frida-server /data/local/tmp/
-adb shell &quot;chmod +x /data/local/tmp/frida-server&quot;
-adb shell &quot;/data/local/tmp/frida-server &amp;&quot;
-</code></pre>
-<p>Verify it's running:</p>
-<pre><code class="language-bash">frida-ps -U
-</code></pre>
-<h2>Step 2 — Use the Universal Bypass Script</h2>
-<p>The <code>frida-android-unpinning</code> script by @pcipolloni handles most pinning implementations out of the box.</p>
-<pre><code class="language-bash">frida -U -f com.target.app \
-  --codeshare pcipolloni/universal-android-ssl-pinning-bypass-with-frida \
-  --no-pause
-</code></pre>
-<blockquote>
-<p>If the app restarts and re-pins, try <code>-U --attach</code> instead of <code>-f</code> to hook a running process.</p>
-</blockquote>
-<h2>Step 3 — Verify Traffic in Burp</h2>
-<p>Once the script is injected, all HTTPS traffic should flow through your Burp proxy. You should see requests populating in the HTTP history tab.</p>
-<h2>When the Universal Script Fails</h2>
-<p>Some apps use custom pinning logic. In that case:</p>
-<ol>
-<li>Decompile the APK with <code>jadx-gui</code></li>
-<li>Search for <code>CertificatePinner</code>, <code>TrustManager</code>, <code>checkServerTrusted</code></li>
-<li>Find the exact class and method performing the check</li>
-<li>Write a targeted Frida hook</li>
-</ol>
-<pre><code class="language-javascript">Java.perform(function() {
-  var CertPinner = Java.use('com.target.app.network.CertPinner');
-  CertPinner.check.overload('java.lang.String', 'java.util.List').implementation = function(host, certs) {
-    console.log('[*] SSL Pinning bypassed for: ' + host);
-    return; // do nothing
-  };
-});
-</code></pre>
-<h2>Notes</h2>
-<ul>
-<li>Always test in a lab environment on apps you own or have permission to test.</li>
-<li>Newer apps may use <code>network_security_config.xml</code> — check that too.</li>
-<li>OkHttp3, Conscrypt, and native pinning all need different hooks.</li>
-</ul>
-<hr />
-<p><em>This post was written from real-world experience during Android VAPT engagements.</em></p></article>
+            <!-- Main Content Column -->
+            <div class="col-span-1 md:col-span-9 bg-canvas p-8 md:p-16 lg:p-24 flex flex-col items-start justify-start relative">
+                <h1 class="post-title text-macro text-5xl md:text-7xl lg:text-8xl leading-[0.85] uppercase max-w-4xl mb-16" id="post-title">Loading...</h1>
+                <article class="post-body max-w-3xl w-full" id="post-body"></article>
+            </div>
         </div>
     </main>
 

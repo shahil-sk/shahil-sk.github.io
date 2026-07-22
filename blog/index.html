@@ -109,26 +109,34 @@
         ROOT
     </a>
 
-    <main class="w-full pt-32 pb-16 px-8 md:px-16 min-h-[100dvh] flex flex-col items-center bg-gradient-to-b from-canvas to-neutral-900 relative">
-        <div class="w-full flex flex-col gap-16 relative z-10">
-            <!-- Header -->
-            <div class="flex flex-col gap-4 border-b border-ink/10 pb-8">
-                <span class="text-micro text-ink/40">SYS.LOG_ARCHIVE //</span>
-                <h1 class="text-macro text-6xl md:text-8xl font-bold leading-[0.85] tracking-tight">
-                    RAW<br>
-                    <span class="text-ink/30 italic font-serif lowercase">logs</span>
-                </h1>
-                <p class="text-micro text-ink/60 max-w-md">SECURITY RESEARCH, TACTICAL EXPLOITS, AND SYSTEM ARCHITECTURE ANALYSIS.</p>
+    <main class="w-full pt-32 pb-0 min-h-[100dvh] bg-canvas relative flex flex-col">
+        <!-- Rigid Grid Structure -->
+        <div class="w-full grid grid-cols-1 md:grid-cols-12 gap-[1px] bg-grid flex-1 border-t border-b border-grid mt-8">
+            <!-- Header Section (Left Column) -->
+            <div class="col-span-1 md:col-span-4 bg-canvas p-8 md:p-16 flex flex-col justify-between h-full">
+                <div class="flex flex-col gap-2">
+                    <span class="text-micro text-ink/40 uppercase">// SYS.LOG_ARCHIVE</span>
+                    <h1 class="text-macro text-6xl md:text-8xl font-bold leading-[0.85] tracking-tight text-ink mt-8">
+                        RAW<br>
+                        <span class="text-ink/30 italic font-serif lowercase">logs</span>
+                    </h1>
+                </div>
+                
+                <p class="text-micro text-ink/60 max-w-xs mt-32 md:mt-0 uppercase">SECURITY RESEARCH, TACTICAL EXPLOITS, AND SYSTEM ARCHITECTURE ANALYSIS.</p>
             </div>
 
-            <!-- Filters -->
-            <div class="flex flex-wrap gap-4" id="blog-filters">
-                <button class="filter-btn active text-micro text-accent transition-colors" data-tag="all">[ ALL ]</button>
-            </div>
-
-            <!-- Posts Grid -->
-            <div class="flex flex-col gap-8 w-full border-t border-ink/10 pt-8" id="blog-posts-grid">
-                <div class="text-micro animate-pulse">LOADING LOGS...</div>
+            <!-- Content Section (Right Column) -->
+            <div class="col-span-1 md:col-span-8 bg-canvas flex flex-col">
+                <!-- Filters row -->
+                <div class="p-8 md:px-16 border-b border-grid flex flex-wrap gap-4 items-center bg-canvas" id="blog-filters">
+                    <!-- Filters injected via JS -->
+                </div>
+                
+                <!-- Posts Grid container -->
+                <div class="flex flex-col w-full bg-grid gap-[1px]" id="blog-posts-grid">
+                    <!-- Loading State -->
+                    <div class="p-8 md:p-16 bg-canvas text-micro animate-pulse text-ink/50">WAITING FOR TRANSMISSIONS...</div>
+                </div>
             </div>
         </div>
     </main>
