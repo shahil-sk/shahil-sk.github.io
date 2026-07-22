@@ -130,7 +130,7 @@
         e.stopPropagation();
         
         const tag = btn.dataset.tag;
-        const cmd = tag === 'all' ? 'ls -la ./transmissions/' : `grep -R "${tag}" ./transmissions/`;
+        const cmd = tag === 'all' ? 'ls -la ./logs/' : `grep -R "${tag}" ./logs/`;
         
         const toggle = document.getElementById('terminal-toggle');
         const navTerminal = document.getElementById('nav-terminal');
