@@ -229,17 +229,52 @@ document.addEventListener('DOMContentLoaded', () => {
         terminalOutput.scrollTo(0, terminalOutput.scrollHeight);
     });
 
+    // Custom Context Menu
+    const contextMenu = document.createElement('div');
+    contextMenu.id = 'custom-context-menu';
+    contextMenu.className = 'fixed bg-canvas border border-ink/20 flex flex-col z-[9999] opacity-0 pointer-events-none transition-opacity duration-200 text-micro shadow-2xl';
+    
+    const menuOptions = [
+        { label: '[ INITIATE_TERMINAL ]', action: () => { if (navTerminal.classList.contains('hidden')) terminalToggle.click(); } },
+        { label: '[ COPY_URL ]', action: () => { navigator.clipboard.writeText(window.location.href); } },
+        { label: '[ NAVIGATE_ROOT ]', action: () => { window.location.href = window.location.pathname.includes('/blog/') ? '../index.html' : 'index.html'; } }
+    ];
+
+    menuOptions.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'px-6 py-4 text-left text-ink/70 hover:bg-ink hover:text-canvas transition-colors w-full border-b border-ink/10 last:border-b-0 uppercase';
+        btn.textContent = opt.label;
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            opt.action();
+            contextMenu.classList.add('opacity-0', 'pointer-events-none');
+        });
+        contextMenu.appendChild(btn);
+    });
+
+    document.body.appendChild(contextMenu);
+
     document.addEventListener('contextmenu', (e) => {
-        // Only warn if they right-click on the main content, not the terminal
-        if (!navTerminal.contains(e.target) && !terminalToggle.contains(e.target)) {
-            if (navTerminal.classList.contains('hidden')) {
-                terminalToggle.click();
-            }
-            const responseNode = document.createElement('div');
-            responseNode.className = 'text-[#ff3333] font-bold mb-4 whitespace-pre';
-            responseNode.textContent = `[SECURITY_ALERT] Context menu access intercepted. Action logged.`;
-            terminalOutput.appendChild(responseNode);
-            terminalOutput.scrollTo(0, terminalOutput.scrollHeight);
+        e.preventDefault();
+        
+        // Position menu
+        const menuWidth = 200; // estimated width
+        const menuHeight = 150; // estimated height
+        let x = e.clientX;
+        let y = e.clientY;
+        
+        // Prevent overflowing screen
+        if (x + menuWidth > window.innerWidth) x = window.innerWidth - menuWidth - 10;
+        if (y + menuHeight > window.innerHeight) y = window.innerHeight - menuHeight - 10;
+        
+        contextMenu.style.left = `${x}px`;
+        contextMenu.style.top = `${y}px`;
+        contextMenu.classList.remove('opacity-0', 'pointer-events-none');
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!contextMenu.contains(e.target)) {
+            contextMenu.classList.add('opacity-0', 'pointer-events-none');
         }
     });
 
