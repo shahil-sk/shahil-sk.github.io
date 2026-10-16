@@ -23,7 +23,7 @@
                         serif: ['"Playfair Display"', 'serif'],
                     },
                     colors: {
-                        canvas: '#0A0A0A',
+                        canvas: '#000000',
                         ink: '#EAEAEA',
                         grid: '#222222',
                         accent: '#FFFFFF',
@@ -39,18 +39,9 @@
     
     <style>
         body {
-            background-color: #0A0A0A;
+            background-color: #000000;
             color: #EAEAEA;
             cursor: crosshair;
-        }
-
-        .noise-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            pointer-events: none;
-            z-index: 9999;
-            opacity: 0.05;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
 
         .text-micro {
@@ -103,7 +94,7 @@
             filter: grayscale(0%) contrast(1);
         }
         .post-body pre {
-            background: #050505 !important;
+            background: #000000 !important;
             border: 1px solid #222;
             padding: 1.5em;
             overflow-x: auto;
@@ -154,8 +145,6 @@
 </head>
 <body class="antialiased overflow-x-hidden selection:bg-accent selection:text-ink">
 
-    <div class="noise-overlay"></div>
-
     <!-- Global Nav Overlay -->
     <nav class="fixed top-0 w-full p-8 md:px-16 md:py-12 flex justify-end items-start z-[100] pointer-events-none">
         <div class="relative pointer-events-auto">
@@ -166,10 +155,10 @@
                 </svg>
             </button>
             
-            <div id="nav-terminal" class="absolute top-full right-0 mt-6 w-[90vw] sm:w-[350px] md:w-[500px] lg:w-[600px] bg-[#111111] border border-ink/10 flex flex-col font-mono text-micro text-ink p-6 hidden opacity-0 -translate-y-4 transition-all duration-[260ms] ease-out shadow-2xl">
+            <div id="nav-terminal" class="absolute top-full right-0 mt-6 w-[90vw] sm:w-[350px] md:w-[500px] lg:w-[600px] bg-black border border-ink/20 flex flex-col font-mono text-micro text-ink p-6 hidden opacity-0 -translate-y-4 transition-all duration-[260ms] ease-out shadow-2xl">
                 <div id="terminal-output" class="flex flex-col gap-1 mb-2 whitespace-pre-wrap leading-relaxed max-h-48 overflow-y-auto scrollbar-hide">
-                    <div class="text-ink/50 mb-2">// SECURE SHELL INITIALIZED</div>
-                    <div class="mb-4">System ready. Type <span class="text-accent">help</span> for commands.</div>
+                    <div class="text-ink/50 mb-2">Terminal session initialized.</div>
+                    <div class="mb-4">Type <span class="text-accent">help</span> for available commands.</div>
                 </div>
                 <div class="flex items-center gap-3 shrink-0 relative mt-4 pt-4 border-t border-ink/10">
                     <span class="text-accent shrink-0">root@sk:~#</span>
@@ -197,23 +186,23 @@
             <div class="col-span-1 md:col-span-3 bg-canvas p-8 md:p-16 flex flex-col justify-start border-b md:border-b-0 border-grid relative">
                 <div class="sticky top-32 flex flex-col gap-12">
                     <div>
-                        <div class="text-micro text-ink/40 mb-2">// DATE</div>
-                        <div class="post-meta" id="post-meta">[ 2025-12-11 ]</div>
+                        <div class="text-micro text-ink/40 mb-2">DATE</div>
+                        <div class="post-meta" id="post-meta">2025-12-11</div>
                     </div>
                     <div>
-                        <div class="text-micro text-ink/40 mb-2">// READ TIME</div>
-                        <div class="post-reading-time" id="post-reading-time">[ READ_TIME: 4 MIN ]</div>
+                        <div class="text-micro text-ink/40 mb-2">READ TIME</div>
+                        <div class="post-reading-time" id="post-reading-time">4 MIN READ</div>
                     </div>
                     <div>
-                        <div class="text-micro text-ink/40 mb-2">// TAGS</div>
-                        <div class="post-tags flex gap-2 flex-wrap" id="post-tags"><span class="text-micro text-ink/60 uppercase">[ SETUP ]</span> <span class="text-micro text-ink/60 uppercase">[ PFSENSE ]</span> <span class="text-micro text-ink/60 uppercase">[ FIREWALL ]</span> <span class="text-micro text-ink/60 uppercase">[ VM ]</span></div>
+                        <div class="text-micro text-ink/40 mb-2">TAGS</div>
+                        <div class="post-tags flex gap-2 flex-wrap" id="post-tags"><span class="text-micro text-ink/60 uppercase">SETUP</span> <span class="text-micro text-ink/60 uppercase">PFSENSE</span> <span class="text-micro text-ink/60 uppercase">FIREWALL</span> <span class="text-micro text-ink/60 uppercase">VM</span></div>
                     </div>
                 </div>
             </div>
 
             <!-- Main Content Column -->
             <div class="col-span-1 md:col-span-9 bg-canvas p-8 md:p-16 lg:p-24 flex flex-col items-start justify-start relative">
-                <h1 class="post-title text-macro text-5xl md:text-7xl lg:text-8xl leading-[0.85] uppercase max-w-4xl mb-16" id="post-title">Setup pf-sense in VM & Configure</h1>
+                <h1 class="post-title text-macro text-3xl sm:text-5xl md:text-7xl lg:text-8xl leading-[0.9] sm:leading-[0.85] uppercase max-w-4xl mb-12 md:mb-16 break-words" id="post-title">Setup pf-sense in VM & Configure</h1>
                 <article class="post-body max-w-3xl w-full" id="post-body">
 <p>Before creating the pfSense VM, set up a custom internal network bridge for LAN traffic and link it to your main <code>virbr0</code>.​</p>
 <ol>

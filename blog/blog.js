@@ -115,13 +115,13 @@
       if (filtersEl) {
       filtersEl.innerHTML = `
         <span class="text-micro text-ink/40 mr-4 hidden md:block">FILTER BY TAG:</span>
-        <button class=\"filter-btn active text-micro text-canvas bg-ink px-4 py-2 border border-ink transition-all\" data-tag=\"all\">[ ALL ]</button>
+        <button class=\"filter-btn active text-micro text-canvas bg-ink px-4 py-2 border border-ink transition-all\" data-tag=\"all\">ALL</button>
       `;
       allTags.forEach(tag => {
         const btn       = document.createElement('button');
         btn.className   = 'filter-btn text-micro text-ink/50 bg-transparent px-4 py-2 border border-ink/20 hover:border-ink hover:text-ink transition-all';
         btn.dataset.tag = tag;
-        btn.textContent = `[ ${tag.toUpperCase()} ]`;
+        btn.textContent = tag.toUpperCase();
         filtersEl.appendChild(btn);
       });
 
@@ -132,7 +132,7 @@
         e.stopPropagation();
         
         const tag = btn.dataset.tag;
-        const cmd = tag === 'all' ? 'ls -la ./logs/' : `grep -R "${tag}" ./logs/`;
+        const cmd = tag === 'all' ? 'ls -la ./articles/' : `grep -R "${tag}" ./articles/`;
         
         const toggle = document.getElementById('terminal-toggle');
         const navTerminal = document.getElementById('nav-terminal');
@@ -182,7 +182,7 @@
         const num = (i + 1).toString().padStart(2, '0');
         
         return `
-      <a href=\"${postUrl}\" data-command="cat ${post.slug}.log" class=\"blog-card group flex flex-col md:flex-row items-stretch bg-canvas hover:bg-[#0c0c0c] transition-colors duration-700 w-full relative overflow-hidden opacity-0 translate-y-4\">
+      <a href=\"${postUrl}\" data-command="cat ${post.slug}" class=\"blog-card group flex flex-col md:flex-row items-stretch bg-canvas hover:bg-ink/5 transition-colors duration-700 w-full relative overflow-hidden opacity-0 translate-y-4\">
         <!-- Number block -->
         <div class="p-8 md:px-16 lg:px-24 border-r border-grid flex items-center justify-center shrink-0 w-32 md:w-48 lg:w-64 hidden md:flex">
             <span class=\"text-macro text-5xl md:text-7xl text-ink/10 group-hover:text-ink/30 transition-colors pointer-events-none\">${num}</span>
@@ -190,13 +190,13 @@
         
         <!-- Content block -->
         <div class="p-8 md:px-16 lg:px-24 flex flex-col gap-6 w-full justify-center">
-            <h3 class=\"text-macro text-4xl md:text-5xl text-ink leading-[0.85] uppercase group-hover:text-accent transition-colors\">${htmlEsc(post.title)}</h3>
+            <h3 class=\"text-macro text-2xl sm:text-4xl md:text-5xl text-ink leading-[0.9] sm:leading-[0.85] uppercase group-hover:text-accent transition-colors break-words\">${htmlEsc(post.title)}</h3>
             <p class="text-micro text-ink/60 max-w-2xl leading-relaxed group-hover:text-ink transition-colors duration-300 opacity-80">${htmlEsc(post.excerpt)}</p>
             <div class=\"flex gap-4 items-center pt-8 mt-auto w-full\">
-                <span class=\"text-micro text-ink/40 shrink-0\">[ ${post.date} ]</span>
+                <span class=\"text-micro text-ink/40 shrink-0\">${post.date}</span>
                 <span class=\"text-micro text-ink/20\">//</span>
                 <div class=\"flex gap-2 flex-wrap\">
-                    ${(post.tags || []).map(t => `<span class=\"text-micro text-ink/60 uppercase\">[ ${htmlEsc(t).toUpperCase()} ]</span>`).join('')}
+                    ${(post.tags || []).map(t => `<span class=\"text-micro text-ink/60 uppercase\">${htmlEsc(t).toUpperCase()}</span>`).join('')}
                 </div>
             </div>
         </div>

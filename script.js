@@ -53,7 +53,7 @@ async function populateBlogPreview() {
       
       allPosts = results.filter(r => r.status === 'fulfilled').map(r => r.value);
     } catch (err) {
-      grid.innerHTML = '<div class="text-accent font-bold text-micro border border-accent p-4 inline-block">ERROR: FAILED TO FETCH TRANSMISSIONS</div>';
+      grid.innerHTML = '<div class="text-accent font-bold text-micro border border-accent p-4 inline-block">FAILED TO LOAD ARTICLES</div>';
       return;
     }
   }
@@ -82,10 +82,7 @@ async function populateBlogPreview() {
     article.innerHTML = `
       <div class="md:col-span-2 text-micro text-ink/50 group-hover:text-ink transition-colors">${formattedDate}</div>
       <div class="md:col-span-1 text-micro text-accent/50 group-hover:text-accent transition-colors hidden md:block">0${index + 1}</div>
-      <h3 class="md:col-span-7 text-macro text-2xl md:text-3xl text-ink group-hover:text-accent transition-colors uppercase leading-none mt-2 md:mt-0">${item.title}</h3>
-      <div class="md:col-span-2 text-left md:text-right text-micro text-ink/40 group-hover:text-accent transition-colors mt-4 md:mt-0">
-          [ EXECUTE_READ ]
-      </div>
+      <h3 class="md:col-span-9 text-macro text-xl sm:text-2xl md:text-3xl text-ink group-hover:text-accent transition-colors uppercase leading-tight md:leading-none mt-2 md:mt-0 break-words">${item.title}</h3>
     `;
     
     grid.appendChild(article);
@@ -112,7 +109,7 @@ function initAnimations() {
                 end: "bottom center",
                 scrub: true
             },
-            color: "#FF2A2A", // shift to accent
+            color: "#FFFFFF", // shift to accent
             ease: "none"
         });
     });
@@ -155,15 +152,15 @@ async function populateGithubProjects() {
             el.target = '_blank';
             el.className = 'px-8 py-12 md:px-16 md:py-16 group hover:bg-ink/5 focus:bg-ink/5 focus:outline-none transition-colors duration-300 flex-1 flex flex-col justify-center border-b border-ink/10 relative z-10';
             
-            const desc = (repo.description || 'CLASSIFIED SYSTEM ARCHITECTURE. NO DESCRIPTION PROVIDED.').toUpperCase();
-            const lang = repo.language ? `[ ${repo.language.toUpperCase()} ]` : '[ UNKNOWN ]';
+            const desc = (repo.description || 'SECURITY RESEARCH AND DEVELOPMENT REPOSITORY.').toUpperCase();
+            const lang = repo.language ? repo.language.toUpperCase() : 'UNKNOWN';
             
             el.innerHTML = `
-                <div class="flex justify-between items-center mb-4 w-full">
-                    <h3 class="text-macro text-4xl md:text-5xl font-bold group-hover:text-accent transition-colors">${repo.name}</h3>
-                    <span class="text-macro text-3xl group-hover:translate-x-2 transition-transform">↗</span>
+                <div class="flex justify-between items-start gap-4 mb-4 w-full">
+                    <h3 class="text-macro text-2xl sm:text-4xl md:text-5xl font-bold group-hover:text-accent transition-colors break-words">${repo.name}</h3>
+                    <span class="text-macro text-2xl sm:text-3xl group-hover:translate-x-2 transition-transform shrink-0">↗</span>
                 </div>
-                <p class="text-micro text-ink/60 group-hover:text-canvas/80 group-focus:text-canvas/80 max-w-md mb-6">${desc}</p>
+                <p class="text-micro text-ink/60 group-hover:text-ink max-w-md mb-6">${desc}</p>
                 <div class="flex gap-6 items-center">
                     <span class="text-micro text-accent">${lang}</span>
                     <span class="text-micro text-ink/40">★ ${repo.stargazers_count}</span>
@@ -178,15 +175,15 @@ async function populateGithubProjects() {
         viewAll.target = '_blank';
         viewAll.className = 'p-8 md:p-16 group hover:bg-accent focus:bg-accent hover:text-canvas focus:text-canvas focus:outline-none transition-colors duration-300 flex-1 flex justify-between items-center relative z-10';
         viewAll.innerHTML = `
-            <span class="text-macro text-2xl md:text-3xl font-bold">ACCESS_FULL_GITHUB_ARCHIVE</span>
-            <span class="text-macro text-3xl group-hover:translate-x-2 transition-transform">→</span>
+            <span class="text-macro text-xl sm:text-2xl md:text-3xl font-bold break-words">VIEW ALL REPOSITORIES ON GITHUB</span>
+            <span class="text-macro text-2xl sm:text-3xl group-hover:translate-x-2 transition-transform shrink-0">→</span>
         `;
         container.appendChild(viewAll);
         
         if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
     } catch(e) {
         console.warn('Failed to fetch github repos:', e);
-        container.innerHTML = '<div class="px-8 py-12 text-accent font-bold text-micro border border-accent p-4 inline-block m-8 md:m-16">ERROR: FAILED TO SYNC REPOSITORIES</div>';
+        container.innerHTML = '<div class="px-8 py-12 text-accent font-bold text-micro border border-accent p-4 inline-block m-8 md:m-16">FAILED TO LOAD REPOSITORIES</div>';
     }
 }
 
@@ -255,10 +252,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const commands = {
-        'help': 'Available commands:\n  whoami    - Display user identity\n  ls        - List active operations\n  cd [dir]  - Navigate to module (arsenal, expertise, logs, root)\n  cat logs  - Stream raw transmissions\n  dismantle - [WARNING] Strip UI architecture\n  clear     - Clear terminal output',
-        'whoami': 'Shahil Ahmed\nRole: Offensive Security / Systems Breaker\nStatus: Active (Monitoring)',
-        'ls': 'Operations Archive:\n  drwxr-xr-x  arsenal/\n  drwxr-xr-x  expertise/\n  drwxr-xr-x  logs/',
-        'sudo': 'Access denied. This incident will be reported.'
+        'help': 'Available commands:\n  whoami    - Display bio\n  ls        - List site sections\n  cd <dir>  - Navigate to section (projects, skills, articles, root)\n  clear     - Clear terminal output',
+        'whoami': 'Shahil Ahmed\nRole: Penetration Tester & Security Researcher\nFocus: Web, API, and Mobile Security\nLocation: Mangaluru, India',
+        'ls': 'Site Sections:\n  projects/  (arsenal)\n  skills/    (expertise)\n  articles/  (logs)',
+        'sudo': 'Access denied.'
     };
 
     function navigateTo(id) {
@@ -271,37 +268,20 @@ document.addEventListener('DOMContentLoaded', () => {
         return `bash: cd: ${id}: No such directory`;
     }
 
-    // Intruder Detection (Data Exfiltration Tracking)
-    document.addEventListener('copy', () => {
-        const selection = document.getSelection().toString();
-        if (!selection) return;
-        const bytes = new Blob([selection]).size;
-        
-        if (navTerminal.classList.contains('hidden')) {
-            terminalToggle.click();
-        }
-        
-        const responseNode = document.createElement('div');
-        responseNode.className = 'text-[#ff3333] font-bold mb-4 whitespace-pre';
-        responseNode.textContent = `[SECURITY_ALERT] Unauthorized data exfiltration detected. ${bytes} bytes copied to clipboard.`;
-        terminalOutput.appendChild(responseNode);
-        terminalOutput.scrollTo(0, terminalOutput.scrollHeight);
-    });
-
     // Custom Context Menu
     const contextMenu = document.createElement('div');
     contextMenu.id = 'custom-context-menu';
-    contextMenu.className = 'fixed bg-canvas border border-ink/20 flex flex-col z-[9999] opacity-0 pointer-events-none transition-opacity duration-200 text-micro shadow-2xl';
+    contextMenu.className = 'fixed bg-black border border-ink/20 flex flex-col z-[9999] opacity-0 pointer-events-none transition-opacity duration-200 text-micro shadow-2xl';
     
     const menuOptions = [
-        { label: '[ INITIATE_TERMINAL ]', action: () => { if (navTerminal.classList.contains('hidden')) terminalToggle.click(); } },
-        { label: '[ COPY_URL ]', action: () => { navigator.clipboard.writeText(window.location.href); } },
-        { label: '[ NAVIGATE_ROOT ]', action: () => { window.location.href = window.location.pathname.includes('/blog/') ? '../index.html' : 'index.html'; } }
+        { label: 'OPEN TERMINAL', action: () => { if (navTerminal.classList.contains('hidden')) terminalToggle.click(); } },
+        { label: 'COPY URL', action: () => { navigator.clipboard.writeText(window.location.href); } },
+        { label: 'BACK TO TOP', action: () => { window.scrollTo({ top: 0, behavior: 'smooth' }); } }
     ];
 
     menuOptions.forEach(opt => {
         const btn = document.createElement('button');
-        btn.className = 'px-6 py-4 text-left text-ink/70 hover:bg-ink hover:text-canvas transition-colors w-full border-b border-ink/10 last:border-b-0 uppercase';
+        btn.className = 'px-6 py-4 text-left text-ink/70 hover:bg-ink hover:text-black transition-colors w-full border-b border-ink/10 last:border-b-0 uppercase';
         btn.textContent = opt.label;
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -353,8 +333,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 terminalOutput.innerHTML = '';
             } else if (cmd === 'sudo dismantle' || cmd === 'dismantle' || cmd === 'sudo dismantle ui') {
                 const responseNode = document.createElement('div');
-                responseNode.className = 'text-[#ff3333] font-bold mb-4 whitespace-pre';
-                responseNode.textContent = 'INITIATING ARCHITECTURE DISMANTLING PROTOCOL...\nPurging CSS Object Model...\nStripping Vector Graphics...\nRendering Raw DOM.';
+                responseNode.className = 'text-accent font-bold mb-4 whitespace-pre';
+                responseNode.textContent = 'Resetting styles to wireframe mode...';
                 terminalOutput.appendChild(responseNode);
                 terminalOutput.scrollTo(0, terminalOutput.scrollHeight);
                 
@@ -376,7 +356,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     });
                     
-                    document.body.style.backgroundColor = '#050505';
+                    document.body.style.backgroundColor = '#000000';
                     document.body.style.color = '#eaeaea';
                     document.body.style.fontFamily = 'monospace';
                     
@@ -387,24 +367,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 let response = '';
                 if (dir === '/' || dir === '~' || dir === 'root' || dir === 'hero') {
                     response = navigateTo('hero');
-                } else if (dir === 'arsenal' || dir === 'projects') {
+                } else if (dir === 'arsenal' || dir === 'projects' || dir === 'project') {
                     response = navigateTo('arsenal');
-                } else if (dir === 'expertise' || dir === 'skills') {
+                } else if (dir === 'expertise' || dir === 'skills' || dir === 'capabilities') {
                     response = navigateTo('expertise');
-                } else if (dir === 'logs' || dir === 'transmissions') {
+                } else if (dir === 'logs' || dir === 'articles' || dir === 'writeups') {
                     response = navigateTo('logs');
                 } else {
-                    response = `bash: cd: ${dir}: No such file or directory`;
+                    response = `bash: cd: ${dir}: No such directory`;
                 }
                 const responseNode = document.createElement('div');
                 responseNode.className = 'text-ink/70 opacity-80 mb-4 whitespace-pre';
                 responseNode.textContent = response;
                 terminalOutput.appendChild(responseNode);
-            } else if (cmd === 'cat logs' || cmd === 'cat transmissions') {
+            } else if (cmd === 'cat logs' || cmd === 'cat articles' || cmd === 'cat transmissions') {
                 const response = navigateTo('logs');
                 const responseNode = document.createElement('div');
                 responseNode.className = 'text-ink/70 opacity-80 mb-4 whitespace-pre';
-                responseNode.textContent = response + '\nStreaming data...';
+                responseNode.textContent = response;
                 terminalOutput.appendChild(responseNode);
             } else {
                 const response = commands[cmd] || `bash: ${cmd}: command not found`;
@@ -424,4 +404,30 @@ document.addEventListener('DOMContentLoaded', () => {
     navTerminal.addEventListener('click', () => {
         terminalInput.focus();
     });
+
+    // Mobile touch toggle for SK hover dialog
+    const skContainer = document.getElementById('sk-container');
+    const skDialog = document.getElementById('sk-hover-dialog');
+    if (skContainer && skDialog) {
+        skContainer.addEventListener('click', (e) => {
+            if (window.matchMedia('(hover: none)').matches) {
+                e.stopPropagation();
+                const isOpen = skDialog.classList.contains('opacity-100');
+                if (isOpen) {
+                    skDialog.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto');
+                    skDialog.classList.add('opacity-0', 'translate-y-8', 'pointer-events-none');
+                } else {
+                    skDialog.classList.remove('opacity-0', 'translate-y-8', 'pointer-events-none');
+                    skDialog.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto');
+                }
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!skContainer.contains(e.target) && window.matchMedia('(hover: none)').matches) {
+                skDialog.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto');
+                skDialog.classList.add('opacity-0', 'translate-y-8', 'pointer-events-none');
+            }
+        });
+    }
 });

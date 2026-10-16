@@ -9,7 +9,7 @@
       "Frida",
       "Pentesting"
     ],
-    "readTime": "[ READ_TIME: 2 MIN ]",
+    "readTime": "2 MIN READ",
     "url": "posts/bypassing-ssl-pinning-on-android-apps-with-frida.html"
   },
   {
@@ -23,7 +23,7 @@
       "Firewall",
       "VM"
     ],
-    "readTime": "[ READ_TIME: 4 MIN ]",
+    "readTime": "4 MIN READ",
     "url": "posts/setup-pf-sense-in-vm-configure.html"
   },
   {
@@ -35,7 +35,7 @@
       "Android",
       "Burpsuite"
     ],
-    "readTime": "[ READ_TIME: 2 MIN ]",
+    "readTime": "2 MIN READ",
     "url": "posts/how-to-root-genymotion-emulator-and-set-up-burpsuite-for-https-interception.html"
   },
   {
@@ -48,7 +48,7 @@
       "Frida",
       "Pentesting"
     ],
-    "readTime": "[ READ_TIME: 2 MIN ]",
+    "readTime": "2 MIN READ",
     "url": "posts/android-emulator-detection-bypass.html"
   },
   {
@@ -60,7 +60,7 @@
       "Android",
       "Tools"
     ],
-    "readTime": "[ READ_TIME: 6 MIN ]",
+    "readTime": "6 MIN READ",
     "url": "posts/android-tools-installation.html"
   },
   {
@@ -73,7 +73,7 @@
       "Frida",
       "Pentesting"
     ],
-    "readTime": "[ READ_TIME: 2 MIN ]",
+    "readTime": "2 MIN READ",
     "url": "posts/root-detection-and-ssl-pinning-bypass-using-objection-and-frida.html"
   },
   {
@@ -87,7 +87,7 @@
       "Burpsuite",
       "Setup"
     ],
-    "readTime": "[ READ_TIME: 2 MIN ]",
+    "readTime": "2 MIN READ",
     "url": "posts/setup-android-emulator-for-burpsuite-frida.html"
   }
 ]

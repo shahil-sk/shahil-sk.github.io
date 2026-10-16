@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHAHIL AHMED // LOGS</title>
+    <title>SHAHIL AHMED | ARTICLES</title>
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Playfair+Display:ital,wght@1,900&display=swap" rel="stylesheet">
@@ -20,7 +20,7 @@
                         serif: ['"Playfair Display"', 'serif'],
                     },
                     colors: {
-                        canvas: '#0A0A0A',
+                        canvas: '#000000',
                         ink: '#EAEAEA',
                         grid: '#222222',
                         accent: '#FFFFFF',
@@ -36,18 +36,9 @@
     
     <style>
         body {
-            background-color: #0A0A0A;
+            background-color: #000000;
             color: #EAEAEA;
             cursor: crosshair;
-        }
-
-        .noise-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            pointer-events: none;
-            z-index: 9999;
-            opacity: 0.05;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
         }
 
         .text-micro {
@@ -72,8 +63,6 @@
 </head>
 <body class="antialiased overflow-x-hidden selection:bg-accent selection:text-ink">
 
-    <div class="noise-overlay"></div>
-
     <!-- Global Nav Overlay -->
     <nav class="fixed top-0 w-full p-8 md:px-16 md:py-12 flex justify-end items-start z-[100] pointer-events-none">
         <div class="relative pointer-events-auto">
@@ -84,10 +73,10 @@
                 </svg>
             </button>
             
-            <div id="nav-terminal" class="absolute top-full right-0 mt-6 w-[90vw] sm:w-[350px] md:w-[500px] lg:w-[600px] bg-[#111111] border border-ink/10 flex flex-col font-mono text-micro text-ink p-6 hidden opacity-0 -translate-y-4 transition-all duration-[260ms] ease-out shadow-2xl">
+            <div id="nav-terminal" class="absolute top-full right-0 mt-6 w-[90vw] sm:w-[350px] md:w-[500px] lg:w-[600px] bg-black border border-ink/20 flex flex-col font-mono text-micro text-ink p-6 hidden opacity-0 -translate-y-4 transition-all duration-[260ms] ease-out shadow-2xl">
                 <div id="terminal-output" class="flex flex-col gap-1 mb-2 whitespace-pre-wrap leading-relaxed max-h-48 overflow-y-auto scrollbar-hide">
-                    <div class="text-ink/50 mb-2">// SECURE SHELL INITIALIZED</div>
-                    <div class="mb-4">System ready. Type <span class="text-accent">help</span> for commands.</div>
+                    <div class="text-ink/50 mb-2">Terminal session initialized.</div>
+                    <div class="mb-4">Type <span class="text-accent">help</span> for available commands.</div>
                 </div>
                 <div class="flex items-center gap-3 shrink-0 relative mt-4 pt-4 border-t border-ink/10">
                     <span class="text-accent shrink-0">root@sk:~#</span>
@@ -106,7 +95,7 @@
     <!-- Go Back Link -->
     <a href="../index.html" class="fixed top-8 md:top-12 left-8 md:left-16 text-micro text-ink/50 hover:text-accent transition-colors z-50 mix-blend-difference uppercase flex items-center gap-2 group">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 transition-transform duration-300 group-hover:-translate-x-2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-        ROOT
+        HOME
     </a>
 
     <main class="w-full pt-14 min-h-[100dvh] bg-canvas relative flex flex-col">
@@ -115,14 +104,14 @@
             <!-- Header Section -->
             <div class="w-full bg-canvas p-4 md:px-8 lg:px-12 md:py-6 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
                 <div class="flex flex-col gap-2">
-                    <h1 class="text-macro text-6xl md:text-8xl lg:text-[10rem] font-bold leading-[0.85] tracking-tight text-ink mt-4 md:mt-8">
-                        RAW
-                        <span class="text-ink/30 italic font-serif lowercase">logs</span>
-                        <!-- do not add '<br>' between RAW and logs, it will break the layout. The line break is handled by CSS for responsiveness. -->
+                    <h1 class="text-macro text-5xl sm:text-6xl md:text-8xl lg:text-[10rem] font-bold leading-[0.85] tracking-tight text-ink mt-4 md:mt-8">
+                        ALL
+                        <span class="text-ink/30 italic font-serif lowercase">articles</span>
+                        <!-- do not add '<br>' between ALL and articles, it will break the layout. The line break is handled by CSS for responsiveness. -->
                     </h1>
                 </div>
                 
-                <p class="text-micro text-ink/60 max-w-xs uppercase md:text-right md:pb-4">SECURITY RESEARCH, TACTICAL EXPLOITS, AND SYSTEM ARCHITECTURE ANALYSIS.</p>
+                <p class="text-micro text-ink/60 max-w-xs uppercase md:text-right md:pb-4">SECURITY RESEARCH, CTF WRITEUPS, AND APPLICATION SECURITY GUIDES.</p>
             </div>
 
             <!-- Filters row -->
@@ -133,7 +122,7 @@
             <!-- Posts Grid container -->
             <div class="flex flex-col w-full bg-grid gap-[1px]" id="blog-posts-grid">
                 <!-- Loading State -->
-                <div class="p-8 md:px-16 lg:px-24 bg-canvas text-micro animate-pulse text-ink/50">WAITING FOR TRANSMISSIONS...</div>
+                <div class="p-8 md:px-16 lg:px-24 bg-canvas text-micro animate-pulse text-ink/50">LOADING ARTICLES...</div>
             </div>
         </div>
     </main>

@@ -148,7 +148,7 @@ def build_blog():
         slug = filename.replace('.md', '')
         word_count = len(body.split())
         read_time = max(1, round(word_count / 200))
-        read_time_str = f"[ READ_TIME: {read_time} MIN ]"
+        read_time_str = f"{read_time} MIN READ"
 
         # Transform Obsidian links before Markdown processing
         body = fix_image_links(body)
@@ -179,9 +179,9 @@ def build_blog():
             page_html = re.sub(r'<h1([^>]*)id="post-title"([^>]*)>Loading...</h1>', lambda m: f'<h1{m.group(1)}id="post-title"{m.group(2)}>{title}</h1>', page_html)
             
             date = fm.get('date', '')
-            page_html = re.sub(r'<div([^>]*)id="post-meta"([^>]*)></div>', lambda m: f'<div{m.group(1)}id="post-meta"{m.group(2)}>[ {date} ]</div>', page_html)
+            page_html = re.sub(r'<div([^>]*)id="post-meta"([^>]*)></div>', lambda m: f'<div{m.group(1)}id="post-meta"{m.group(2)}>{date}</div>', page_html)
             
-            tags_html = ' '.join([f'<span class="text-micro text-ink/60 uppercase">[ {t.upper()} ]</span>' for t in fm.get('tags', [])])
+            tags_html = ' '.join([f'<span class="text-micro text-ink/60 uppercase">{t.upper()}</span>' for t in fm.get('tags', [])])
             page_html = re.sub(r'<div([^>]*)id="post-tags"([^>]*)></div>', lambda m: f'<div{m.group(1)}id="post-tags"{m.group(2)}>{tags_html}</div>', page_html)
             
             page_html = re.sub(r'<div([^>]*)id="post-reading-time"([^>]*)></div>', lambda m: f'<div{m.group(1)}id="post-reading-time"{m.group(2)}>{read_time_str}</div>', page_html)

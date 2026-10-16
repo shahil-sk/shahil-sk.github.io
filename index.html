@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHAHIL AHMED // OFFENSIVE SECURITY</title>
+    <title>SHAHIL AHMED | OFFENSIVE SECURITY & PENETRATION TESTING</title>
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Playfair+Display:ital,wght@1,900&display=swap" rel="stylesheet">
@@ -24,7 +24,7 @@
                         serif: ['"Playfair Display"', 'serif'],
                     },
                     colors: {
-                        canvas: '#0A0A0A',
+                        canvas: '#000000',
                         ink: '#EAEAEA',
                         grid: '#222222',
                         accent: '#FFFFFF',
@@ -40,20 +40,11 @@
     
     <style>
         body {
-            background-color: #0A0A0A;
+            background-color: #000000;
             color: #EAEAEA;
             cursor: crosshair;
         }
 
-        /* Mechanical Noise */
-        .noise-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            pointer-events: none;
-            z-index: 9999;
-            opacity: 0.05;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-        }
 
         /* Typographic Utilities */
         .text-micro {
@@ -79,8 +70,6 @@
 </head>
 <body class="antialiased overflow-x-hidden selection:bg-accent selection:text-ink">
 
-    <div class="noise-overlay"></div>
-
     <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 z-[9999] bg-accent text-ink px-4 py-2 text-micro font-bold border border-ink">SKIP TO CONTENT</a>
 
     <!-- Top Navigation (Rigid) -->
@@ -96,10 +85,10 @@
             </button>
             
             <!-- Terminal Dropdown -->
-            <div id="nav-terminal" class="absolute top-full right-0 mt-6 w-[90vw] sm:w-[350px] md:w-[500px] lg:w-[600px] bg-[#111111] border border-ink/10 flex flex-col font-mono text-micro text-ink p-6 hidden opacity-0 -translate-y-4 transition-all duration-[260ms] ease-out shadow-2xl">
+            <div id="nav-terminal" class="absolute top-full right-0 mt-6 w-[90vw] sm:w-[350px] md:w-[500px] lg:w-[600px] bg-black border border-ink/20 flex flex-col font-mono text-micro text-ink p-6 hidden opacity-0 -translate-y-4 transition-all duration-[260ms] ease-out shadow-2xl">
                 <div id="terminal-output" class="flex flex-col gap-1 mb-2 whitespace-pre-wrap leading-relaxed max-h-48 overflow-y-auto scrollbar-hide">
-                    <div class="text-ink/50 mb-2">// SECURE SHELL INITIALIZED</div>
-                    <div class="mb-4">System ready. Type <span class="text-accent">help</span> for commands.</div>
+                    <div class="text-ink/50 mb-2">Terminal session initialized.</div>
+                    <div class="mb-4">Type <span class="text-accent">help</span> for available commands.</div>
                 </div>
                 <div class="flex items-center gap-3 shrink-0 relative mt-4 pt-4 border-t border-ink/10">
                     <span class="text-accent shrink-0">root@sk:~#</span>
@@ -115,11 +104,21 @@
         </div>
     </nav>
 
-    <main id="main" class="w-full mt-16">
+    <main id="main" class="w-full">
         
         <!-- Hero Section -->
-        <section id="hero" class="w-full min-h-[100dvh] flex flex-col justify-center bg-gradient-to-b from-canvas to-neutral-900 relative">
+        <section id="hero" class="w-full min-h-[100dvh] flex flex-col justify-center items-center bg-black relative overflow-hidden py-16 md:py-24">
             
+            <!-- Background Video with Seamless Cinematic Blend Masks -->
+            <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
+                <video autoplay loop muted playsinline class="w-full h-full object-cover opacity-30 filter grayscale contrast-125">
+                    <source src="vid.mp4" type="video/mp4">
+                </video>
+                <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black"></div>
+                <div class="absolute inset-0 bg-gradient-to-b from-black/80 via-transparent to-black"></div>
+                <div class="absolute inset-0 bg-black/40"></div>
+            </div>
+
             <!-- Tactical SVG Blueprint straddling Hero and Arsenal -->
             <div class="absolute right-[-10%] bottom-0 translate-y-1/2 w-[60vw] md:w-[40vw] opacity-10 pointer-events-none mix-blend-screen hidden md:block z-0">
                 <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="0.2" class="text-ink w-full h-auto">
@@ -184,56 +183,41 @@
                 </svg>
             </div>
 
-            <div class="px-8 md:px-16 w-full relative z-10">
+            <div class="px-4 sm:px-8 md:px-16 w-full max-w-[1600px] mx-auto relative z-10 flex flex-col items-center">
                 
-
-
-                <!-- Massive SK with Hover Dialog -->
-                <div class="relative group inline-block cursor-crosshair">
-                    <h1 class="text-macro text-[clamp(8rem,25vw,30rem)] text-transparent [-webkit-text-stroke:2px_#EAEAEA] leading-[0.75] tracking-tighter group-hover:text-accent transition-colors duration-500 relative z-10">
-                        SK
-                    </h1>
-                    
-                    <!-- Hover Dialog Reveal -->
-                    <div class="absolute left-0 top-[80%] md:top-[60%] w-[85vw] max-w-[280px] md:max-w-none md:w-[400px] bg-ink text-canvas p-6 opacity-0 translate-y-8 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 z-50 border border-transparent shadow-2xl">
-                        <span class="text-micro font-bold border-b border-canvas/20 pb-2 mb-4 block w-full">IDENTITY RECORDED</span>
-                        <h2 class="text-macro text-3xl md:text-5xl mb-2">SHAHIL AHMED</h2>
-                        <p class="text-micro opacity-80 leading-relaxed mb-6">
-                            OFFENSIVE SECURITY OPERATOR.<br>
-                            SPECIALIST IN SYSTEM DISMANTLING & TACTICAL EXPLOITATION.
-                        </p>
-                        <div class="flex justify-between items-center text-micro pt-4 border-t border-canvas/20">
-                            <span>L: 12.87&deg;N // 74.84&deg;E</span>
-                            <span class="animate-pulse font-bold">STATUS: ACTIVE</span>
+                <!-- Massive SK with Hover Dialog (Centered) -->
+                <div class="w-full flex justify-center items-center">
+                    <div class="relative group inline-block cursor-crosshair" id="sk-container">
+                        <h1 class="text-macro text-[clamp(6rem,18vw,26rem)] text-transparent [-webkit-text-stroke:2px_#EAEAEA] leading-[0.75] tracking-tighter group-hover:text-accent transition-colors duration-500 relative z-10 select-none text-center">
+                            SK
+                        </h1>
+                        
+                        <!-- Hover Dialog Reveal -->
+                        <div id="sk-hover-dialog" class="absolute left-1/2 -translate-x-1/2 top-[80%] md:top-[60%] w-[85vw] max-w-[340px] md:max-w-none md:w-[400px] bg-black text-ink p-6 opacity-0 translate-y-8 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 z-50 border border-ink/20 shadow-2xl text-left backdrop-blur-md">
+                            <span class="text-micro font-bold border-b border-ink/20 pb-2 mb-4 block w-full">SECURITY RESEARCHER</span>
+                            <h2 class="text-macro text-3xl md:text-5xl mb-2">SHAHIL AHMED</h2>
+                            <p class="text-micro opacity-80 leading-relaxed mb-6">
+                                PENETRATION TESTER &amp; SECURITY RESEARCHER.<br>
+                                SPECIALIZING IN WEB, API, AND MOBILE SECURITY ASSESSMENTS.
+                            </p>
+                            <div class="flex justify-between items-center text-micro pt-4 border-t border-ink/20">
+                                <span>MANGALURU, INDIA</span>
+                                <span class="font-bold text-accent">AVAILABLE FOR WORK</span>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                
-                <div class="mt-16 md:mt-24 grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24 w-full max-w-7xl relative z-10">
-                    <div>
-                        <div class="flex items-center gap-4 mb-8">
-                            <span class="w-12 h-px bg-accent"></span>
-                            <span class="text-micro opacity-50">SYS_OVERRIDE</span>
-                        </div>
-                        <p class="text-macro text-3xl md:text-5xl font-medium text-ink/90 normal-case tracking-tight leading-tight">
-                            I dismantle architectures<br class="hidden md:block">
-                            <span class="italic text-ink/40 font-serif lowercase">to isolate their breaking points.</span>
-                        </p>
-                    </div>
-                    <div class="text-micro text-ink/60 flex flex-col gap-3 border-l border-ink/20 pl-6 justify-center">
-                        <span class="hover:text-accent transition-colors cursor-default">01 // VULNERABILITY ASSESSMENTS</span>
-                        <span class="hover:text-accent transition-colors cursor-default">02 // PENETRATION TESTING</span>
-                        <span class="hover:text-accent transition-colors cursor-default">03 // RED TEAM OPERATIONS</span>
-                        <p class="mt-6 opacity-50 max-w-xs leading-relaxed">
-                            IDENTIFYING CRITICAL FLAWS BEFORE EXPLOITATION OCCURS.
-                        </p>
                     </div>
                 </div>
             </div>
+
+            <!-- Bottom fade blend out of Hero -->
+            <div class="absolute bottom-0 left-0 w-full h-24 md:h-28 bg-gradient-to-b from-transparent via-black/80 to-black pointer-events-none z-20"></div>
         </section>
 
-        <!-- Arsenal (Projects) -->
-        <section id="arsenal" class="w-full grid grid-cols-1 md:grid-cols-12 min-h-[100dvh] bg-gradient-to-b from-neutral-900 to-[#151515] relative">
+        <!-- Section Blend Divider -->
+        <div class="w-full h-px bg-gradient-to-r from-transparent via-ink/20 to-transparent relative z-20"></div>
+
+        <!-- Projects -->
+        <section id="arsenal" class="w-full grid grid-cols-1 md:grid-cols-12 min-h-[100dvh] bg-black relative">
             
             <!-- Tactical SVG A: Target Reticle (Arsenal Center Gap) -->
             <div class="absolute left-[35%] top-[50%] -translate-y-1/2 w-[25vw] md:w-[15vw] opacity-[0.06] pointer-events-none mix-blend-screen hidden md:block z-0 transition-opacity duration-1000 hover:opacity-[0.15]">
@@ -246,39 +230,36 @@
             </div>
 
             <!-- Pinned Left Column (GSAP Scrubbing target) -->
-            <div class="md:col-span-5 p-8 md:p-16 flex flex-col" id="arsenal-pin">
+            <div class="md:col-span-5 p-6 sm:p-8 md:p-16 flex flex-col" id="arsenal-pin">
                 <div class="sticky top-32">
-                    <h2 class="text-macro text-[clamp(3rem,8vw,8rem)] text-ink mb-12 gs-scrub-text">ARSENAL</h2>
+                    <h2 class="text-macro text-[clamp(3rem,8vw,8rem)] text-ink mb-12 gs-scrub-text">PROJECTS</h2>
                     <p class="text-micro text-ink/60 max-w-xs mb-12 relative z-10">
-                        ENGINEERED SOLUTIONS FOR TACTICAL EXPLOITATION AND AUTOMATED ANALYSIS.
+                        OPEN SOURCE SECURITY TOOLS, RESEARCH UTILITIES, AND AUTOMATED SCRIPTS.
                     </p>
                     <svg class="w-12 h-12 text-accent animate-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 2v20M2 12h20M12 7a5 5 0 100 10A5 5 0 1012 7z"/></svg>
                 </div>
             </div>
 
             <!-- Right Column (Scrolling Data) -->
-            <div id="github-projects-container" class="md:col-span-7 flex flex-col border-l border-ink/10">
-                <div class="p-8 md:p-16 text-micro animate-pulse text-ink/50">SYNCING REPOSITORIES...</div>
+            <div id="github-projects-container" class="md:col-span-7 flex flex-col border-t md:border-t-0 md:border-l border-ink/10">
+                <div class="p-8 md:p-16 text-micro animate-pulse text-ink/50">LOADING REPOSITORIES...</div>
             </div>
 
-            <!-- Bottom fade transition out of Arsenal -->
-            <div class="absolute bottom-0 left-0 w-full h-48 bg-gradient-to-b from-transparent to-[#151515] pointer-events-none z-[20]"></div>
+            <!-- Bottom fade blend out of Arsenal -->
+            <div class="absolute bottom-0 left-0 w-full h-24 md:h-28 bg-gradient-to-b from-transparent via-black/80 to-black pointer-events-none z-20"></div>
         </section>
 
+        <!-- Section Blend Divider -->
+        <div class="w-full h-px bg-gradient-to-r from-transparent via-ink/20 to-transparent relative z-20"></div>
+
         <!-- Capabilities -->
-        <section id="expertise" class="w-full min-h-[100dvh] flex flex-col justify-center bg-gradient-to-b from-[#151515] to-neutral-900 relative overflow-hidden">
+        <section id="expertise" class="w-full min-h-[130dvh] flex flex-col justify-center bg-black relative overflow-hidden py-24 md:py-32">
             <!-- Brutalist Background Watermark -->
             <div class="absolute inset-0 flex flex-col justify-between pointer-events-none opacity-[0.03] select-none z-0 overflow-hidden">
                 <span class="text-macro text-[30vw] leading-[0.7] text-ink whitespace-nowrap">WEB</span>
                 <span class="text-macro text-[30vw] leading-[0.7] text-ink whitespace-nowrap translate-x-[20%]">API</span>
                 <span class="text-macro text-[30vw] leading-[0.7] text-ink whitespace-nowrap -translate-x-[10%]">MOB</span>
             </div>
-            
-            <!-- Top fade transition from previous section -->
-            <div class="absolute top-0 left-0 w-full h-48 bg-gradient-to-b from-[#151515] to-transparent pointer-events-none z-[1]"></div>
-            
-            <!-- Bottom fade transition into next section -->
-            <div class="absolute bottom-0 left-0 w-full h-48 bg-gradient-to-b from-transparent to-neutral-900 pointer-events-none z-[1]"></div>
             
             <!-- Tactical SVG B: Data Nodes (Top Right empty space) -->
             <div class="absolute right-[2%] top-[5%] w-[20vw] md:w-[8vw] opacity-[0.04] pointer-events-none mix-blend-screen hidden md:block z-0 transition-opacity duration-[2000ms] hover:opacity-10">
@@ -301,48 +282,54 @@
                 </svg>
             </div>
 
-            <div class="px-8 md:px-16 w-full max-w-7xl mx-auto z-10 flex flex-col justify-center h-full">
+            <div class="px-6 sm:px-8 md:px-16 w-full max-w-7xl mx-auto z-10 flex flex-col justify-center h-full">
                 <div class="flex flex-col gap-12 md:gap-20 w-full">
                     
                     <!-- Staircase Item 1 -->
                     <div class="flex flex-col md:flex-row gap-6 md:gap-16 items-start group">
-                        <span class="text-macro text-6xl md:text-8xl text-ink/20 group-hover:text-accent transition-colors duration-500">01</span>
-                        <div class="flex flex-col gap-6 pt-2">
-                            <h3 class="text-macro text-5xl md:text-7xl text-ink leading-[0.85]">WEB SECURITY</h3>
+                        <span class="text-macro text-5xl md:text-8xl text-ink/20 group-hover:text-accent transition-colors duration-500">01</span>
+                        <div class="flex flex-col gap-4 md:gap-6 pt-2">
+                            <h3 class="text-macro text-3xl sm:text-5xl md:text-7xl text-ink leading-[0.85] break-words">WEB SECURITY</h3>
                             <p class="text-micro text-ink/60 max-w-md leading-relaxed group-hover:text-ink transition-colors duration-300">
-                                Deep analysis of modern web architectures. Exploiting complex logic flaws, chaining vulnerabilities (SQLi, CSRF, XSS), and bypassing enterprise authentication mechanisms.
+                                In-depth analysis of modern web architectures. Identifying complex logic flaws, critical vulnerabilities (SQLi, CSRF, XSS), and testing authentication controls.
                             </p>
                         </div>
                     </div>
                     
                     <!-- Staircase Item 2 -->
                     <div class="flex flex-col md:flex-row gap-6 md:gap-16 items-start md:ml-32 lg:ml-48 group">
-                        <span class="text-macro text-6xl md:text-8xl text-ink/20 group-hover:text-accent transition-colors duration-500">02</span>
-                        <div class="flex flex-col gap-6 pt-2">
-                            <h3 class="text-macro text-5xl md:text-7xl text-ink leading-[0.85]">API EXPLOITATION</h3>
+                        <span class="text-macro text-5xl md:text-8xl text-ink/20 group-hover:text-accent transition-colors duration-500">02</span>
+                        <div class="flex flex-col gap-4 md:gap-6 pt-2">
+                            <h3 class="text-macro text-3xl sm:text-5xl md:text-7xl text-ink leading-[0.85] break-words">API SECURITY</h3>
                             <p class="text-micro text-ink/60 max-w-md leading-relaxed group-hover:text-ink transition-colors duration-300">
-                                Dismantling microservices and backend integrations. Specializing in REST/GraphQL logic, BOLA (IDOR), mass assignment, and aggressive rate limit evasion.
+                                Security assessment of microservices and backend integrations. Specializing in REST and GraphQL APIs, BOLA/IDOR, data exposure, and rate limit validation.
                             </p>
                         </div>
                     </div>
                     
                     <!-- Staircase Item 3 -->
                     <div class="flex flex-col md:flex-row gap-6 md:gap-16 items-start md:ml-64 lg:ml-[24rem] group">
-                        <span class="text-macro text-6xl md:text-8xl text-ink/20 group-hover:text-accent transition-colors duration-500">03</span>
-                        <div class="flex flex-col gap-6 pt-2">
-                            <h3 class="text-macro text-5xl md:text-7xl text-ink leading-[0.85]">ANDROID SYSTEMS</h3>
+                        <span class="text-macro text-5xl md:text-8xl text-ink/20 group-hover:text-accent transition-colors duration-500">03</span>
+                        <div class="flex flex-col gap-4 md:gap-6 pt-2">
+                            <h3 class="text-macro text-3xl sm:text-5xl md:text-7xl text-ink leading-[0.85] break-words">MOBILE SECURITY</h3>
                             <p class="text-micro text-ink/60 max-w-md leading-relaxed group-hover:text-ink transition-colors duration-300">
-                                Reverse engineering mobile executables. Intent manipulation, broadcast receiver exploits, custom SSL pinning bypasses, and live Frida instrumentation.
+                                Static and dynamic analysis of Android applications. Reverse engineering, runtime instrumentation with Frida, SSL pinning bypasses, and root detection testing.
                             </p>
                         </div>
                     </div>
 
                 </div>
             </div>
+
+            <!-- Bottom fade blend out of Expertise -->
+            <div class="absolute bottom-0 left-0 w-full h-24 md:h-28 bg-gradient-to-b from-transparent via-black/80 to-black pointer-events-none z-20"></div>
         </section>
 
-        <!-- Dynamic Transmissions -->
-        <section id="logs" class="w-full min-h-[100dvh] flex flex-col justify-center bg-gradient-to-b from-neutral-900 to-canvas relative py-32">
+        <!-- Section Blend Divider -->
+        <div class="w-full h-px bg-gradient-to-r from-transparent via-ink/20 to-transparent relative z-20"></div>
+
+        <!-- Articles -->
+        <section id="logs" class="w-full min-h-[100dvh] flex flex-col justify-center bg-black relative py-24 md:py-32">
             
             <!-- Tactical SVG D: Radar Sweep (Top Right corner) -->
             <div class="absolute right-[2%] top-[5%] w-[40vw] md:w-[20vw] opacity-[0.06] pointer-events-none mix-blend-screen hidden md:block z-0 transition-all duration-[3000ms] hover:opacity-20 hover:scale-105">
@@ -369,34 +356,39 @@
                 </svg>
             </div>
 
-            <div class="px-8 md:px-16 w-full max-w-[1600px] mx-auto z-10 flex flex-col justify-center h-full">
+            <div class="px-6 sm:px-8 md:px-16 w-full max-w-[1600px] mx-auto z-10 flex flex-col justify-center h-full">
                 <div class="flex flex-col md:flex-row justify-between items-end mb-12 md:mb-16">
                     <div class="flex flex-col">
-                        <h2 class="text-macro text-5xl md:text-7xl font-bold leading-[0.85] tracking-tight">
+                        <h2 class="text-macro text-5xl md:text-8xl font-bold leading-[0.85] tracking-tight">
                             RAW<br>
-                            <span class="text-ink/30 italic font-serif lowercase">logs</span>
+                            <span class="text-ink/30 italic font-serif lowercase">Logs</span>
                         </h2>
                     </div>
                 </div>
 
                 <!-- Data Table Header -->
                 <div class="hidden md:grid grid-cols-12 gap-4 text-micro text-ink/40 border-b border-ink/20 pb-4 mb-2 w-full">
-                    <div class="col-span-2">TIMESTAMP</div>
-                    <div class="col-span-1">ID</div>
-                    <div class="col-span-7">ENTRY_TITLE</div>
-                    <div class="col-span-2 text-right">ACTION</div>
+                    <div class="col-span-2">DATE</div>
+                    <div class="col-span-1">#</div>
+                    <div class="col-span-9">TITLE</div>
                 </div>
 
                 <div id="blog-preview-grid" class="flex flex-col w-full">
                     <!-- Injected via JS -->
                 </div>
                 
-                <a href="blog/" class="text-micro text-ink/60 hover:text-accent transition-colors block mt-16 text-center w-full">VIEW FULL ARCHIVE [↗]</a>
+                <a href="blog/" class="text-micro text-ink/60 hover:text-accent transition-colors block mt-16 text-center w-full">VIEW ALL ARTICLES ↗</a>
             </div>
+
+            <!-- Bottom fade blend out of Logs -->
+            <div class="absolute bottom-0 left-0 w-full h-24 md:h-28 bg-gradient-to-b from-transparent via-black/80 to-black pointer-events-none z-20"></div>
         </section>
 
+        <!-- Section Blend Divider -->
+        <div class="w-full h-px bg-gradient-to-r from-transparent via-ink/20 to-transparent relative z-20"></div>
+
         <!-- Footer -->
-        <footer class="w-full bg-canvas pt-32 pb-8 flex flex-col relative overflow-hidden">
+        <footer class="w-full bg-black pt-24 md:pt-32 pb-8 flex flex-col relative overflow-hidden">
             
             <!-- Tactical SVG F: Circuit (Footer Top Right edge) -->
             <div class="absolute right-[5%] top-[20%] w-[30vw] md:w-[15vw] opacity-[0.03] pointer-events-none mix-blend-screen hidden md:block z-0">
@@ -409,26 +401,28 @@
             </div>
 
             <!-- Massive Centered CTA -->
-            <div class="w-full flex flex-col items-center justify-center border-b border-ink/20 pb-32 relative z-10">
-                <a href="mailto:shahilforbusiness@gmail.com" class="group flex flex-col items-center text-center">
-                    <span class="text-macro text-[clamp(5rem,20vw,20rem)] leading-[0.75] text-ink group-hover:text-accent transition-colors tracking-tighter">
+            <div class="w-full flex flex-col items-center justify-center border-b border-ink/20 pb-20 md:pb-32 relative z-10 px-4 md:px-8">
+                <a href="mailto:email@005007009.xyz" class="group flex flex-col items-center text-center max-w-full">
+                    <span class="text-macro text-[clamp(4rem,18vw,20rem)] leading-[0.75] text-ink group-hover:text-accent transition-colors tracking-tighter">
                         CONTACT
                     </span>
-                    <span class="text-macro text-[clamp(3rem,12vw,12rem)] italic font-serif lowercase text-ink/30 group-hover:text-ink transition-colors leading-[0.8]">
-                        protocol
+                    <span class="text-macro text-[clamp(1.5rem,4.5vw,4.5rem)] lowercase text-ink/30 group-hover:text-ink transition-colors leading-[1.2] mt-4 break-all">
+                        email@005007009.xyz
                     </span>
                 </a>
             </div>
             
             <!-- Terminal Exit Status & Links -->
-            <div class="w-full flex flex-col md:flex-row justify-between items-center p-8 md:px-16 pt-8">
-                <div class="flex gap-8 text-micro text-ink/60 mb-8 md:mb-0">
-                    <a href="https://github.com/shahil-sk" target="_blank" class="hover:text-accent transition-colors">[ GITHUB ]</a>
-                    <a href="https://linkedin.com/in/shahil-ahmed-533266310" target="_blank" class="hover:text-accent transition-colors">[ LINKEDIN ]</a>
+            <div class="w-full flex flex-col md:flex-row justify-between items-center p-8 md:px-16 pt-8 gap-6 md:gap-0">
+                <div class="flex flex-wrap justify-center md:justify-start gap-6 md:gap-8 text-micro text-ink/60">
+                    <a href="https://github.com/shahil-sk" target="_blank" class="hover:text-accent transition-colors">GITHUB</a>
+                    <a href="https://linkedin.com/in/shahil-ahmed-533266310" target="_blank" class="hover:text-accent transition-colors">LINKEDIN</a>
+                    <a href="https://github.com/shahil-sk" target="_blank" class="hover:text-accent transition-colors">X</a>
+                    <a href="https://github.com/shahil-sk" target="_blank" class="hover:text-accent transition-colors">INSTAGRAM</a>
+                    <a href="https://github.com/shahil-sk" target="_blank" class="hover:text-accent transition-colors">MEDIUM</a>
                 </div>
-                <div class="text-micro text-ink/40 flex items-center gap-4">
-                    <span class="w-1.5 h-1.5 bg-accent animate-pulse"></span>
-                    END_OF_TRANSMISSION // &copy; 2026 SHAHIL AHMED
+                <div class="text-micro text-ink/40 flex items-center gap-4 text-center">
+                    &copy; 2026 SHAHIL AHMED
                 </div>
             </div>
         </footer>
